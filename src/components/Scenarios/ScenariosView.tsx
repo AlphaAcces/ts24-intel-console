@@ -3,7 +3,8 @@ import { useCaseData } from '../../context/DataContext';
 import { Scenario, ActionItem } from '../../types';
 import { Tag } from '../Shared/Tag';
 import { Route, Check, AlertTriangle, X, LogOut, Loader, ServerCrash, XCircle, Bot } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import { generateWithModel } from '../../lib/ai';
+import { AVAILABLE_MODELS, DEFAULT_MODEL_KEY } from '../../config/availableModels';
 
 const AI_CACHE_KEY = 'ai_scenario_history';
 
@@ -141,6 +142,7 @@ export const ScenariosView: React.FC = () => {
     const [analysisResult, setAnalysisResult] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [selectedModelKey, setSelectedModelKey] = useState<string>(DEFAULT_MODEL_KEY);
     
     const linkedActions = useMemo(() => {
         if (!selectedScenario) return [];
@@ -178,13 +180,8 @@ export const ScenariosView: React.FC = () => {
             }
 
             try {
-                if (!process.env.API_KEY) {
-                    throw new Error("AI-analyse er ikke tilgængelig, fordi API-nøglen mangler. Kontakt administratoren.");
-                }
-                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
                 const actionsList = actionsData.map(a => `- ${a.id}: ${a.title} (Prioritet: ${a.priority})`).join('\n');
-                
+
                 const prompt = `
                     Du er en ekspert i risikoanalyse og strategi for virksomheder.
                     Analysér følgende scenarie for virksomheden TS Logistik og generér en "mini-playbook" på dansk.
@@ -211,12 +208,7 @@ export const ScenariosView: React.FC = () => {
                     * **Triggere at Overvåge:** Hvilke 3 konkrete signaler eller hændelser indikerer, at virksomheden er på vej ind i dette scenarie?
                 `;
 
-                const response = await ai.models.generateContent({
-                    model: 'gemini-2.5-flash',
-                    contents: prompt,
-                });
-                
-                const resultText = response.text;
+                const { text: resultText } = await generateWithModel(selectedModelKey, prompt);
                 setAnalysisResult(resultText);
 
                 const currentCacheData = localStorage.getItem(AI_CACHE_KEY);
@@ -263,14 +255,27 @@ export const ScenariosView: React.FC = () => {
                 </div>
             </div>
             {selectedScenario && (
-                <AIAnalysisPanel 
-                    analysis={analysisResult} 
-                    isLoading={isLoading} 
-                    error={error} 
-                    onClose={() => setSelectedScenario(null)}
-                    scenario={selectedScenario}
-                    linkedActions={linkedActions}
-                />
+                    <div className="w-full md:w-1/3 lg:w-1/4 p-4">
+                        <div className="bg-component-dark rounded-md border border-border-dark p-4">
+                            <label className="text-sm text-gray-400">Vælg AI-model</label>
+                            <select className="w-full mt-2 bg-base-dark text-gray-200 p-2 rounded" value={selectedModelKey} onChange={e => setSelectedModelKey(e.target.value)}>
+                                {AVAILABLE_MODELS.map(m => (
+                                    <option key={m.key} value={m.key}>{m.name} {m.implemented ? '' : ' (ikke implementeret)'}</option>
+                                ))}
+                            </select>
+
+                            <div className="mt-4">
+                                <AIAnalysisPanel 
+                                    analysis={analysisResult} 
+                                    isLoading={isLoading} 
+                                    error={error} 
+                                    onClose={() => setSelectedScenario(null)}
+                                    scenario={selectedScenario}
+                                    linkedActions={linkedActions}
+                                />
+                            </div>
+                        </div>
+                    </div>
             )}
         </div>
     );
