@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TslLogo } from '../Shared/TslLogo';
 import { LanguageToggle } from '../Shared/LanguageToggle';
 import { PreferencesPanel } from '../Shared/PreferencesPanel';
@@ -14,6 +15,7 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ onToggleNav, activeSubject, onSubjectChange, currentViewId, currentBreadcrumbs, navigateTo }) => {
+  const { t } = useTranslation();
   const getButtonClass = (subject: Subject) => {
     const baseClass = "flex flex-col items-center px-4 py-1 rounded-md transition-colors duration-200";
     if (activeSubject === subject) {
@@ -22,7 +24,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleNav, activeSubject, onSu
     return `${baseClass} bg-component-dark hover:bg-gray-700/50`;
   };
 
-  const headerTitle = activeSubject === 'tsl' ? 'TS Logistik ApS' : 'Ümit Cetin';
+  const headerTitle = activeSubject === 'tsl' ? t('app.companyName', 'TS Logistik ApS') : t('app.userName', 'Ümit Cetin');
 
   return (
     <header className="fixed top-0 left-0 right-0 z-20 bg-component-dark/80 backdrop-blur-sm border-b border-border-dark">
@@ -42,11 +44,11 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleNav, activeSubject, onSu
         <div className="flex items-center space-x-2">
             <button onClick={() => onSubjectChange('tsl')} className={getButtonClass('tsl')}>
                 <span className={`text-sm font-bold ${activeSubject === 'tsl' ? 'text-accent-green' : 'text-gray-200'}`}>TS Logistik</span>
-                <span className="text-xs text-gray-500">Erhverv</span>
+                <span className="text-xs text-gray-500">{t('nav.business')}</span>
             </button>
             <button onClick={() => onSubjectChange('umit')} className={getButtonClass('umit')}>
                  <span className={`text-sm font-bold ${activeSubject === 'umit' ? 'text-accent-green' : 'text-gray-200'}`}>Ümit Cetin</span>
-                <span className="text-xs text-gray-500">Privat</span>
+                <span className="text-xs text-gray-500">{t('nav.personal')}</span>
             </button>
             <div className="ml-2">
               <LanguageToggle />

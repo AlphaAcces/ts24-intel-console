@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Subject } from '../../types';
 import { NAV_ITEMS } from '../../config/navigation';
 
@@ -10,8 +11,9 @@ interface SideNavProps {
 }
 
 export const SideNav: React.FC<SideNavProps> = ({ currentView, activeSubject, onNavigate, isOpen }) => {
+  const { t } = useTranslation();
   const visibleNavItems = NAV_ITEMS.filter(item => item.showFor.includes(activeSubject));
-  
+
   return (
     <aside className={`fixed top-0 left-0 z-30 h-full pt-16 w-64 bg-component-dark border-r border-border-dark transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:z-10`}>
       <nav className="p-4">
@@ -29,7 +31,7 @@ export const SideNav: React.FC<SideNavProps> = ({ currentView, activeSubject, on
                   }`}
                 >
                   <span className="mr-3">{item.icon}</span>
-                  {item.label}
+                  {item.i18nKey ? t(item.i18nKey) : item.label}
                 </button>
               </li>
             );

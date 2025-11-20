@@ -5,7 +5,20 @@
     "exporting": "Eksporterer…"
   },
   "nav": {
+    "dashboard": "Dashboard",
     "business": "Erhverv",
-    "personal": "Privat"
+    "personal": "Privat",
+    "executive": "Executive Summary",
+    "person": "Person & Network",
+    "companies": "Companies",
+    "financials": "Financials",
+    "hypotheses": "Hypotheses",
+    "cashflow": "Cashflow & DSO",
+    "sector": "Sector Analysis",
+    "timeline": "Timeline",
+    "risk": "Risk Heatmap",
+    "actions": "Actionables",
+    "counterparties": "Counterparties",
+    "scenarios": "Scenarios"
   }
 }
