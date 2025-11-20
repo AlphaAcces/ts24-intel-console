@@ -3,6 +3,7 @@ import { useCaseData } from '../../context/DataContext';
 import { User, MapPin, Briefcase, Shield, Search, GanttChart } from 'lucide-react';
 import { Tag } from '../Shared/Tag';
 import { NetworkGraph } from './NetworkGraph';
+import { useTranslation } from 'react-i18next';
 
 const ProfileInfo: React.FC<{icon: React.ReactNode, label: string, value: string}> = ({ icon, label, value }) => (
     <div className="flex items-start">
@@ -22,32 +23,41 @@ const getRiskColor = (score: number): 'red' | 'yellow' | 'gray' => {
 
 export const PersonView: React.FC = () => {
     const { personData, relationRiskData, networkNodes, networkEdges } = useCaseData();
+    const { t } = useTranslation('person');
+
+    const profileLabels = {
+        primaryRole: t('profile.labels.primaryRole'),
+        address: t('profile.labels.address'),
+        addressHistory: t('profile.labels.addressHistory'),
+        pepStatus: t('profile.labels.pepStatus'),
+        socmint: t('profile.labels.socmint'),
+    };
 
     return (
         <div className="space-y-8">
             <div className="bg-component-dark p-6 rounded-lg border border-border-dark">
                 <div className="flex items-center mb-6">
                     <User className="w-8 h-8 text-accent-green mr-4"/>
-                    <h2 className="text-xl font-bold text-gray-200">{personData.name} - Profil & Netværk</h2>
+                    <h2 className="text-xl font-bold text-gray-200">{t('profile.heading', { name: personData.name })}</h2>
                 </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                    <ProfileInfo icon={<Briefcase size={20}/>} label="Primær Rolle & Ejerstatus" value={`${personData.primaryRole} ${personData.uboStatus}`} />
-                    <ProfileInfo icon={<MapPin size={20}/>} label="Nuværende Adresse" value={personData.currentAddress} />
-                    <ProfileInfo icon={<GanttChart size={20}/>} label="Adressehistorik" value={personData.addressHistory.join('; ')} />
-                    <ProfileInfo icon={<Shield size={20}/>} label="PEP / Sanktioner" value={`${personData.pepStatus} ${personData.sanctionsScreening}`} />
-                    <ProfileInfo icon={<Search size={20}/>} label="SOCMINT Profil" value={personData.socmintProfile} />
+                    <ProfileInfo icon={<Briefcase size={20}/>} label={profileLabels.primaryRole} value={`${personData.primaryRole} ${personData.uboStatus}`} />
+                    <ProfileInfo icon={<MapPin size={20}/>} label={profileLabels.address} value={personData.currentAddress} />
+                    <ProfileInfo icon={<GanttChart size={20}/>} label={profileLabels.addressHistory} value={personData.addressHistory.join('; ')} />
+                    <ProfileInfo icon={<Shield size={20}/>} label={profileLabels.pepStatus} value={`${personData.pepStatus} ${personData.sanctionsScreening}`} />
+                    <ProfileInfo icon={<Search size={20}/>} label={profileLabels.socmint} value={personData.socmintProfile} />
                 </div>
             </div>
 
             <div>
-                <h3 className="text-lg font-bold text-gray-200 mb-4">Selskabsnetværk (Interaktivt)</h3>
+                <h3 className="text-lg font-bold text-gray-200 mb-4">{t('network.heading')}</h3>
                 <div className="bg-component-dark p-4 rounded-lg border border-border-dark">
                     <NetworkGraph nodes={networkNodes} edges={networkEdges} />
                 </div>
             </div>
 
             <div className="bg-component-dark p-6 rounded-lg border border-border-dark">
-                <h3 className="text-lg font-bold text-gray-200 mb-4 border-b border-border-dark pb-3">Nøglemodparter & Relationer</h3>
+                <h3 className="text-lg font-bold text-gray-200 mb-4 border-b border-border-dark pb-3">{t('relationships.heading')}</h3>
                 <div className="md:hidden">
                     <ul className="space-y-4">
                         {relationRiskData.map((rel) => (
@@ -68,9 +78,9 @@ export const PersonView: React.FC = () => {
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-border-dark">
-                                <th scope="col" className="py-3 px-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Entitet</th>
-                                <th scope="col" className="py-3 px-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Relation/Rolle</th>
-                                <th scope="col" className="py-3 px-2 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Risiko Score</th>
+                                <th scope="col" className="py-3 px-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('relationships.table.entity')}</th>
+                                <th scope="col" className="py-3 px-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('relationships.table.role')}</th>
+                                <th scope="col" className="py-3 px-2 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('relationships.table.riskScore')}</th>
                             </tr>
                         </thead>
                         <tbody>

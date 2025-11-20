@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NetworkNode, NetworkEdge } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 interface NetworkGraphProps {
     nodes: NetworkNode[];
@@ -26,26 +27,26 @@ const Node: React.FC<{ node: NetworkNode, onMouseEnter: () => void, onMouseLeave
     const typeColor = typeColors[node.type] || typeColors.company;
 
     return (
-        <g 
+        <g
             transform={`translate(${node.x - nodeDimensions.width / 2}, ${node.y - nodeDimensions.height / 2})`}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             className="cursor-pointer"
         >
-            <rect 
-                width={nodeDimensions.width} 
-                height={nodeDimensions.height} 
-                rx={nodeDimensions.radius} 
+            <rect
+                width={nodeDimensions.width}
+                height={nodeDimensions.height}
+                rx={nodeDimensions.radius}
                 ry={nodeDimensions.radius}
                 fill="#1a1c20"
                 stroke={riskColor}
                 strokeWidth={2}
             />
-             <rect 
-                width={5} 
-                height={nodeDimensions.height} 
+             <rect
+                width={5}
+                height={nodeDimensions.height}
                 fill={typeColor}
-                rx={nodeDimensions.radius} 
+                rx={nodeDimensions.radius}
                 ry={nodeDimensions.radius}
                 clipPath={`inset(0 ${nodeDimensions.width - 5}px 0 0 round ${nodeDimensions.radius}px)`}
             />
@@ -56,6 +57,7 @@ const Node: React.FC<{ node: NetworkNode, onMouseEnter: () => void, onMouseLeave
 };
 
 const Tooltip: React.FC<{ node: NetworkNode }> = ({ node }) => {
+    const { t } = useTranslation('person');
     const yOffset = node.y - nodeDimensions.height / 2 - 10;
     const xOffset = node.x;
 
@@ -63,7 +65,7 @@ const Tooltip: React.FC<{ node: NetworkNode }> = ({ node }) => {
         <g transform={`translate(${xOffset}, ${yOffset})`} style={{ pointerEvents: 'none' }}>
             <foreignObject x={-125} y={-80} width={250} height={75}>
                  <div className="bg-base-dark p-2 rounded-md border border-border-dark text-center shadow-lg text-xs">
-                     <p className="font-bold text-gray-300">{node.cvr ? `CVR: ${node.cvr}` : 'Person'}</p>
+                     <p className="font-bold text-gray-300">{node.cvr ? t('network.tooltip.cvr', { cvr: node.cvr }) : t('network.tooltip.personFallback')}</p>
                      <p className="text-gray-400 mt-1">{node.notes}</p>
                  </div>
             </foreignObject>
@@ -85,7 +87,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({ nodes, edges }) => {
                 if (!fromNode || !toNode) return null;
 
                 return (
-                    <line 
+                    <line
                         key={i}
                         x1={fromNode.x}
                         y1={fromNode.y}
@@ -98,8 +100,8 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({ nodes, edges }) => {
                 );
             })}
             {nodes.map(node => (
-                <Node 
-                    key={node.id} 
+                <Node
+                    key={node.id}
                     node={node}
                     onMouseEnter={() => setHoveredNodeId(node.id)}
                     onMouseLeave={() => setHoveredNodeId(null)}

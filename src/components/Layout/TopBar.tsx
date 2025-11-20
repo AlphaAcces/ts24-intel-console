@@ -9,7 +9,7 @@ interface TopBarProps {
   onToggleNav: () => void;
   activeSubject: Subject;
   onSubjectChange: (subject: Subject) => void;
-  currentViewId?: string;
+  currentViewId?: View;
   currentBreadcrumbs?: string[];
   navigateTo?: (view: View, options?: { fromDashboard?: boolean; breadcrumbs?: string[] }) => void;
 }

@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Subject } from '../../types';
 import { useCaseData } from '../../context/DataContext';
 import { KpiCard } from '../Shared/KpiCard';
@@ -19,68 +20,112 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, activeSubject }) => {
+    const { t, i18n } = useTranslation();
     const { totalRiskScore, riskHeatmapData, financialData } = useCaseData();
+    const locale = React.useMemo(() => (i18n.language === 'da' ? 'da-DK' : 'en-GB'), [i18n.language]);
+    const decimalFormatter = React.useMemo(() => new Intl.NumberFormat(locale, {
+        maximumFractionDigits: 0,
+    }), [locale]);
+    const riskLevelLabels = React.useMemo(() => ({
+        KRITISK: t('common.riskLevel.critical'),
+        HØJ: t('common.riskLevel.high'),
+        MODERAT: t('common.riskLevel.medium'),
+        LAV: t('common.riskLevel.low'),
+        'N/A': t('common.riskLevel.na'),
+    }), [t]);
+    const driverLabels = React.useMemo(() => ({
+        'Legal/Compliance': t('dashboard.common.drivers.legalCompliance'),
+        Governance: t('dashboard.common.drivers.governance'),
+        Financial: t('dashboard.common.drivers.financial'),
+        'Sector/Operations': t('dashboard.common.drivers.sector'),
+        'SOCMINT/Reputation': t('dashboard.common.drivers.reputation'),
+    }), [t]);
+    const joiner = t('common.delimiters.and');
+    const primaryDrivers = React.useMemo(
+        () => [...riskHeatmapData]
+            .sort((a, b) => b.assignedScore - a.assignedScore)
+            .slice(0, 2)
+            .map(r => driverLabels[r.category] ?? r.category)
+            .join(joiner),
+        [riskHeatmapData, driverLabels, joiner],
+    );
+    const resolvedPrimaryDrivers = primaryDrivers || t('dashboard.common.noDrivers');
+    const riskLevelLabel = riskLevelLabels[totalRiskScore.level] ?? totalRiskScore.level;
+    const millionUnit = t('common.units.millionAbbrev');
+    const currencyUnit = t('common.currency.dkk');
+    const formatMillionValue = (value?: number | null) => {
+        if (typeof value !== 'number') {
+            return t('common.naShort');
+        }
+        return (value / 1_000_000).toFixed(2);
+    };
+    const formatCurrencyValue = (value?: number | null) => {
+        if (typeof value !== 'number') {
+            return t('common.naShort');
+        }
+        return decimalFormatter.format(value);
+    };
 
     if (activeSubject === 'umit') {
         const legalRisk = riskHeatmapData.find(r => r.category === 'Legal/Compliance');
         const financialRisk = riskHeatmapData.find(r => r.category === 'Financial');
         const governanceRisk = riskHeatmapData.find(r => r.category === 'Governance');
-
-        const primaryDrivers = [...riskHeatmapData]
-            .sort((a, b) => b.assignedScore - a.assignedScore)
-            .slice(0, 2)
-            .map(r => r.category.split('/')[0])
-            .join(' & ');
+        const totalRiskValue = `${totalRiskScore.score}/${totalRiskScore.maxScore}`;
+        const formatScoreValue = (risk?: typeof legalRisk) => (risk ? risk.assignedScore.toString() : t('common.naShort'));
+        const formatScoreUnit = (risk?: typeof legalRisk) => (risk ? `/ ${risk.maxScore ?? t('common.naShort')}` : undefined);
 
         return (
-             <div className="space-y-8">
+            <div className="space-y-8">
                 <div className="bg-component-dark p-2 rounded-lg border border-border-dark text-center">
-                    <p className="text-sm font-semibold text-gray-300 tracking-wider">Case: Ümit Cetin (Privatprofil)</p>
+                    <p className="text-sm font-semibold text-gray-300 tracking-wider">{t('dashboard.personal.caseHeader')}</p>
                 </div>
                 <section>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <KpiCard
-                            title="Samlet Personlig Risiko"
-                            value={`${totalRiskScore.score}/${totalRiskScore.maxScore}`}
+                            title={t('dashboard.personal.cards.totalRisk.title')}
+                            value={totalRiskValue}
                             color="red"
-                            icon={<ShieldAlert className="w-4 h-4"/>}
+                            icon={<ShieldAlert className="w-4 h-4" />}
                             onClick={() => onNavigate('risk', { fromDashboard: true })}
                         >
-                            {totalRiskScore.level} / Drivere: {primaryDrivers}
+                            {t('dashboard.personal.cards.totalRisk.description', {
+                                level: riskLevelLabel,
+                                drivers: resolvedPrimaryDrivers,
+                            })}
                         </KpiCard>
                         <KpiCard
-                            title="Juridisk Risiko"
-                            value={`${legalRisk?.assignedScore ?? 'N/A'}`}
-                            unit={`/ ${legalRisk?.maxScore ?? 'N/A'}`}
+                            title={t('dashboard.personal.cards.legalRisk.title')}
+                            value={formatScoreValue(legalRisk)}
+                            unit={formatScoreUnit(legalRisk)}
                             color="orange"
-                            icon={<FileWarning className="w-4 h-4"/>}
+                            icon={<FileWarning className="w-4 h-4" />}
                             onClick={() => onNavigate('risk', { fromDashboard: true })}
                         >
-                            Potentiel personlig hæftelse
+                            {t('dashboard.personal.cards.legalRisk.description')}
                         </KpiCard>
                         <KpiCard
-                            title="Finansiel Eksponering"
-                            value={`${financialRisk?.assignedScore ?? 'N/A'}`}
-                            unit={`/ ${financialRisk?.maxScore ?? 'N/A'}`}
+                            title={t('dashboard.personal.cards.financialRisk.title')}
+                            value={formatScoreValue(financialRisk)}
+                            unit={formatScoreUnit(financialRisk)}
                             color="orange"
-                            icon={<DollarSign className="w-4 h-4"/>}
+                            icon={<DollarSign className="w-4 h-4" />}
                             onClick={() => onNavigate('risk', { fromDashboard: true })}
                         >
-                            Afhængighed af TSL-koncernen
+                            {t('dashboard.personal.cards.financialRisk.description')}
                         </KpiCard>
-                         <KpiCard
-                            title="Governance Risiko"
-                            value={`${governanceRisk?.assignedScore ?? 'N/A'}`}
-                            unit={`/ ${governanceRisk?.maxScore ?? 'N/A'}`}
+                        <KpiCard
+                            title={t('dashboard.personal.cards.governanceRisk.title')}
+                            value={formatScoreValue(governanceRisk)}
+                            unit={formatScoreUnit(governanceRisk)}
                             color="yellow"
-                            icon={<Users className="w-4 h-4"/>}
+                            icon={<Users className="w-4 h-4" />}
                             onClick={() => onNavigate('risk', { fromDashboard: true })}
                         >
-                            UBO-kontrol, ingen intern kontrol
+                            {t('dashboard.personal.cards.governanceRisk.description')}
                         </KpiCard>
                     </div>
                 </section>
-                 <section>
+                <section>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="lg:col-span-2">
                             <Suspense fallback={<CardSkeleton />}>
@@ -88,7 +133,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                             </Suspense>
                         </div>
                         <Suspense fallback={<CardSkeleton />}>
-                            <PriorityActionsCard onNavigate={(view) => onNavigate(view, {fromDashboard: true})} />
+                            <PriorityActionsCard onNavigate={(view) => onNavigate(view, { fromDashboard: true })} />
                         </Suspense>
                     </div>
                 </section>
@@ -98,78 +143,81 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                     </Suspense>
                 </section>
             </div>
-        )
+        );
     }
 
     const latestFinancials = financialData[financialData.length - 1];
     const prevFinancials = financialData.length > 1 ? financialData[financialData.length - 2] : null;
 
     const netResultChange = latestFinancials && prevFinancials && prevFinancials.profitAfterTax !== 0
-      ? ((latestFinancials.profitAfterTax - prevFinancials.profitAfterTax) / Math.abs(prevFinancials.profitAfterTax)) * 100
-      : 0;
-
-    const primaryDrivers = [...riskHeatmapData]
-        .sort((a, b) => b.assignedScore - a.assignedScore)
-        .slice(0, 2)
-        .map(r => (r.category === 'Financial' ? 'Likviditet' : r.category === 'Legal/Compliance' ? 'Skat' : r.category))
-        .join(' & ');
+        ? ((latestFinancials.profitAfterTax - prevFinancials.profitAfterTax) / Math.abs(prevFinancials.profitAfterTax)) * 100
+        : 0;
 
     const equitySparkline = financialData.map(d => ({ year: d.year, value: d.equityEndOfYear }));
     const resultSparkline = financialData.map(d => ({ year: d.year, value: d.profitAfterTax }));
 
+    const totalRiskValue = `${totalRiskScore.score}/${totalRiskScore.maxScore}`;
+    const netResultYear = latestFinancials?.year ?? new Date().getFullYear();
+    const netResultValue = formatMillionValue(latestFinancials?.profitAfterTax ?? null);
+    const equityValue = formatMillionValue(latestFinancials?.equityEndOfYear ?? null);
+    const liquidityValue = formatCurrencyValue(latestFinancials?.cash ?? null);
+    const solidityValue = typeof latestFinancials?.solidity === 'number' ? latestFinancials.solidity.toString() : t('common.naShort');
+    const dsoValue = typeof latestFinancials?.dso === 'number' ? t('common.units.days', { count: latestFinancials.dso }) : t('common.naShort');
+
     return (
         <div className="space-y-8">
             <div className="bg-component-dark p-2 rounded-lg border border-border-dark text-center">
-                <p className="text-sm font-semibold text-gray-300 tracking-wider">Case: TS Logistik ApS (Erhverv)</p>
+                <p className="text-sm font-semibold text-gray-300 tracking-wider">{t('dashboard.corporate.caseHeader')}</p>
             </div>
-            {/* Section 1: Mission Status */}
             <section>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <KpiCard
-                        title="Samlet Risikoniveau"
-                        value={`${totalRiskScore.score}/${totalRiskScore.maxScore}`}
+                        title={t('dashboard.corporate.cards.totalRisk.title')}
+                        value={totalRiskValue}
                         color="red"
-                        icon={<ShieldAlert className="w-4 h-4"/>}
+                        icon={<ShieldAlert className="w-4 h-4" />}
                         onClick={() => onNavigate('risk', { fromDashboard: true })}
                     >
-                        {totalRiskScore.level} / Drivere: {primaryDrivers}
+                        {t('dashboard.corporate.cards.totalRisk.description', {
+                            level: riskLevelLabel,
+                            drivers: resolvedPrimaryDrivers,
+                        })}
                     </KpiCard>
                     <KpiCard
-                        title="Årets Resultat (2024)"
-                        value={`${(latestFinancials.profitAfterTax / 1000000).toFixed(2)}`}
-                        unit="mio."
+                        title={t('dashboard.corporate.cards.netResult.title', { year: netResultYear })}
+                        value={netResultValue}
+                        unit={millionUnit}
                         color={netResultChange < 0 ? 'orange' : 'green'}
                         change={netResultChange}
                         changeType="positive"
                         sparklineData={resultSparkline}
-                        icon={<TrendingUp className="w-4 h-4"/>}
+                        icon={<TrendingUp className="w-4 h-4" />}
                         onClick={() => onNavigate('financials', { fromDashboard: true })}
                     />
                     <KpiCard
-                        title="Egenkapital & Soliditet"
-                        value={`${(latestFinancials.equityEndOfYear / 1000000).toFixed(2)}`}
-                        unit="mio."
+                        title={t('dashboard.corporate.cards.equity.title')}
+                        value={equityValue}
+                        unit={millionUnit}
                         color="green"
                         sparklineData={equitySparkline}
-                        icon={<DollarSign className="w-4 h-4"/>}
+                        icon={<DollarSign className="w-4 h-4" />}
                         onClick={() => onNavigate('financials', { fromDashboard: true })}
                     >
-                        Soliditet: {latestFinancials.solidity}%
+                        {t('dashboard.corporate.cards.equity.description', { solidity: solidityValue })}
                     </KpiCard>
                     <KpiCard
-                        title="Likviditet (Cash) & DSO"
-                        value={latestFinancials.cash?.toLocaleString() ?? 'N/A'}
-                        unit="DKK"
+                        title={t('dashboard.corporate.cards.liquidity.title')}
+                        value={liquidityValue}
+                        unit={currencyUnit}
                         color="red"
-                        icon={<Banknote className="w-4 h-4"/>}
+                        icon={<Banknote className="w-4 h-4" />}
                         onClick={() => onNavigate('cashflow', { fromDashboard: true })}
                     >
-                        Akut Risiko / DSO: ~{latestFinancials.dso} dage
+                        {t('dashboard.corporate.cards.liquidity.description', { dso: dsoValue })}
                     </KpiCard>
                 </div>
             </section>
 
-            {/* Section 2: Intelligence Summary & Actions */}
             <section>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2">
@@ -178,12 +226,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                         </Suspense>
                     </div>
                     <Suspense fallback={<CardSkeleton />}>
-                        <PriorityActionsCard onNavigate={(view) => onNavigate(view, {fromDashboard: true})} />
+                        <PriorityActionsCard onNavigate={(view) => onNavigate(view, { fromDashboard: true })} />
                     </Suspense>
                 </div>
             </section>
 
-            {/* Section 3: Recent Activity */}
             <section>
                 <Suspense fallback={<CardSkeleton />}>
                     <RecentEventsCard />

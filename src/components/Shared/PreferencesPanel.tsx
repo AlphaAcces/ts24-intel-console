@@ -5,7 +5,7 @@ import type { View } from '../../types';
 import { setCompactMode, saveView, removeView } from '../../store/userPreferencesSlice';
 
 interface PreferencesPanelProps {
-  currentViewId: string;
+  currentViewId: View;
   currentBreadcrumbs?: string[];
   navigateTo?: (view: View, options?: { fromDashboard?: boolean; breadcrumbs?: string[] }) => void;
 }

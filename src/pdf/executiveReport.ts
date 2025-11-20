@@ -1,8 +1,11 @@
 import type { jsPDF } from 'jspdf';
+import i18n from '../i18n';
 import {
+  ExecutiveActionItemSummary,
   ExecutiveExportPayload,
   ExecutiveFinancialAlert,
   ExecutiveTimelineHighlight,
+  ExecutiveRedFlag,
   ExecutiveRiskScoreSummary,
 } from '../types';
 
@@ -92,6 +95,68 @@ const ICON_BULLETS = {
   roadmap: '🗓',
 };
 
+const translate = (key: string, options?: Record<string, unknown>) => i18n.t(key, options);
+const getLocale = (): string => (i18n.language && i18n.language.startsWith('da') ? 'da-DK' : 'en-GB');
+
+const translateRiskCategory = (category: ExecutiveRiskScoreSummary['category']): string => {
+  switch (category) {
+    case 'Legal/Compliance':
+      return translate('executive.risk.category.legalCompliance');
+    case 'Governance':
+      return translate('executive.risk.category.governance');
+    case 'Sector/Operations':
+      return translate('executive.risk.category.sectorOperations');
+    case 'Financial':
+      return translate('executive.risk.category.financial');
+    case 'SOCMINT/Reputation':
+      return translate('executive.risk.category.reputation');
+    default:
+      return category;
+  }
+};
+
+const translateRiskLevel = (level: ExecutiveRiskScoreSummary['riskLevel'] | 'N/A'): string => {
+  switch (level) {
+    case 'KRITISK':
+      return translate('executive.risk.level.critical');
+    case 'HØJ':
+      return translate('executive.risk.level.high');
+    case 'MODERAT':
+      return translate('executive.risk.level.medium');
+    case 'LAV':
+      return translate('executive.risk.level.low');
+    case 'N/A':
+    default:
+      return translate('executive.risk.level.na');
+  }
+};
+
+const translatePriority = (priority?: ExecutiveActionItemSummary['priority']): string | undefined => {
+  switch (priority) {
+    case 'Påkrævet':
+      return translate('executive.priority.required');
+    case 'Høj':
+      return translate('executive.priority.high');
+    case 'Middel':
+      return translate('executive.priority.medium');
+    default:
+      return priority;
+  }
+};
+
+const translateHorizon = (horizon?: ExecutiveActionItemSummary['timeHorizon']): string | undefined => {
+  switch (horizon) {
+    case '0-30 dage':
+      return translate('executive.horizon.0_30');
+    case '1-3 mdr':
+      return translate('executive.horizon.1_3');
+    case '3-12 mdr':
+      return translate('executive.horizon.3_12');
+    default:
+      return horizon;
+  }
+};
+
 const setFillColor = (doc: jsPDF, color: { r: number; g: number; b: number }) => {
   doc.setFillColor(color.r, color.g, color.b);
 };
@@ -112,9 +177,9 @@ const resetBodyTypography = (doc: jsPDF) => {
 
 const formatCurrency = (value: number | null): string => {
   if (value === null) {
-    return '—';
+    return translate('executive.placeholder.unavailable');
   }
-  return new Intl.NumberFormat('da-DK', {
+  return new Intl.NumberFormat(getLocale(), {
     style: 'currency',
     currency: 'DKK',
     maximumFractionDigits: 0,
@@ -123,16 +188,16 @@ const formatCurrency = (value: number | null): string => {
 
 const formatPercent = (value: number | null): string => {
   if (value === null) {
-    return '—';
+    return translate('executive.placeholder.unavailable');
   }
   return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
 };
 
 const formatDays = (value: number | null): string => {
   if (value === null) {
-    return '—';
+    return translate('executive.placeholder.unavailable');
   }
-  return `${value} dage`;
+  return translate('executive.units.days', { count: value });
 };
 
 const formatAlertValue = (alert: ExecutiveFinancialAlert): string => {
@@ -142,9 +207,9 @@ const formatAlertValue = (alert: ExecutiveFinancialAlert): string => {
 const formatDate = (isoDate: string): string => {
   const date = new Date(isoDate);
   if (Number.isNaN(date.getTime())) {
-    return isoDate;
+    return translate('executive.placeholder.unavailable');
   }
-  return date.toLocaleDateString('da-DK');
+  return date.toLocaleDateString(getLocale());
 };
 
 const formatTimelineItem = (event: ExecutiveTimelineHighlight): string => {
@@ -152,19 +217,30 @@ const formatTimelineItem = (event: ExecutiveTimelineHighlight): string => {
   return event.description ? `${base} — ${event.description}` : base;
 };
 
-const formatActionItem = (item: {
-  title: string;
-  priority?: string;
-  ownerRole?: string;
-  timeHorizon?: string;
-  description?: string;
-}): string => {
-  const parts = [item.title];
-  if (item.priority) parts.push(`(${item.priority})`);
-  if (item.ownerRole) parts.push(`Ansvar: ${item.ownerRole}`);
-  if (item.timeHorizon) parts.push(`Horisont: ${item.timeHorizon}`);
+const formatActionItem = (item: ExecutiveActionItemSummary): string => {
+  const parts: string[] = [item.title];
+  const priority = translatePriority(item.priority);
+  if (priority) parts.push(`(${priority})`);
+
+  const responsibilityValue = item.ownerRole ?? translate('executive.notSpecified');
+  parts.push(`${translate('executive.action.responsibility')}: ${responsibilityValue}`);
+
+  const horizonValue = item.timeHorizon ? translateHorizon(item.timeHorizon) ?? item.timeHorizon : translate('executive.notApplicable');
+  parts.push(`${translate('executive.action.horizon')}: ${horizonValue}`);
+
   const header = parts.join(' · ');
   return item.description ? `${header} — ${item.description}` : header;
+};
+
+const formatRedFlag = (flag: ExecutiveRedFlag): string => {
+  const label = translate(`executive.alert.${flag.id}.label`);
+  const description = translate(`executive.alert.${flag.id}.description`);
+  const value = flag.value === null
+    ? translate('executive.placeholder.unavailable')
+    : flag.unit === 'DKK'
+      ? formatCurrency(flag.value)
+      : translate('executive.units.days', { count: flag.value });
+  return `${label}: ${value} — ${description}`;
 };
 
 const applyPageTheme = (doc: jsPDF) => {
@@ -342,21 +418,23 @@ const drawRiskRows = (mode: RenderMode, ctx: RenderContext, risks: ExecutiveRisk
     const textWidth = ctx.width - 100;
     const lines = ctx.doc.splitTextToSize(risk.justification, textWidth);
     const blockHeight = Math.max(badgeHeight, lines.length * LINE_HEIGHTS.body + 6);
+    const riskLevelLabel = translateRiskLevel(risk.riskLevel);
+    const categoryLabel = translateRiskCategory(risk.category);
 
     if (mode === 'draw') {
-      const badgeWidth = Math.max(52, ctx.doc.getTextWidth(risk.riskLevel) + 18);
+      const badgeWidth = Math.max(52, ctx.doc.getTextWidth(riskLevelLabel) + 18);
       setFillColor(ctx.doc, { r: palette.fill[0], g: palette.fill[1], b: palette.fill[2] });
       ctx.doc.roundedRect(ctx.x, ctx.y + offset, badgeWidth, badgeHeight, 6, 6, 'F');
       ctx.doc.setFont('helvetica', 'bold');
       ctx.doc.setFontSize(10);
       ctx.doc.setTextColor(palette.text[0], palette.text[1], palette.text[2]);
-      ctx.doc.text(risk.riskLevel, ctx.x + badgeWidth / 2, ctx.y + offset + badgeHeight / 2 + 3, { align: 'center' });
+      ctx.doc.text(riskLevelLabel, ctx.x + badgeWidth / 2, ctx.y + offset + badgeHeight / 2 + 3, { align: 'center' });
 
       const textX = ctx.x + badgeWidth + 14;
       ctx.doc.setFont('helvetica', 'bold');
       ctx.doc.setFontSize(FONT_SIZES.body);
       setTextColor(ctx.doc, COLORS.pageHeading);
-      ctx.doc.text(risk.category, textX, ctx.y + offset + 12);
+      ctx.doc.text(categoryLabel, textX, ctx.y + offset + 12);
 
       ctx.doc.setFont('helvetica', 'normal');
       ctx.doc.setFontSize(FONT_SIZES.body);
@@ -444,8 +522,20 @@ const addFooterMetadata = (doc: jsPDF, meta: { generatedDate: string; subject: s
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(FONT_SIZES.footer);
     const footerY = height - PAGE_MARGIN / 2;
-    doc.text(`${meta.generatedDate} · ${meta.subject.toUpperCase()}`, PAGE_MARGIN, footerY);
-    doc.text(`Side ${pageIndex}/${pageCount}`, width - PAGE_MARGIN, footerY, { align: 'right' });
+    doc.text(
+      translate('executive.pdf.footer.meta', {
+        date: meta.generatedDate,
+        subject: meta.subject.toUpperCase(),
+      }),
+      PAGE_MARGIN,
+      footerY,
+    );
+    doc.text(
+      translate('executive.pdf.footer.page', { current: pageIndex, total: pageCount }),
+      width - PAGE_MARGIN,
+      footerY,
+      { align: 'right' },
+    );
   }
 };
 
@@ -460,27 +550,37 @@ const chunkArray = <T,>(items: T[], chunkSize: number): T[][] => {
 const renderFinancialCard = (payload: ExecutiveExportPayload): CardDefinition => ({
   render: (mode, ctx) => {
     resetBodyTypography(ctx.doc);
-    let offset = drawCardHeading(mode, ctx, 'Finansielt overblik');
-    offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, `Status ${payload.financial.latestYear ?? '—'}`);
+    let offset = drawCardHeading(mode, ctx, translate('executive.card.financial.title'));
+    offset += drawSectionLabel(
+      mode,
+      { ...ctx, y: ctx.y + offset },
+      translate('executive.pdf.status', {
+        value: payload.financial.latestYear ?? translate('executive.placeholder.unavailable'),
+      }),
+    );
 
     const grossTone = payload.financial.yoyGrossChange === null ? 'neutral' : payload.financial.yoyGrossChange >= 0 ? 'positive' : 'negative';
     const profitTone = payload.financial.yoyProfitChange === null ? 'neutral' : payload.financial.yoyProfitChange >= 0 ? 'positive' : 'negative';
 
     const metrics: MetricCell[] = [
-      { label: 'Bruttofortjeneste', value: formatCurrency(payload.financial.grossProfit) },
-      { label: 'YoY bruttofortjeneste', value: formatPercent(payload.financial.yoyGrossChange), tone: grossTone as MetricCell['tone'] },
-      { label: 'Resultat efter skat', value: formatCurrency(payload.financial.profitAfterTax) },
-      { label: 'YoY resultat efter skat', value: formatPercent(payload.financial.yoyProfitChange), tone: profitTone as MetricCell['tone'] },
-      { label: 'Likviditet', value: formatCurrency(payload.financial.liquidity), tone: 'warning' },
-      { label: 'DSO', value: formatDays(payload.financial.dso) },
-      { label: 'Konsernlån', value: formatCurrency(payload.financial.intercompanyLoans), tone: 'negative' },
+      { label: translate('executive.metric.grossProfit'), value: formatCurrency(payload.financial.grossProfit) },
+      { label: translate('executive.metric.yoyGrossProfit'), value: formatPercent(payload.financial.yoyGrossChange), tone: grossTone as MetricCell['tone'] },
+      { label: translate('executive.metric.profitAfterTax'), value: formatCurrency(payload.financial.profitAfterTax) },
+      { label: translate('executive.metric.yoyProfitAfterTax'), value: formatPercent(payload.financial.yoyProfitChange), tone: profitTone as MetricCell['tone'] },
+      { label: translate('executive.metric.liquidity'), value: formatCurrency(payload.financial.liquidity), tone: 'warning' },
+      { label: translate('executive.metric.dso'), value: formatDays(payload.financial.dso) },
+      { label: translate('executive.metric.intercompanyLoans'), value: formatCurrency(payload.financial.intercompanyLoans), tone: 'negative' },
     ];
 
     offset += drawMetricGrid(mode, { ...ctx, y: ctx.y + offset }, metrics);
 
     if (payload.financial.alerts.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Observationer');
-      const alerts = payload.financial.alerts.map(alert => `${alert.label}: ${formatAlertValue(alert)} — ${alert.description}`);
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.pdf.observations'));
+      const alerts = payload.financial.alerts.map(alert => {
+        const label = translate(`executive.alert.${alert.id}.label`, { defaultValue: alert.label });
+        const description = translate(`executive.alert.${alert.id}.description`, { defaultValue: alert.description });
+        return `${label}: ${formatAlertValue(alert)} — ${description}`;
+      });
       offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, alerts);
     }
 
@@ -491,26 +591,32 @@ const renderFinancialCard = (payload: ExecutiveExportPayload): CardDefinition =>
 const renderRiskCard = (payload: ExecutiveExportPayload): CardDefinition => ({
   render: (mode, ctx) => {
     resetBodyTypography(ctx.doc);
-    let offset = drawCardHeading(mode, ctx, 'Risiko & compliance');
-    offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Makroanalyse');
+    let offset = drawCardHeading(mode, ctx, translate('executive.risk.title'));
+    offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.pdf.macroAnalysis'));
     offset += drawParagraph(mode, { ...ctx, y: ctx.y + offset }, payload.risk.sectorRiskSummary);
     offset += 6;
-    offset += drawKeyFigure(mode, { ...ctx, y: ctx.y + offset }, 'Compliance note', payload.risk.complianceIssue || 'Ingen registreret');
     offset += drawKeyFigure(
       mode,
       { ...ctx, y: ctx.y + offset },
-      'Skattesag eksponering',
-      payload.risk.taxCaseExposure ? formatCurrency(payload.risk.taxCaseExposure) : 'Ingen registreret',
+      translate('executive.risk.complianceNote'),
+      payload.risk.complianceIssue || translate('executive.pdf.noneRegistered'),
+    );
+    offset += drawKeyFigure(
+      mode,
+      { ...ctx, y: ctx.y + offset },
+      translate('executive.pdf.taxExposure'),
+      payload.risk.taxCaseExposure ? formatCurrency(payload.risk.taxCaseExposure) : translate('executive.pdf.noneRegistered'),
     );
 
     if (payload.risk.riskScores.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Vægtede risici');
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.pdf.weightedRisks'));
       offset += drawRiskRows(mode, { ...ctx, y: ctx.y + offset }, payload.risk.riskScores);
     }
 
     if (payload.risk.redFlags.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Red flags');
-      offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, payload.risk.redFlags, ICON_BULLETS.critical);
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.redFlags'));
+      const items = payload.risk.redFlags.map(formatRedFlag);
+      offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, items, ICON_BULLETS.critical);
     }
 
     return offset;
@@ -521,28 +627,28 @@ const renderActionCard = (payload: ExecutiveExportPayload): CardDefinition => ({
   span: 2,
   render: (mode, ctx) => {
     resetBodyTypography(ctx.doc);
-    let offset = drawCardHeading(mode, ctx, 'Action radar');
+    let offset = drawCardHeading(mode, ctx, translate('executive.pdf.actionRadar'));
 
     if (payload.actions.upcomingDeadlines.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Deadlines (30 dage)');
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.pdf.deadlines30'));
       const items = payload.actions.upcomingDeadlines.map(formatActionItem);
       offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, items, ICON_BULLETS.deadline);
     }
 
     if (payload.actions.boardActionables.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Board actionables');
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.boardActionables'));
       const items = payload.actions.boardActionables.map(formatActionItem);
       offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, items, ICON_BULLETS.board);
     }
 
     if (payload.actions.criticalEvents.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Kritiske hændelser');
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.criticalEvents'));
       const items = payload.actions.criticalEvents.map(event => `${formatTimelineItem(event)}`);
       offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, items, ICON_BULLETS.critical);
     }
 
     if (payload.actions.upcomingEvents.length > 0) {
-      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, 'Næste milepæle (60 dage)');
+      offset += drawSectionLabel(mode, { ...ctx, y: ctx.y + offset }, translate('executive.pdf.nextMilestones60'));
       const items = payload.actions.upcomingEvents.map(formatTimelineItem);
       offset += drawBulletList(mode, { ...ctx, y: ctx.y + offset }, items, ICON_BULLETS.roadmap);
     }
@@ -571,15 +677,15 @@ export const generateExecutiveReportPdf = async (
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(FONT_SIZES.pageTitle);
   setTextColor(doc, COLORS.pageHeading);
-  doc.text('Executive Intelligence Brief', PAGE_MARGIN, y);
+  doc.text(translate('executive.pdf.pageTitle'), PAGE_MARGIN, y);
   y += 32;
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(FONT_SIZES.pageSubtitle);
   setTextColor(doc, COLORS.textSecondary);
-  doc.text(`Subject · ${payload.subject.toUpperCase()}`, PAGE_MARGIN, y);
+  doc.text(translate('executive.pdf.subjectLine', { subject: payload.subject.toUpperCase() }), PAGE_MARGIN, y);
   y += 16;
-  doc.text(`Genereret · ${generatedDate}`, PAGE_MARGIN, y);
+  doc.text(translate('executive.pdf.generatedLine', { date: generatedDate }), PAGE_MARGIN, y);
   y += 26;
 
   const coreRows: CardDefinition[][] = [
@@ -601,6 +707,9 @@ export const generateExecutiveReportPdf = async (
 
   addFooterMetadata(doc, { generatedDate, subject: payload.subject });
 
-  const filename = `Executive-Summary-${payload.subject}-${payload.generatedAt.slice(0, 10)}.pdf`;
+  const filename = translate('executive.pdf.filename', {
+    subject: payload.subject,
+    date: payload.generatedAt.slice(0, 10),
+  });
   doc.save(filename);
 };

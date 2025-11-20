@@ -16,7 +16,7 @@ const sampleSummary = {
   risk: {
     taxCaseExposure: null,
     complianceIssue: '',
-    redFlags: ['Flag 1'],
+    redFlags: [{ id: 'dso', value: 33, unit: 'days' }],
     riskScores: [{ category: 'Financial', riskLevel: 'MODERAT', justification: 'Justify' }],
   },
   actions: {
@@ -35,7 +35,7 @@ describe('createExecutiveExportPayload', () => {
     expect(typeof payload.generatedAt).toBe('string');
     expect(payload.financial.grossProfit).toBe(3_000_000);
     expect(Array.isArray(payload.financial.alerts)).toBe(true);
-    expect(payload.risk.redFlags).toEqual(['Flag 1']);
+    expect(payload.risk.redFlags).toEqual([{ id: 'dso', value: 33, unit: 'days' }]);
 
     // Ensure deep-copies: modifying original shouldn't change payload
     (sampleSummary.financial.alerts[0] as any).label = 'Mutated';

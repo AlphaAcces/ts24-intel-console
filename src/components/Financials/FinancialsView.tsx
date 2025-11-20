@@ -1,6 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, BarChart, Bar, CartesianGrid, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useCaseData } from '../../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 const ChartCard: React.FC<{ title: string; children: React.ReactElement; }> = ({ title, children }) => (
     <div className="bg-component-dark p-6 rounded-lg border border-border-dark">
@@ -13,35 +14,51 @@ const ChartCard: React.FC<{ title: string; children: React.ReactElement; }> = ({
     </div>
 );
 
-const formatDKK = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `${(value / 1000000).toFixed(1)} mio.`;
-    if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(0)} t.`;
-    return `${value}`;
-};
-const formatDKKTooltip = (value: number) => `${value.toLocaleString('da-DK')} DKK`;
-const formatPercent = (value: number) => `${value.toFixed(1)}%`;
-const formatNumber = (value: number) => value.toLocaleString('da-DK');
-
 export const FinancialsView: React.FC = () => {
   const { financialData } = useCaseData();
+  const { t, i18n } = useTranslation(['financials', 'common']);
+  const locale = i18n.language === 'da' ? 'da-DK' : 'en-GB';
+
+  const millionAbbrev = t('common:units.millionAbbrev');
+  const thousandAbbrev = t('financials:units.thousandAbbrev');
+  const currencyLabel = t('common:currency.dkk');
+  const naLabel = t('common:naShort');
+
+  const formatCompactValue = (value: number) => {
+    if (Math.abs(value) >= 1000000) {
+      return `${(value / 1000000).toFixed(1)} ${millionAbbrev}`;
+    }
+    if (Math.abs(value) >= 1000) {
+      return `${(value / 1000).toFixed(0)} ${thousandAbbrev}`;
+    }
+    return new Intl.NumberFormat(locale).format(Math.round(value));
+  };
+
+  const formatCurrency = (value: number) => {
+    const rounded = Math.round(value);
+    return `${new Intl.NumberFormat(locale).format(rounded)} ${currencyLabel}`;
+  };
+
+  const formatNumber = (value: number) => new Intl.NumberFormat(locale).format(value);
+  const formatPercent = (value: number) => `${value.toFixed(1)}%`;
 
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-bold text-gray-200 mb-4">Årlige Nøgletal (TS Logistik ApS)</h2>
+        <h2 className="text-xl font-bold text-gray-200 mb-4">{t('table.title')}</h2>
         <div className="bg-component-dark border border-border-dark rounded-lg overflow-x-auto scrollbar-hidden">
           <table className="min-w-full divide-y divide-border-dark">
             <thead className="bg-gray-800/50">
               <tr>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">År</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Bruttofortjeneste</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">EBIT</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Årets Resultat</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Egenkapital</th>
-                <th scope="col" className="px-3 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">Ansatte</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">EBIT-margin</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Netto-margin</th>
-                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Resultat/ansat</th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.year')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.grossProfit')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.ebit')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.netResult')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.equity')}</th>
+                <th scope="col" className="px-3 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.staff')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.ebitMargin')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.netMargin')}</th>
+                <th scope="col" className="px-3 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.resultPerEmployee')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-dark font-mono">
@@ -49,13 +66,13 @@ export const FinancialsView: React.FC = () => {
                 <tr key={d.year} className="hover:bg-gray-800/40">
                   <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-200">{d.year}</td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-gray-300">{formatNumber(d.revenueOrGrossProfit)}</td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-orange-400">{d.ebit ? formatNumber(d.ebit) : 'N/A'}</td>
+                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-orange-400">{d.ebit ? formatNumber(d.ebit) : naLabel}</td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-green-400">{formatNumber(d.profitAfterTax)}</td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-indigo-400">{formatNumber(d.equityEndOfYear)}</td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-center text-gray-300">{d.staffCount}</td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-orange-400">{d.ebitMargin ? `${d.ebitMargin.toFixed(1)}%` : 'N/A'}</td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-green-400">{d.netMargin ? `${d.netMargin.toFixed(1)}%` : 'N/A'}</td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-gray-300">{d.profitPerEmployee ? formatNumber(d.profitPerEmployee) : 'N/A'}</td>
+                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-orange-400">{d.ebitMargin ? formatPercent(d.ebitMargin) : naLabel}</td>
+                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-green-400">{d.netMargin ? formatPercent(d.netMargin) : naLabel}</td>
+                  <td className="px-3 py-4 whitespace-nowrap text-sm text-right text-gray-300">{d.profitPerEmployee ? formatNumber(d.profitPerEmployee) : naLabel}</td>
                 </tr>
               ))}
             </tbody>
@@ -64,56 +81,59 @@ export const FinancialsView: React.FC = () => {
       </div>
 
       <div>
-        <h2 className="text-xl font-bold text-gray-200 mb-4">Grafisk Udvikling</h2>
+        <h2 className="text-xl font-bold text-gray-200 mb-4">{t('charts.sectionTitle')}</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ChartCard title="Resultatudvikling">
+          <ChartCard title={t('charts.result.title')}>
             <AreaChart data={financialData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
               <XAxis dataKey="year" stroke="#a0aec0" />
-              <YAxis tickFormatter={formatDKK} stroke="#a0aec0" />
-              <Tooltip contentStyle={{ backgroundColor: '#1a202c', border: '1px solid #2d3748' }} formatter={(value: number) => formatDKKTooltip(value)} />
+              <YAxis tickFormatter={formatCompactValue} stroke="#a0aec0" />
+              <Tooltip contentStyle={{ backgroundColor: '#1a202c', border: '1px solid #2d3748' }} formatter={(value: number) => formatCurrency(value)} />
               <Legend />
-              <Area type="monotone" dataKey="revenueOrGrossProfit" name="Bruttofortjeneste" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.1} strokeWidth={2} />
-              <Area type="monotone" dataKey="ebit" name="EBIT" stroke="#dd6b20" fill="#dd6b20" fillOpacity={0.1} strokeWidth={2} />
-              <Area type="monotone" dataKey="profitAfterTax" name="Nettoresultat" stroke="#00cc66" fill="#00cc66" fillOpacity={0.2} strokeWidth={2} />
+              <Area type="monotone" dataKey="revenueOrGrossProfit" name={t('charts.result.series.grossProfit')} stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.1} strokeWidth={2} />
+              <Area type="monotone" dataKey="ebit" name={t('charts.result.series.ebit')} stroke="#dd6b20" fill="#dd6b20" fillOpacity={0.1} strokeWidth={2} />
+              <Area type="monotone" dataKey="profitAfterTax" name={t('charts.result.series.netResult')} stroke="#00cc66" fill="#00cc66" fillOpacity={0.2} strokeWidth={2} />
             </AreaChart>
           </ChartCard>
 
-          <ChartCard title="Kapital & Soliditet">
+          <ChartCard title={t('charts.equity.title')}>
             <AreaChart data={financialData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
               <XAxis dataKey="year" stroke="#a0aec0" />
-              <YAxis yAxisId="left" tickFormatter={formatDKK} stroke="#a0aec0" />
+              <YAxis yAxisId="left" tickFormatter={formatCompactValue} stroke="#a0aec0" />
               <YAxis yAxisId="right" orientation="right" tickFormatter={formatPercent} stroke="#a0aec0" />
-              <Tooltip contentStyle={{ backgroundColor: '#1a202c', border: '1px solid #2d3748' }} formatter={(value: number, name: string) => name === 'Soliditet' ? formatPercent(value) : formatDKKTooltip(value)} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#1a202c', border: '1px solid #2d3748' }}
+                formatter={(value: number, _name: string, entry) => (entry && (entry as { dataKey?: string }).dataKey === 'solidity' ? formatPercent(value) : formatCurrency(value))}
+              />
               <Legend />
-              <Area yAxisId="left" type="monotone" dataKey="equityEndOfYear" name="Egenkapital" stroke="#818cf8" fill="#818cf8" fillOpacity={0.1} strokeWidth={2} />
-              <Line yAxisId="right" type="monotone" dataKey="solidity" name="Soliditet" stroke="#d69e2e" strokeWidth={2} dot={{ r: 4 }} />
+              <Area yAxisId="left" type="monotone" dataKey="equityEndOfYear" name={t('charts.equity.series.equity')} stroke="#818cf8" fill="#818cf8" fillOpacity={0.1} strokeWidth={2} />
+              <Line yAxisId="right" type="monotone" dataKey="solidity" name={t('charts.equity.series.solidity')} stroke="#d69e2e" strokeWidth={2} dot={{ r: 4 }} />
             </AreaChart>
           </ChartCard>
 
           <div className="lg:col-span-2">
-            <ChartCard title="Produktivitet (Resultat pr. Medarbejder)">
+            <ChartCard title={t('charts.productivity.title')}>
               <BarChart data={financialData.filter(d => d.staffCount > 0)}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
                 <XAxis dataKey="year" stroke="#a0aec0" />
-                <YAxis tickFormatter={(v) => `${Math.round(v / 1000)} t.kr.`} stroke="#a0aec0" />
-                <Tooltip contentStyle={{ backgroundColor: '#1a202c', border: '1px solid #2d3748' }} formatter={(value: number) => formatDKKTooltip(value)} />
+                <YAxis tickFormatter={(v) => `${Math.round(v / 1000)} ${thousandAbbrev}`} stroke="#a0aec0" />
+                <Tooltip contentStyle={{ backgroundColor: '#1a202c', border: '1px solid #2d3748' }} formatter={(value: number) => formatCurrency(value)} />
                 <Legend />
-                <Bar dataKey="profitPerEmployee" name="Resultat/ansat" fill="#dd6b20" />
+                <Bar dataKey="profitPerEmployee" name={t('charts.productivity.series.profitPerEmployee')} fill="#dd6b20" />
               </BarChart>
             </ChartCard>
           </div>
         </div>
       </div>
-      
+
       <div className="bg-component-dark p-6 rounded-lg border border-border-dark">
-        <h3 className="text-lg font-bold text-gray-200 mb-2">Finansiel Kommentar 2024</h3>
+        <h3 className="text-lg font-bold text-gray-200 mb-2">{t('analysis.title')}</h3>
         <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
-          <li><span className="font-semibold text-orange-400">Pres på indtjening:</span> EBIT- og netto-margin er faldende sammenlignet med 2022-23, hvilket indikerer stigende omkostninger eller prispres.</li>
-          <li><span className="font-semibold text-red-400">Halveret produktivitet:</span> Nettoresultat pr. medarbejder er faldet fra ~170 t.kr. i 2023 til ~85 t.kr. i 2024, på trods af flere ansatte.</li>
-          <li><span className="font-semibold text-green-400">Stærk kapitalisering:</span> Egenkapitalen er voksende og soliditeten er høj (&gt;55%), hvilket giver en buffer mod tab.</li>
-          <li><span className="font-semibold text-yellow-500">Likviditetsrisiko:</span> Den stærke balance dækker over en kritisk likviditetskrise. Se "Cashflow & DSO" for detaljeret analyse.</li>
+          <li><span className="font-semibold text-orange-400">{t('analysis.points.marginPressure.title')}</span> {t('analysis.points.marginPressure.body')}</li>
+          <li><span className="font-semibold text-red-400">{t('analysis.points.productivityDrop.title')}</span> {t('analysis.points.productivityDrop.body')}</li>
+          <li><span className="font-semibold text-green-400">{t('analysis.points.capitalization.title')}</span> {t('analysis.points.capitalization.body')}</li>
+          <li><span className="font-semibold text-yellow-500">{t('analysis.points.liquidityRisk.title')}</span> {t('analysis.points.liquidityRisk.body')}</li>
         </ul>
       </div>
     </div>

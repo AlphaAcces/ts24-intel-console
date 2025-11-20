@@ -284,7 +284,13 @@ export interface ExecutiveRiskHighlights {
   complianceIssue: string;
   sectorRiskSummary: string;
   riskScores: ExecutiveRiskScoreSummary[];
-  redFlags: string[];
+  redFlags: ExecutiveRedFlag[];
+}
+
+export interface ExecutiveRedFlag {
+  id: 'liquidity' | 'dso' | 'intercompany';
+  value: number | null;
+  unit: 'DKK' | 'days';
 }
 
 export interface ExecutiveActionItemSummary {

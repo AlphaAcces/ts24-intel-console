@@ -22,4 +22,896 @@
     "scenarios": "Scenarios"
     ,"savedViews": "Saved Views"
   }
+  ,
+  "common": {
+    "naShort": "N/A",
+    "riskLevel": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Moderate",
+      "low": "Low",
+      "na": "N/A"
+    },
+    "currency": {
+      "dkk": "DKK"
+    },
+    "delimiters": {
+      "and": " & "
+    },
+    "units": {
+      "millionAbbrev": "M",
+      "days": "{{count}} days",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    },
+    "companies": {
+      "tsl": {
+        "short": "TSL"
+      }
+    }
+  },
+  "dashboard": {
+    "common": {
+      "noDrivers": "No key drivers identified",
+      "drivers": {
+        "legalCompliance": "Legal & compliance",
+        "governance": "Governance",
+        "financial": "Liquidity",
+        "sector": "Sector & operations",
+        "reputation": "Reputation risk"
+      }
+    },
+    "personal": {
+      "caseHeader": "Case: Ümit Cetin (Personal profile)",
+      "cards": {
+        "totalRisk": {
+          "title": "Total personal risk",
+          "description": "{{level}} · Drivers: {{drivers}}"
+        },
+        "legalRisk": {
+          "title": "Legal risk",
+          "description": "Potential personal liability"
+        },
+        "financialRisk": {
+          "title": "Financial exposure",
+          "description": "Dependence on the TSL group"
+        },
+        "governanceRisk": {
+          "title": "Governance risk",
+          "description": "UBO control, no internal controls"
+        }
+      }
+    },
+    "corporate": {
+      "caseHeader": "Case: TS Logistik ApS (Business)",
+      "cards": {
+        "totalRisk": {
+          "title": "Overall risk level",
+          "description": "{{level}} · Drivers: {{drivers}}"
+        },
+        "netResult": {
+          "title": "Net result ({{year}})"
+        },
+        "equity": {
+          "title": "Equity & solvency",
+          "description": "Solvency: {{solidity}}%"
+        },
+        "liquidity": {
+          "title": "Liquidity (cash) & DSO",
+          "description": "Acute risk · DSO: ~{{dso}}"
+        }
+      }
+    }
+  },
+  "business": {
+    "heading": {
+      "eyebrow": "Business",
+      "title": "Business dashboard",
+      "subtitle": "KPIs, risks and trend indicators"
+    },
+    "placeholder": {
+      "kpiCards": "Business KPI cards (placeholder)",
+      "filters": "Filters (placeholder)",
+      "trendChart": "Trend chart (placeholder)",
+      "tables": "Tables (placeholder)"
+    }
+  },
+  "person": {
+    "profile": {
+      "heading": "{{name}} - Profile & network",
+      "labels": {
+        "primaryRole": "Primary role & ownership",
+        "address": "Current address",
+        "addressHistory": "Address history",
+        "pepStatus": "PEP / Sanctions",
+        "socmint": "SOCMINT profile"
+      }
+    },
+    "network": {
+      "heading": "Corporate network (interactive)",
+      "tooltip": {
+        "cvr": "CVR: {{cvr}}",
+        "personFallback": "Person"
+      }
+    },
+    "relationships": {
+      "heading": "Key counterparties & relations",
+      "table": {
+        "entity": "Entity",
+        "role": "Relation / Role",
+        "riskScore": "Risk score"
+      }
+    }
+  },
+  "companies": {
+    "heading": {
+      "structure": "Ownership structure",
+      "overview": "Company overview"
+    },
+    "table": {
+      "company": "Company",
+      "cvr": "CVR",
+      "role": "Role",
+      "status": "Status",
+      "mobile": {
+        "cvrLabel": "CVR:"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "historical": "Historical"
+    },
+    "modal": {
+      "close": "Close",
+      "noteHeading": "Note",
+      "fields": {
+        "cvr": "CVR number",
+        "status": "Status",
+        "established": "Established",
+        "industryCode": "Industry code",
+        "director": "Director",
+        "owner": "Owner",
+        "auditor": "Auditor"
+      }
+    },
+    "ownership": {
+      "historicalHeading": "Historical / peripheral entities"
+    }
+  },
+  "actions": {
+    "heading": {
+      "title": "Action plan · status & overview"
+    },
+    "kpis": {
+      "required": "Required actions",
+      "highPriority": "Open high-priority actions",
+      "completion": "Completion"
+    },
+    "filters": {
+      "label": "Filter:",
+      "options": {
+        "all": "All",
+        "required": "Required"
+      }
+    },
+    "sort": {
+      "label": "Sort by:",
+      "options": {
+        "priority": "Priority",
+        "category": "Category",
+        "horizon": "Time horizon"
+      }
+    },
+    "categories": {
+      "legal": "Legal",
+      "intelligence": "Intelligence",
+      "financial": "Financial",
+      "commercial": "Commercial",
+      "regulatory": "Regulatory",
+      "governance": "Governance",
+      "strategic": "Strategic"
+    },
+    "priorities": {
+      "required": "Required",
+      "high": "High",
+      "medium": "Medium"
+    },
+    "horizons": {
+      "short": "0-30 days",
+      "mid": "1-3 months",
+      "long": "3-12 months"
+    },
+    "views": {
+      "cashflow": "Cashflow",
+      "risk": "Risk",
+      "timeline": "Timeline",
+      "hypotheses": "Hypotheses",
+      "companies": "Companies",
+      "person": "Person",
+      "sector": "Sector",
+      "financials": "Financials"
+    },
+    "card": {
+      "statusHeading": "Status & time horizon",
+      "statusOptions": {
+        "notStarted": "Not started",
+        "inProgress": "In progress",
+        "completed": "Completed"
+      },
+      "evidenceHeading": "Expected evidence:",
+      "viewSource": "View source",
+      "relationsHeading": "Relations",
+      "copy": {
+        "priority": "Priority",
+        "category": "Category",
+        "source": "Source",
+        "noSource": "None",
+        "button": "Copy",
+        "copied": "Copied!"
+      }
+    },
+    "emptyState": {
+      "noMatches": "No actions match the selected filters."
+    }
+  },
+  "financials": {
+    "units": {
+      "thousandAbbrev": "k"
+    },
+    "table": {
+      "title": "Annual key figures (TS Logistik ApS)",
+      "headers": {
+        "year": "Year",
+        "grossProfit": "Gross profit",
+        "ebit": "EBIT",
+        "netResult": "Net result",
+        "equity": "Equity",
+        "staff": "Employees",
+        "ebitMargin": "EBIT margin",
+        "netMargin": "Net margin",
+        "resultPerEmployee": "Result per employee"
+      }
+    },
+    "charts": {
+      "sectionTitle": "Trend overview",
+      "result": {
+        "title": "Income performance",
+        "series": {
+          "grossProfit": "Gross profit",
+          "ebit": "EBIT",
+          "netResult": "Net result"
+        }
+      },
+      "equity": {
+        "title": "Capital & solvency",
+        "series": {
+          "equity": "Equity",
+          "solidity": "Solvency"
+        }
+      },
+      "productivity": {
+        "title": "Productivity (result per employee)",
+        "series": {
+          "profitPerEmployee": "Result per employee"
+        }
+      }
+    },
+    "analysis": {
+      "title": "Financial commentary 2024",
+      "points": {
+        "marginPressure": {
+          "title": "Margin pressure:",
+          "body": "EBIT and net margins continue to decline versus 2022-23, pointing to rising costs or pricing pressure."
+        },
+        "productivityDrop": {
+          "title": "Productivity halved:",
+          "body": "Net result per employee fell from ~170k DKK in 2023 to ~85k DKK in 2024 despite higher headcount."
+        },
+        "capitalization": {
+          "title": "Strong capitalization:",
+          "body": "Equity keeps growing and solvency remains above 55%, providing a buffer against losses."
+        },
+        "liquidityRisk": {
+          "title": "Liquidity risk:",
+          "body": "The solid balance sheet masks an acute liquidity crunch. See ‘Cashflow & DSO’ for details."
+        }
+      }
+    }
+  },
+  "cashflow": {
+    "heading": {
+      "title": "Liquidity & risk status (base case)"
+    },
+    "kpiCards": {
+      "cashOnHand": {
+        "title": "Cash on hand",
+        "note": "Effectively no cash buffer."
+      },
+      "internalReceivables": {
+        "title": "Intercompany receivables",
+        "note": "Capital trapped inside the group."
+      },
+      "dso": {
+        "title": "DSO 2024",
+        "note": "Extremely long debtor days."
+      },
+      "taxClaim": {
+        "title": "Potential tax claim",
+        "note": "Immediate threat to liquidity."
+      }
+    },
+    "units": {
+      "thousandAbbrev": "k"
+    },
+    "scenarios": {
+      "heading": "Scenario analysis",
+      "tabs": {
+        "base": "Base case",
+        "taxClaim": "Scenario A: Tax claim upheld",
+        "repayment": "Scenario B: Loans repaid"
+      },
+      "summary": {
+        "base": {
+          "title": "Base case",
+          "description": "Current position from the latest accounts. Shows the acute liquidity pressure and high capital tie-up."
+        },
+        "taxClaim": {
+          "title": "Scenario A: Tax claim upheld",
+          "description": "Worst case where equity evaporates and cash turns deeply negative. Insolvency follows immediately."
+        },
+        "repayment": {
+          "title": "Scenario B: 50% loans repaid",
+          "description": "Best case where partial repayment of shareholder loans restores liquidity and reduces DSO."
+        }
+      },
+      "cards": {
+        "equity": "Adjusted equity",
+        "cash": "Adjusted liquidity",
+        "dso": "Adjusted DSO"
+      }
+    },
+    "dsoChart": {
+      "title": "DSO development (days)",
+      "tooltipValue": "{{value}} days",
+      "series": "DSO"
+    },
+    "receivablesTable": {
+      "title": "Receivables structure",
+      "columns": {
+        "item": "Line item",
+        "year": "{{year}} ({{currency}})"
+      },
+      "rows": {
+        "internal": "Of which intercompany",
+        "external": "Of which external",
+        "total": "Total receivables"
+      },
+      "noData": "Insufficient receivables data."
+    },
+    "analysis": {
+      "title": "Liquidity note & conclusion",
+      "points": {
+        "acuteRisk": {
+          "title": "Acute risk:",
+          "body": "The company is operationally insolvent with only 31 DKK in cash. Operations rely entirely on supplier credit and collections."
+        },
+        "capitalDrain": {
+          "title": "Capital drain:",
+          "body": "An expanding 12.4m DKK balance is locked in intercompany loans, draining liquidity from operations."
+        },
+        "extremeDso": {
+          "title": "Extreme DSO:",
+          "body": "DSO of ~358 days indicates the intercompany loans behave like long-term financing rather than working capital."
+        },
+        "combinedRisk": {
+          "title": "Combined threat:",
+          "body": "The pending 4m DKK tax case plus zero liquidity is an existential risk (see Hypotheses H3/H4 and the risk heatmap)."
+        }
+      }
+    }
+  },
+  "sector": {
+    "comparison": {
+      "heading": "Key metrics vs. sector (2024)",
+      "columns": {
+        "metric": "Metric",
+        "company": "TS Logistik",
+        "sector": "Sector average",
+        "highPerformer": "High performer"
+      },
+      "metrics": {
+        "ebitMargin": "EBIT margin",
+        "equityRatio": "Equity ratio",
+        "profitPerEmployee": "Result per employee"
+      },
+      "valueSuffix": {
+        "thousand": "k DKK"
+      }
+    },
+    "chart": {
+      "heading": "EBIT margin over time — TSL vs. sector",
+      "series": {
+        "company": "TS Logistik",
+        "sector": "Sector average"
+      }
+    },
+    "drivers": {
+      "heading": "Strategic drivers & sector pressure",
+      "riskLabel": "Risk",
+      "impactPrefix": "Impact on {{company}}:",
+      "items": {
+        "driver1": {
+          "title": "Driver shortage & wage pressure",
+          "industry": "The sector lacks ~10,000 drivers. Salaries are increasing and the fight for qualified staff intensifies.",
+          "impact": "Personnel costs have surged and productivity has dropped. TSL is directly exposed."
+        },
+        "driver2": {
+          "title": "Rising operating costs",
+          "industry": "Road taxes, fuel and other operating costs are rising. Companies can only pass part of this on to customers.",
+          "impact": "Falling 2023-24 margins confirm that TSL is under profitability pressure from higher costs."
+        },
+        "driver3": {
+          "title": "Overcapacity & price pressure",
+          "industry": "A slowing economy reduces demand, leading to overcapacity and intense price competition.",
+          "impact": "As a presumed captive supplier, TSL is highly exposed to price pressure from a few large customers."
+        },
+        "driver4": {
+          "title": "Digitalisation",
+          "industry": "Customers expect real-time updates and digital booking. Lack of investment here is a competitive disadvantage.",
+          "impact": "TSL's near-invisible digital profile suggests limited customer-facing tech investments, posing long-term risk."
+        },
+        "driver5": {
+          "title": "Sustainability",
+          "industry": "Pressure to reduce CO₂ is rising, but scepticism and limited low-emission fleet supply slow adoption.",
+          "impact": "TSL has likely not invested in green assets, making them less attractive to sustainability-focused clients."
+        }
+      }
+    },
+    "macroRisks": {
+      "heading": "Macro risks for the sector",
+      "riskLabel": "Risk",
+      "emptyState": "No macro risks registered for this profile.",
+      "items": {
+        "risk1": {
+          "title": "Market & pricing pressure",
+          "description": "Heavy competition, customer margin pressure and consolidation across transport and automotive."
+        },
+        "risk2": {
+          "title": "Regulatory changes",
+          "description": "New kilometre tax and shifts in automotive duties/environmental rules introduce major uncertainty."
+        },
+        "risk3": {
+          "title": "Macro climate",
+          "description": "Higher rates and inflation impact financing costs and demand in both sectors."
+        },
+        "risk4": {
+          "title": "Technological disruption",
+          "description": "Digital demands in transport and a shift towards EV/online sales require continuous investment."
+        }
+      }
+    },
+    "analysis": {
+      "heading": "Analytical conclusion",
+      "points": {
+        "overperformance": {
+          "title": "Historic overperformance:",
+          "body": "TSL has historically outperformed on margins and solvency, but the advantage is eroding (2023-24)."
+        },
+        "productivity": {
+          "title": "Falling productivity:",
+          "body": "Profit per employee has dropped below sector expectations, supporting Hypothesis H2 on overcapacity."
+        },
+        "balance": {
+          "title": "Strong balance, weak liquidity:",
+          "body": "High solvency offers a buffer, but stands in contrast to the acute liquidity crisis—an atypical risk mix."
+        },
+        "model": {
+          "title": "Vulnerable model:",
+          "body": "Reliance on a few large \"captive\" clients leaves the company exposed to sector-wide price and cost pressure."
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "heading": "Strategic scenarios 2025-2026",
+    "intro": "Based on Final Report v3.0 four primary scenarios illustrate the outcome space from best case to worst case and set the strategic action plan.",
+    "card": {
+      "assumptions": "Key assumptions",
+      "outcome": "Expected outcome",
+      "labels": {
+        "probability": "Probability",
+        "impact": "Impact"
+      },
+      "analyzeCta": "Run AI analysis"
+    },
+    "probability": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "extreme": "Extreme"
+    },
+    "impact": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "extreme": "Extreme"
+    },
+    "items": {
+      "best": {
+        "name": "Best case: Controlled recovery",
+        "description": "The company navigates the crisis by resolving the tax case favourably and rebuilding liquidity. Operations stabilise on a stronger footing.",
+        "assumptions": [
+          "Tax case won or settled for <1m DKK.",
+          "Intercompany loans partly repaid (~5m DKK).",
+          "Working capital facility established.",
+          "Revenue stable; margins improve slightly."
+        ],
+        "expectedOutcome": "Survival and stabilisation. Risk drops to “Moderate”."
+      },
+      "base": {
+        "name": "Base case: Moderate crisis and adaptation",
+        "description": "The company survives but weakened. The tax case is partially lost and market pressure forces cost reductions.",
+        "assumptions": [
+          "Tax case settles with 2-4m DKK loss.",
+          "Liquidity raised via asset sale (e.g. property).",
+          "Revenue declines 10-15%.",
+          "Headcount reduced to protect margins."
+        ],
+        "expectedOutcome": "Survival with scars. Risk stays “High” but insolvency avoided."
+      },
+      "worst": {
+        "name": "Worst case: Severe crisis / collapse",
+        "description": "A perfect storm of negative events triggers an uncontrollable crisis and likely bankruptcy.",
+        "assumptions": [
+          "Tax case fully lost (~4m DKK + penalty).",
+          "Major client lost; revenue falls >20%.",
+          "Dubai project fails and capital is lost.",
+          "Bank/creditors lose confidence."
+        ],
+        "expectedOutcome": "Restructuring or bankruptcy within 12-18 months."
+      },
+      "exit": {
+        "name": "Strategic exit: Positive variant",
+        "description": "Ümit Cetin proactively sells or merges TSL to realise value, reduce personal risk and refocus investments.",
+        "assumptions": [
+          "Operations stabilise enough to attract a buyer.",
+          "Industrial buyer or PE fund acquires operations.",
+          "Ümit realises a gain and exits partly or fully."
+        ],
+        "expectedOutcome": "Value crystallised and personal risk neutralised. Controlled wind-down."
+      }
+    },
+    "ai": {
+      "panelTitle": "AI analysis: {{name}}",
+      "loading": "Generating analysis…",
+      "linkedActions": "Relevant actions",
+      "error": "An unexpected error occurred during the AI analysis."
+    }
+  },
+  "timeline": {
+    "heading": "Chronological timeline",
+    "filters": {
+      "all": "All",
+      "structure": "Structure",
+      "financial": "Financial",
+      "address": "Address",
+      "operational": "Operational",
+      "compliance": "Tax / compliance"
+    },
+    "yearSummary_one": "({{count}} event)",
+    "yearSummary_other": "({{count}} events)",
+    "noEvents": "No events match the selected filter.",
+    "eventTypes": {
+      "establishment": "Establishment",
+      "accounts": "Accounts",
+      "structure": "Structure",
+      "financial": "Financial",
+      "operational": "Operational",
+      "address": "Address",
+      "compliance": "Tax / compliance"
+    },
+    "sourceLabel": "Source",
+    "viewSource": "View source document",
+    "sourceTooltip": "Open source document ({{sourceId}})"
+  },
+  "risk": {
+    "heading": "Risk overview",
+    "kpi": {
+      "total": {
+        "title": "Total risk score"
+      },
+      "primaryDrivers": {
+        "title": "Primary risk drivers"
+      },
+      "criticalCategories": {
+        "title": "Critical categories",
+        "note": "Categories with High or Critical risk"
+      }
+    },
+    "levels": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Moderate",
+      "low": "Low"
+    },
+    "heatmap": {
+      "heading": "Detailed risk heatmap",
+      "columns": {
+        "category": "Category",
+        "likelihoodImpact": "L/I",
+        "score": "Score",
+        "level": "Level",
+        "justification": "Justification",
+        "relations": "Relations"
+      },
+      "likelihoodLabel": "L: {{value}}/5",
+      "impactLabel": "I: {{value}}/5",
+      "sections": {
+        "hypotheses": "Hypotheses",
+        "views": "Views",
+        "actions": "Actions"
+      },
+      "tooltip": "Switch analytical scenarios to test robustness under different assumptions.",
+      "categories": {
+        "financial": "Financial",
+        "legalCompliance": "Legal / compliance",
+        "governance": "Governance",
+        "socmintReputation": "SOCMINT / reputation",
+        "sectorOperations": "Sector / operations"
+      },
+      "justifications": {
+        "financial": "Acute liquidity (31 DKK cash) and 12.4m DKK tied up in intercompany loans. A 4-4.5m DKK Dubai exposure amplifies financial risk.",
+        "legalCompliance": "Open tax case (4m DKK) and uncertainty about transport permits threaten licence to operate. New taxes/regulation add pressure.",
+        "governance": "Structural capital drain to holding. Large insider loans without clear arm’s-length terms; single owner removes internal control.",
+        "socmintReputation": "No negative press. Deliberately low digital footprint; reputation risk limited but could surge in a bankruptcy scenario.",
+        "sectorOperations": "Falling margins and halved profit per employee signal price pressure and inefficiency. Captive model increases vulnerability."
+      }
+    },
+    "primaryDrivers": {
+      "financial": "Liquidity",
+      "legalCompliance": "Tax & compliance",
+      "governance": "Governance",
+      "socmintReputation": "Reputation",
+      "sectorOperations": "Sector operations"
+    },
+    "scenarios": {
+      "heading": "Assessment",
+      "balanced": {
+        "label": "Balanced assessment",
+        "level": "Critical",
+        "description": "Recognises strong equity as a buffer but views the liquidity drain and tax case as a severe threat requiring immediate action."
+      },
+      "eddStrict": {
+        "label": "EDD v1 (strict)",
+        "level": "High (strict assessment)",
+        "description": "Focuses on operational insolvency (31 DKK cash) and the potentially fatal tax case. Equity is illiquid intercompany balances."
+      },
+      "stress": {
+        "label": "Stress scenario 2025",
+        "level": "Critical (stress test)",
+        "description": "Assumes the tax case is lost and a major customer leaves. Triggers immediate bankruptcy and likely domino effects across the group."
+      }
+    }
+  },
+  "personal": {
+    "heading": {
+      "eyebrow": "Personal",
+      "title": "Personal dashboard",
+      "subtitle": "Personal finances & notes"
+    },
+    "placeholder": {
+      "kpis": "Personal KPIs (placeholder)",
+      "filters": "Filters (placeholder)",
+      "savings": "Savings & liabilities (placeholder)",
+      "assets": "Assets & investments (placeholder)"
+    }
+  },
+  "counterparties": {
+    "heading": "Counterparties & relations ({{subject}})",
+    "table": {
+      "headers": {
+        "counterparty": "Counterparty",
+        "typeRisk": "Type / risk",
+        "description": "Description & relation",
+        "links": "Links"
+      }
+    },
+    "types": {
+      "regulatory": "Regulatory",
+      "advisor": "Advisor",
+      "customer": "Customer",
+      "financial": "Financial",
+      "partner": "Partner"
+    },
+    "risk": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "labels": {
+      "riskLevel": "Risk: {{level}}"
+    },
+    "links": {
+      "viewRisks": "View related risks",
+      "viewHypotheses": "View related hypotheses"
+    }
+  },
+  "hypotheses": {
+    "heading": {
+      "title": "Hypothesis dashboard"
+    },
+    "filters": {
+      "all": "All"
+    },
+    "status": {
+      "confirmed": "Confirmed",
+      "open": "Open",
+      "rejected": "Rejected"
+    },
+    "impact": {
+      "high": "High impact",
+      "medium": "Medium impact",
+      "low": "Low impact"
+    },
+    "categories": {
+      "financial": "Financial",
+      "liquidity": "Liquidity",
+      "taxCompliance": "Tax / compliance",
+      "operational": "Operational",
+      "strategic": "Strategic"
+    },
+    "evidence": {
+      "indication": "Indication",
+      "strong": "Strong evidence"
+    },
+    "card": {
+      "description": "Description",
+      "details": "Details",
+      "notesHeading": "Notes & relations"
+    },
+    "views": {
+      "dashboard": "Dashboard",
+      "executive": "Executive summary",
+      "person": "Person & network",
+      "companies": "Companies",
+      "financials": "Financials",
+      "hypotheses": "Hypotheses",
+      "cashflow": "Cashflow & DSO",
+      "sector": "Sector analysis",
+      "timeline": "Timeline",
+      "risk": "Risk heatmap",
+      "actions": "Actionables",
+      "counterparties": "Counterparties",
+      "scenarios": "Scenarios",
+      "business": "Business",
+      "personal": "Personal",
+      "savedViews": "Saved views"
+    }
+  },
+  "executive": {
+    "eyebrow": "Executive Summary",
+    "title": "Executive Summary",
+    "subtitle": "Condensed status of finance, risks and actions — board ready.",
+    "export": "Export PDF",
+    "exporting": "Exporting…",
+    "openTimeline": "Open timeline",
+    "card": {
+      "financial": {
+        "title": "Financial overview",
+        "subtitle": "Key KPIs 2021-2024"
+      },
+      "actions": {
+        "title": "Actions & timeline",
+        "subtitle": "Next 30 days and critical events"
+      }
+    },
+    "metric": {
+      "grossProfit": "Gross profit",
+      "profitAfterTax": "Profit after tax",
+      "dsoTag": "DSO {{value}} {{days}}",
+      "yoyGrossProfit": "YoY gross profit",
+      "yoyProfitAfterTax": "YoY profit after tax",
+      "liquidity": "Liquidity",
+      "dso": "DSO",
+      "intercompanyLoans": "Intercompany loans"
+    },
+    "vsLastYear": "vs last year",
+    "chart": {
+      "grossTrend": "Gross profit trend",
+      "profitTrend": "Profit after tax trend"
+    },
+    "placeholder": {
+      "unavailable": "—"
+    },
+    "units": {
+      "million": "DKK {{value}}m",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    },
+    "criticalObservations": "Critical observations",
+    "risk": {
+      "title": "Risk & compliance",
+      "subtitle": "Authorities and governance",
+      "taxCase": "Tax case",
+      "exposure": "Exposure",
+      "monitor": "monitor provisions",
+      "noActiveCase": "No active tax case registered.",
+      "complianceNote": "Compliance note",
+      "category": {
+        "legalCompliance": "Legal & Compliance",
+        "governance": "Governance",
+        "sectorOperations": "Sector & Operations",
+        "financial": "Financial",
+        "reputation": "Reputation risk"
+      },
+      "level": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Moderate",
+        "low": "Low",
+        "na": "N/A"
+      }
+    },
+    "redFlags": "Red flags",
+    "tag": {
+      "redFlags": "Red flags"
+    },
+    "alert": {
+      "liquidity": {
+        "label": "Liquidity",
+        "description": "Cash on hand at the latest annual report"
+      },
+      "dso": {
+        "label": "DSO",
+        "description": "Average debtor days in most recent period"
+      },
+      "intercompany": {
+        "label": "Intercompany loans",
+        "description": "Receivables from related parties"
+      }
+    },
+    "priority": {
+      "required": "Required",
+      "high": "High",
+      "medium": "Medium"
+    },
+    "horizon": {
+      "0_30": "0-30 days",
+      "1_3": "1-3 months",
+      "3_12": "3-12 months"
+    },
+    "actions": {
+      "viewActionables": "View Actionables"
+    },
+    "upcomingDeadlines": "Upcoming deadlines",
+    "noUpcomingDeadlines": "No deadlines registered in the next 30 days.",
+    "action": {
+      "responsibility": "Responsibility",
+      "horizon": "Horizon"
+    },
+    "pdf": {
+      "status": "Status {{value}}",
+      "observations": "Observations",
+      "macroAnalysis": "Macro analysis",
+      "noneRegistered": "None registered",
+      "taxExposure": "Tax case exposure",
+      "weightedRisks": "Weighted risks",
+      "actionRadar": "Action radar",
+      "deadlines30": "Deadlines (30 days)",
+      "nextMilestones60": "Next milestones (60 days)",
+      "pageTitle": "Executive Intelligence Brief",
+      "subjectLine": "Subject · {{subject}}",
+      "generatedLine": "Generated · {{date}}",
+      "footer": {
+        "meta": "{{date}} · {{subject}}",
+        "page": "Page {{current}}/{{total}}"
+      },
+      "filename": "Executive-Summary-{{subject}}-{{date}}.pdf"
+    },
+    "notSpecified": "Not specified",
+    "notApplicable": "N/A",
+    "criticalEvents": "Critical events",
+    "boardActionables": "Board actionables",
+    "nextKeyEvents": "Next key events"
+  }
 }

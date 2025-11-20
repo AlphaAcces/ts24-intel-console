@@ -1,5 +1,6 @@
 import React from 'react';
 import { User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // FIX: Added `children` to the props type to allow nesting of Node components.
 const Node: React.FC<{ label: string; sublabel: string; level: 'ubo' | 'holding' | 'subsidiary' | 'historical', isLast?: boolean, className?: string, children?: React.ReactNode }> = ({ label, sublabel, level, children, className }) => {
@@ -46,15 +47,19 @@ const ChildNodeContainer: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 };
 
-const HistoricalSection: React.FC = () => (
-    <div className="mt-8 pt-6 border-t border-border-dark/50">
-        <h4 className="text-center text-sm font-bold text-gray-400 mb-4">Historiske / Perifere Enheder</h4>
-        <div className="flex flex-wrap justify-center gap-4">
-            <Node label="Lund Capital Holding ApS" sublabel="Overdraget" level="historical" className="opacity-75" />
-            <Node label="Gorm & Partnere ApS" sublabel="Ophørt" level="historical" className="opacity-75" />
+const HistoricalSection: React.FC = () => {
+    const { t } = useTranslation('companies');
+
+    return (
+        <div className="mt-8 pt-6 border-t border-border-dark/50">
+            <h4 className="text-center text-sm font-bold text-gray-400 mb-4">{t('ownership.historicalHeading')}</h4>
+            <div className="flex flex-wrap justify-center gap-4">
+                <Node label="Lund Capital Holding ApS" sublabel="Overdraget" level="historical" className="opacity-75" />
+                <Node label="Gorm & Partnere ApS" sublabel="Ophørt" level="historical" className="opacity-75" />
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 
 export const OwnershipStructure: React.FC = () => {
@@ -67,7 +72,7 @@ export const OwnershipStructure: React.FC = () => {
                              {/* Vertical connectors for subsidiaries */}
                             <div className="absolute bottom-full h-6 w-px bg-gray-600 md:hidden"></div>
                             <div className="absolute bottom-full h-6 w-px bg-gray-600 hidden md:block" style={{left: 'calc(50% - 1px)'}}></div>
-                            
+
                             <Node label="TS Logistik ApS" sublabel="Drift" level="subsidiary" />
                             <Node label="CESR Ejendomme ApS" sublabel="Ejendom" level="subsidiary" />
                             <Node label="CESR ApS" sublabel="Bilsalg" level="subsidiary" />

@@ -7,6 +7,7 @@ import {
   ExecutiveFinancialAlert,
   ExecutiveFinancialHighlights,
   ExecutiveFinancialTrendPoint,
+  ExecutiveRedFlag,
   ExecutiveRiskHighlights,
   ExecutiveSummaryData,
   FinancialYear,
@@ -126,11 +127,19 @@ const buildRiskHighlights = (risks: RiskScore[], cashflow: CashflowSummary): Exe
     justification: summariseText(risk.justification),
   }));
 
-  const redFlags = [
-    typeof cashflow.cashOnHand === 'number' ? `Likviditet: ${cashflow.cashOnHand.toLocaleString('da-DK')} DKK` : null,
-    typeof cashflow.internalReceivables === 'number' ? `Intercompany-lån: ${cashflow.internalReceivables.toLocaleString('da-DK')} DKK` : null,
-    typeof cashflow.dsoDays2024 === 'number' ? `DSO: ${cashflow.dsoDays2024} dage` : null,
-  ].filter(Boolean) as string[];
+  const redFlags: ExecutiveRedFlag[] = [];
+
+  if (typeof cashflow.cashOnHand === 'number') {
+    redFlags.push({ id: 'liquidity', value: cashflow.cashOnHand, unit: 'DKK' });
+  }
+
+  if (typeof cashflow.internalReceivables === 'number') {
+    redFlags.push({ id: 'intercompany', value: cashflow.internalReceivables, unit: 'DKK' });
+  }
+
+  if (typeof cashflow.dsoDays2024 === 'number') {
+    redFlags.push({ id: 'dso', value: cashflow.dsoDays2024, unit: 'days' });
+  }
 
   return {
     taxCaseExposure: typeof cashflow.potentialTaxClaim === 'number' ? cashflow.potentialTaxClaim : null,
@@ -233,7 +242,7 @@ export const createExecutiveExportPayload = (
     risk: {
       ...summary.risk,
       riskScores: summary.risk.riskScores.map(score => ({ ...score })),
-      redFlags: [...summary.risk.redFlags],
+      redFlags: summary.risk.redFlags.map(flag => ({ ...flag })),
     },
     actions: {
       upcomingDeadlines: summary.actions.upcomingDeadlines.map(item => ({ ...item })),

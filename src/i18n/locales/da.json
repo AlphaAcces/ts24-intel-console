@@ -22,4 +22,896 @@
     "scenarios": "Scenarier",
     "savedViews": "Gemte visninger"
   }
+  ,
+  "common": {
+    "naShort": "N/A",
+    "riskLevel": {
+      "critical": "Kritisk",
+      "high": "Høj",
+      "medium": "Moderat",
+      "low": "Lav",
+      "na": "N/A"
+    },
+    "currency": {
+      "dkk": "DKK"
+    },
+    "delimiters": {
+      "and": " & "
+    },
+    "units": {
+      "millionAbbrev": "mio.",
+      "days": "{{count}} dage",
+      "days_one": "{{count}} dag",
+      "days_other": "{{count}} dage"
+    },
+    "companies": {
+      "tsl": {
+        "short": "TSL"
+      }
+    }
+  },
+  "dashboard": {
+    "common": {
+      "noDrivers": "Ingen drivere identificeret",
+      "drivers": {
+        "legalCompliance": "Jura & compliance",
+        "governance": "Governance",
+        "financial": "Likviditet",
+        "sector": "Sektor & drift",
+        "reputation": "Reputationsrisiko"
+      }
+    },
+    "personal": {
+      "caseHeader": "Case: Ümit Cetin (Privatprofil)",
+      "cards": {
+        "totalRisk": {
+          "title": "Samlet personlig risiko",
+          "description": "{{level}} · Drivere: {{drivers}}"
+        },
+        "legalRisk": {
+          "title": "Juridisk risiko",
+          "description": "Potentiel personlig hæftelse"
+        },
+        "financialRisk": {
+          "title": "Finansiel eksponering",
+          "description": "Afhængighed af TSL-koncernen"
+        },
+        "governanceRisk": {
+          "title": "Governance-risiko",
+          "description": "UBO-kontrol, ingen intern kontrol"
+        }
+      }
+    },
+    "corporate": {
+      "caseHeader": "Case: TS Logistik ApS (Erhverv)",
+      "cards": {
+        "totalRisk": {
+          "title": "Samlet risikoniveau",
+          "description": "{{level}} · Drivere: {{drivers}}"
+        },
+        "netResult": {
+          "title": "Årets resultat ({{year}})"
+        },
+        "equity": {
+          "title": "Egenkapital & soliditet",
+          "description": "Soliditet: {{solidity}}%"
+        },
+        "liquidity": {
+          "title": "Likviditet (cash) & DSO",
+          "description": "Akut risiko · DSO: ~{{dso}}"
+        }
+      }
+    }
+  },
+  "business": {
+    "heading": {
+      "eyebrow": "Erhverv",
+      "title": "Erhvervsdashboard",
+      "subtitle": "KPI'er, risici og trendindikatorer"
+    },
+    "placeholder": {
+      "kpiCards": "KPI-kort (placeholder)",
+      "filters": "Filtre (placeholder)",
+      "trendChart": "Trend-chart (placeholder)",
+      "tables": "Tabeller (placeholder)"
+    }
+  },
+  "person": {
+    "profile": {
+      "heading": "{{name}} - Profil & netværk",
+      "labels": {
+        "primaryRole": "Primær rolle & ejerstatus",
+        "address": "Nuværende adresse",
+        "addressHistory": "Adressehistorik",
+        "pepStatus": "PEP / Sanktioner",
+        "socmint": "SOCMINT-profil"
+      }
+    },
+    "network": {
+      "heading": "Selskabsnetværk (interaktivt)",
+      "tooltip": {
+        "cvr": "CVR: {{cvr}}",
+        "personFallback": "Person"
+      }
+    },
+    "relationships": {
+      "heading": "Nøglemodparter & relationer",
+      "table": {
+        "entity": "Entitet",
+        "role": "Relation/rolle",
+        "riskScore": "Risikoscore"
+      }
+    }
+  },
+  "companies": {
+    "heading": {
+      "structure": "Ejerskabsstruktur",
+      "overview": "Selskabsoversigt"
+    },
+    "table": {
+      "company": "Selskab",
+      "cvr": "CVR",
+      "role": "Rolle",
+      "status": "Status",
+      "mobile": {
+        "cvrLabel": "CVR:"
+      }
+    },
+    "status": {
+      "active": "Aktiv",
+      "historical": "Historisk"
+    },
+    "modal": {
+      "close": "Luk",
+      "noteHeading": "Note",
+      "fields": {
+        "cvr": "CVR-nummer",
+        "status": "Status",
+        "established": "Etableret",
+        "industryCode": "Branchekode",
+        "director": "Direktør",
+        "owner": "Ejer",
+        "auditor": "Revisor"
+      }
+    },
+    "ownership": {
+      "historicalHeading": "Historiske / perifere enheder"
+    }
+  },
+  "actions": {
+    "heading": {
+      "title": "Handlingsplan · status & overblik"
+    },
+    "kpis": {
+      "required": "Påkrævede handlinger",
+      "highPriority": "Åbne højprioritets handlinger",
+      "completion": "Gennemførsel"
+    },
+    "filters": {
+      "label": "Filter:",
+      "options": {
+        "all": "Alle",
+        "required": "Påkrævet"
+      }
+    },
+    "sort": {
+      "label": "Sortér efter:",
+      "options": {
+        "priority": "Prioritet",
+        "category": "Kategori",
+        "horizon": "Tidshorisont"
+      }
+    },
+    "categories": {
+      "legal": "Juridisk",
+      "intelligence": "Efterretning",
+      "financial": "Finansiel",
+      "commercial": "Kommerciel",
+      "regulatory": "Regulatorisk",
+      "governance": "Governance",
+      "strategic": "Strategisk"
+    },
+    "priorities": {
+      "required": "Påkrævet",
+      "high": "Høj",
+      "medium": "Middel"
+    },
+    "horizons": {
+      "short": "0-30 dage",
+      "mid": "1-3 mdr",
+      "long": "3-12 mdr"
+    },
+    "views": {
+      "cashflow": "Cashflow",
+      "risk": "Risk",
+      "timeline": "Tidslinje",
+      "hypotheses": "Hypoteser",
+      "companies": "Selskaber",
+      "person": "Person",
+      "sector": "Sektor",
+      "financials": "Finansiel"
+    },
+    "card": {
+      "statusHeading": "Status & tidshorisont",
+      "statusOptions": {
+        "notStarted": "Ikke startet",
+        "inProgress": "I gang",
+        "completed": "Afsluttet"
+      },
+      "evidenceHeading": "Forventet evidens:",
+      "viewSource": "Vis kilde",
+      "relationsHeading": "Relationer",
+      "copy": {
+        "priority": "Prioritet",
+        "category": "Kategori",
+        "source": "Kilde",
+        "noSource": "Ingen",
+        "button": "Kopier",
+        "copied": "Kopieret!"
+      }
+    },
+    "emptyState": {
+      "noMatches": "Ingen handlinger matcher de valgte filtre."
+    }
+  },
+  "financials": {
+    "units": {
+      "thousandAbbrev": "t."
+    },
+    "table": {
+      "title": "Årlige nøgletal (TS Logistik ApS)",
+      "headers": {
+        "year": "År",
+        "grossProfit": "Bruttofortjeneste",
+        "ebit": "EBIT",
+        "netResult": "Årets resultat",
+        "equity": "Egenkapital",
+        "staff": "Ansatte",
+        "ebitMargin": "EBIT-margin",
+        "netMargin": "Netto-margin",
+        "resultPerEmployee": "Resultat/ansat"
+      }
+    },
+    "charts": {
+      "sectionTitle": "Grafisk udvikling",
+      "result": {
+        "title": "Resultatudvikling",
+        "series": {
+          "grossProfit": "Bruttofortjeneste",
+          "ebit": "EBIT",
+          "netResult": "Nettoresultat"
+        }
+      },
+      "equity": {
+        "title": "Kapital & soliditet",
+        "series": {
+          "equity": "Egenkapital",
+          "solidity": "Soliditet"
+        }
+      },
+      "productivity": {
+        "title": "Produktivitet (resultat pr. medarbejder)",
+        "series": {
+          "profitPerEmployee": "Resultat pr. medarbejder"
+        }
+      }
+    },
+    "analysis": {
+      "title": "Finansiel kommentar 2024",
+      "points": {
+        "marginPressure": {
+          "title": "Pres på indtjening:",
+          "body": "EBIT- og netto-margin er faldende sammenlignet med 2022-23, hvilket indikerer stigende omkostninger eller prispres."
+        },
+        "productivityDrop": {
+          "title": "Halveret produktivitet:",
+          "body": "Nettoresultat pr. medarbejder er faldet fra ~170 t.kr. i 2023 til ~85 t.kr. i 2024, på trods af flere ansatte."
+        },
+        "capitalization": {
+          "title": "Stærk kapitalisering:",
+          "body": "Egenkapitalen er voksende og soliditeten er høj (>55%), hvilket giver en buffer mod tab."
+        },
+        "liquidityRisk": {
+          "title": "Likviditetsrisiko:",
+          "body": "Den stærke balance dækker over en kritisk likviditetskrise. Se \"Cashflow & DSO\" for detaljeret analyse."
+        }
+      }
+    }
+  },
+  "cashflow": {
+    "heading": {
+      "title": "Likviditet og risikostatus (basisscenarie)"
+    },
+    "kpiCards": {
+      "cashOnHand": {
+        "title": "Likvid beholdning",
+        "note": "Reelt ingen kontant buffer."
+      },
+      "internalReceivables": {
+        "title": "Mellemværender i koncernen",
+        "note": "Kapital fastlåst internt i koncernen."
+      },
+      "dso": {
+        "title": "DSO 2024",
+        "note": "Ekstremt lange debitor-dage."
+      },
+      "taxClaim": {
+        "title": "Potentiel skattesag",
+        "note": "Direkte trussel mod likviditeten."
+      }
+    },
+    "units": {
+      "thousandAbbrev": "t."
+    },
+    "scenarios": {
+      "heading": "Scenarieanalyse",
+      "tabs": {
+        "base": "Basisscenarie",
+        "taxClaim": "Scenarie A: Skattesag fastholdes",
+        "repayment": "Scenarie B: Lån tilbagebetales"
+      },
+      "summary": {
+        "base": {
+          "title": "Basisscenarie",
+          "description": "Nuværende position baseret på seneste regnskab. Viser det akutte likviditetspres og høj kapitalbinding."
+        },
+        "taxClaim": {
+          "title": "Scenarie A: Skattesag fastholdes",
+          "description": "Værste tilfælde hvor egenkapitalen forsvinder og kassebeholdningen bliver kraftigt negativ. Insolvens indtræffer straks."
+        },
+        "repayment": {
+          "title": "Scenarie B: 50 % lån tilbagebetales",
+          "description": "Bedste tilfælde hvor delvis tilbagebetaling af aktionærlån genskaber likviditet og reducerer DSO."
+        }
+      },
+      "cards": {
+        "equity": "Justeret egenkapital",
+        "cash": "Justeret likviditet",
+        "dso": "Justeret DSO"
+      }
+    },
+    "dsoChart": {
+      "title": "DSO-udvikling (dage)",
+      "tooltipValue": "{{value}} dage",
+      "series": "DSO"
+    },
+    "receivablesTable": {
+      "title": "Sammensætning af tilgodehavender",
+      "columns": {
+        "item": "Post",
+        "year": "{{year}} ({{currency}})"
+      },
+      "rows": {
+        "internal": "Heraf internt",
+        "external": "Heraf eksternt",
+        "total": "Tilgodehavender i alt"
+      },
+      "noData": "Utilstrækkelige data om tilgodehavender."
+    },
+    "analysis": {
+      "title": "Likviditetsnote og konklusion",
+      "points": {
+        "acuteRisk": {
+          "title": "Akut risiko:",
+          "body": "Virksomheden er driftsinsolvent med kun 31 DKK i kassen. Driften er afhængig af leverandørkredit og indbetalinger."
+        },
+        "capitalDrain": {
+          "title": "Kapitaldræn:",
+          "body": "En voksende balance på 12,4 mio. DKK er bundet i interne lån og dræner driften for likviditet."
+        },
+        "extremeDso": {
+          "title": "Ekstrem DSO:",
+          "body": "DSO på ca. 358 dage viser, at mellemværenderne fungerer som langfristet finansiering i stedet for arbejdskapital."
+        },
+        "combinedRisk": {
+          "title": "Kombineret trussel:",
+          "body": "Den verserende skattesag på 4 mio. DKK kombineret med nul likviditet er en eksistensrisiko (se Hypoteser H3/H4 og risikomatrixen)."
+        }
+      }
+    }
+  },
+  "sector": {
+    "comparison": {
+      "heading": "Nøgletal vs. sektor (2024)",
+      "columns": {
+        "metric": "Nøgletal",
+        "company": "TS Logistik",
+        "sector": "Sektorgennemsnit",
+        "highPerformer": "Top performer"
+      },
+      "metrics": {
+        "ebitMargin": "EBIT-margin",
+        "equityRatio": "Egenkapitalandel",
+        "profitPerEmployee": "Resultat pr. medarbejder"
+      },
+      "valueSuffix": {
+        "thousand": "t. DKK"
+      }
+    },
+    "chart": {
+      "heading": "EBIT-margin over tid - TSL vs. sektor",
+      "series": {
+        "company": "TS Logistik",
+        "sector": "Sektorgennemsnit"
+      }
+    },
+    "drivers": {
+      "heading": "Strategiske drivere og sektorpres",
+      "riskLabel": "Risiko",
+      "impactPrefix": "Effekt for {{company}}:",
+      "items": {
+        "driver1": {
+          "title": "Chaufførmangel og lønpres",
+          "industry": "Branchen mangler ca. 10.000 chauffører. Lønninger stiger og kampen om kvalificeret personale intensiveres.",
+          "impact": "Personaleomkostningerne er steget og produktiviteten er faldet. TSL er direkte eksponeret."
+        },
+        "driver2": {
+          "title": "Stigende driftsomkostninger",
+          "industry": "Vejafgifter, brændstof og andre driftsomkostninger stiger. Selskaber kan kun overvælte dele heraf på kunderne.",
+          "impact": "De faldende marginer i 2023-24 bekræfter, at TSL er under pres fra højere omkostninger."
+        },
+        "driver3": {
+          "title": "Overkapacitet og prispres",
+          "industry": "En afmatning i økonomien reducerer efterspørgslen, hvilket giver overkapacitet og hård priskonkurrence.",
+          "impact": "Som formentlig captive leverandør er TSL meget eksponeret mod prispres fra få store kunder."
+        },
+        "driver4": {
+          "title": "Digitalisering",
+          "industry": "Kunder forventer realtidsopdateringer og digital booking. Manglende investeringer er en konkurrenceulempe.",
+          "impact": "TSL's næsten usynlige digitale profil antyder begrænsede kundevendte investeringer og øger risikoen på sigt."
+        },
+        "driver5": {
+          "title": "Bæredygtighed",
+          "industry": "Krav om CO2-reduktion stiger, men skepsis og begrænset udbud af grønne flåder forsinker adoption.",
+          "impact": "TSL har sandsynligvis ikke investeret i grønne aktiver og bliver mindre attraktiv for kunder med bæredygtighedsfokus."
+        }
+      }
+    },
+    "macroRisks": {
+      "heading": "Makro-risici for sektoren",
+      "riskLabel": "Risiko",
+      "emptyState": "Ingen makro-risici registreret for denne profil.",
+      "items": {
+        "risk1": {
+          "title": "Markeds- og prispres",
+          "description": "Hård konkurrence, kundernes marginpres og konsolidering i transport og automotive."
+        },
+        "risk2": {
+          "title": "Regulatoriske ændringer",
+          "description": "Ny kilometerafgift og ændringer i afgifter/regler skaber betydelig usikkerhed."
+        },
+        "risk3": {
+          "title": "Makroøkonomisk klima",
+          "description": "Højere renter og inflation påvirker finansieringsomkostninger og efterspørgsel i begge sektorer."
+        },
+        "risk4": {
+          "title": "Teknologisk disruption",
+          "description": "Digitale krav i transport og skift mod elbiler og online salg kræver løbende investeringer."
+        }
+      }
+    },
+    "analysis": {
+      "heading": "Analytisk konklusion",
+      "points": {
+        "overperformance": {
+          "title": "Historisk overperformance:",
+          "body": "TSL har historisk leveret højere marginer og soliditet, men fordelen er under erosion (2023-24)."
+        },
+        "productivity": {
+          "title": "Faldende produktivitet:",
+          "body": "Resultat pr. medarbejder er under sektorens forventning og understøtter Hypotese H2 om overkapacitet."
+        },
+        "balance": {
+          "title": "Stærk balance, svag likviditet:",
+          "body": "Høj soliditet giver en buffer, men står i kontrast til den akutte likviditetskrise - en atypisk risikoprofil."
+        },
+        "model": {
+          "title": "Sårbar forretningsmodel:",
+          "body": "Afhængigheden af få store 'captive' kunder gør selskabet udsat for sektorens pris- og omkostningspres."
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "heading": "Strategiske scenarier 2025-2026",
+    "intro": "Baseret på Final Report v3.0 viser fire primære scenarier udfaldsrummet fra bedste til værste situation og sætter den strategiske handlingsplan.",
+    "card": {
+      "assumptions": "Nøgleantagelser",
+      "outcome": "Forventet udfald",
+      "labels": {
+        "probability": "Sandsynlighed",
+        "impact": "Indvirkning"
+      },
+      "analyzeCta": "Kør AI-analyse"
+    },
+    "probability": {
+      "low": "Lav",
+      "medium": "Middel",
+      "high": "Høj",
+      "extreme": "Ekstrem"
+    },
+    "impact": {
+      "low": "Lav",
+      "medium": "Middel",
+      "high": "Høj",
+      "extreme": "Ekstrem"
+    },
+    "items": {
+      "best": {
+        "name": "Best case: Kontrolleret genrejsning",
+        "description": "Virksomheden navigerer krisen ved at løse skattesagen fordelagtigt og genopbygge likviditeten. Driften stabiliseres på et stærkere fundament.",
+        "assumptions": [
+          "Skattesagen vindes eller forliges for <1 mio. DKK.",
+          "Mellemværender tilbagebetales delvist (~5 mio. DKK).",
+          "Likviditetsfacilitet etableres.",
+          "Omsætning stabil; marginer forbedres let."
+        ],
+        "expectedOutcome": "Overlevelse og stabilisering. Risiko falder til 'Moderat'."
+      },
+      "base": {
+        "name": "Basisscenarie: Moderat krise og tilpasning",
+        "description": "Virksomheden overlever men svækket. Skattesagen tabes delvist og markedspræs lægger pres på omkostningerne.",
+        "assumptions": [
+          "Skattesagen ender med tab på 2-4 mio. DKK.",
+          "Likviditet skaffes via salg af aktiv (fx ejendom).",
+          "Omsætning falder 10-15 %.",
+          "Medarbejderstab reduceres for at beskytte marginer."
+        ],
+        "expectedOutcome": "Overlevelse med ar. Risiko forbliver 'Høj', men insolvens undgås."
+      },
+      "worst": {
+        "name": "Worst case: Alvorlig krise / kollaps",
+        "description": "En perfekt storm af negative hændelser udløser en ukontrollerbar krise og sandsynlig konkurs.",
+        "assumptions": [
+          "Skattesagen tabes fuldt ud (~4 mio. DKK + bøde).",
+          "Stor kunde tabes; omsætning falder >20 %.",
+          "Dubai-projekt fejler og kapital tabes.",
+          "Bank/kreditorer mister tillid."
+        ],
+        "expectedOutcome": "Rekonstruktion eller konkurs inden for 12-18 måneder."
+      },
+      "exit": {
+        "name": "Strategisk exit: Positiv variant",
+        "description": "Ümit Cetin sælger eller fusionerer TSL proaktivt for at realisere værdi, reducere personlig risiko og fokusere nye investeringer.",
+        "assumptions": [
+          "Driften stabiliseres nok til at tiltrække køber.",
+          "Industriel køber eller PE-fond overtager driften.",
+          "Ümit realiserer gevinst og exiter delvist eller helt."
+        ],
+        "expectedOutcome": "Værdien realiseres og personlig risiko neutraliseres. Kontrolleret exit."
+      }
+    },
+    "ai": {
+      "panelTitle": "AI-analyse: {{name}}",
+      "loading": "Genererer analyse...",
+      "linkedActions": "Relevante handlinger",
+      "error": "Der opstod en uventet fejl under AI-analysen."
+    }
+  },
+  "timeline": {
+    "heading": "Kronologisk tidslinje",
+    "filters": {
+      "all": "Alle",
+      "structure": "Struktur",
+      "financial": "Finansiel",
+      "address": "Adresse",
+      "operational": "Operationel",
+      "compliance": "Skat / compliance"
+    },
+    "yearSummary_one": "({{count}} hændelse)",
+    "yearSummary_other": "({{count}} hændelser)",
+    "noEvents": "Ingen hændelser matcher det valgte filter.",
+    "eventTypes": {
+      "establishment": "Etablering",
+      "accounts": "Regnskaber",
+      "structure": "Struktur",
+      "financial": "Finansiel",
+      "operational": "Operationel",
+      "address": "Adresse",
+      "compliance": "Skat / compliance"
+    },
+    "sourceLabel": "Kilde",
+    "viewSource": "Vis kildedokument",
+    "sourceTooltip": "Åbn kildedokument ({{sourceId}})"
+  },
+  "risk": {
+    "heading": "Risikooversigt",
+    "kpi": {
+      "total": {
+        "title": "Samlet risikoscore"
+      },
+      "primaryDrivers": {
+        "title": "Primære risikodrivere"
+      },
+      "criticalCategories": {
+        "title": "Kritiske kategorier",
+        "note": "Kategorier med høj eller kritisk risiko"
+      }
+    },
+    "levels": {
+      "critical": "Kritisk",
+      "high": "Høj",
+      "medium": "Moderat",
+      "low": "Lav"
+    },
+    "heatmap": {
+      "heading": "Detaljeret risikomatrix",
+      "columns": {
+        "category": "Kategori",
+        "likelihoodImpact": "S/I",
+        "score": "Score",
+        "level": "Niveau",
+        "justification": "Begrundelse",
+        "relations": "Relationer"
+      },
+      "likelihoodLabel": "S: {{value}}/5",
+      "impactLabel": "I: {{value}}/5",
+      "sections": {
+        "hypotheses": "Hypoteser",
+        "views": "Visninger",
+        "actions": "Handlinger"
+      },
+      "tooltip": "Skift scenarier for at teste robusthed under forskellige antagelser.",
+      "categories": {
+        "financial": "Finansiel",
+        "legalCompliance": "Jura / compliance",
+        "governance": "Governance",
+        "socmintReputation": "SOCMINT / omdømme",
+        "sectorOperations": "Sektor / drift"
+      },
+      "justifications": {
+        "financial": "Akut likviditet (31 DKK i kassen) og 12,4 mio. DKK bundet i interne lån. En Dubai-eksponering på 4-4,5 mio. DKK forstærker risikoen.",
+        "legalCompliance": "Åben skattesag (4 mio. DKK) og usikkerhed om transporttilladelser truer driftslicensen. Nye skatter/regler øger presset.",
+        "governance": "Strukturelt kapitaldræn til holdingselskab. Store insiderlån uden tydelige armslængde-vilkår; eneejer fjerner interne kontroller.",
+        "socmintReputation": "Ingen negativ presse. Bevidst lav digital profil; omdømmerisiko begrænset men kan eksplodere ved konkurs.",
+        "sectorOperations": "Faldende marginer og halveret resultat pr. medarbejder viser prispres og ineffektivitet. Den captive model øger sårbarheden."
+      }
+    },
+    "primaryDrivers": {
+      "financial": "Likviditet",
+      "legalCompliance": "Skat og compliance",
+      "governance": "Governance",
+      "socmintReputation": "Omdømme",
+      "sectorOperations": "Sektor / drift"
+    },
+    "scenarios": {
+      "heading": "Vurdering",
+      "balanced": {
+        "label": "Balanceret vurdering",
+        "level": "Kritisk",
+        "description": "Anerkender stærk egenkapital som buffer men vurderer kapitaldræn og skattesag som alvorlige trusler der kræver handling nu."
+      },
+      "eddStrict": {
+        "label": "EDD v1 (stram)",
+        "level": "Høj (stram vurdering)",
+        "description": "Fokuserer på driftsinsolvens (31 DKK i kassen) og den potentielt fatale skattesag. Egenkapitalen er illikvide mellemværender."
+      },
+      "stress": {
+        "label": "Stress-scenarie 2025",
+        "level": "Kritisk (stress-test)",
+        "description": "Antager at skattesagen tabes og en hovedkunde forsvinder. Udløser øjeblikkelig konkurs og sandsynlig dominoeffekt i koncernen."
+      }
+    }
+  },
+  "personal": {
+    "heading": {
+      "eyebrow": "Privat",
+      "title": "Privat dashboard",
+      "subtitle": "Personlig økonomi & noter"
+    },
+    "placeholder": {
+      "kpis": "Personlige KPI'er (placeholder)",
+      "filters": "Filtre (placeholder)",
+      "savings": "Opsparing og lån (placeholder)",
+      "assets": "Aktiver & investeringer (placeholder)"
+    }
+  },
+  "counterparties": {
+    "heading": "Modparter & relationer ({{subject}})",
+    "table": {
+      "headers": {
+        "counterparty": "Modpart",
+        "typeRisk": "Type / risiko",
+        "description": "Beskrivelse & relation",
+        "links": "Links"
+      }
+    },
+    "types": {
+      "regulatory": "Regulatorisk",
+      "advisor": "Rådgiver",
+      "customer": "Kunde",
+      "financial": "Finansiel",
+      "partner": "Partner"
+    },
+    "risk": {
+      "high": "Høj",
+      "medium": "Middel",
+      "low": "Lav"
+    },
+    "labels": {
+      "riskLevel": "Risiko: {{level}}"
+    },
+    "links": {
+      "viewRisks": "Se relaterede risici",
+      "viewHypotheses": "Se relaterede hypoteser"
+    }
+  },
+  "hypotheses": {
+    "heading": {
+      "title": "Hypotese-dashboard"
+    },
+    "filters": {
+      "all": "Alle"
+    },
+    "status": {
+      "confirmed": "Bekræftet",
+      "open": "Åben",
+      "rejected": "Afkræftet"
+    },
+    "impact": {
+      "high": "Høj påvirkning",
+      "medium": "Moderat påvirkning",
+      "low": "Lav påvirkning"
+    },
+    "categories": {
+      "financial": "Finansiel",
+      "liquidity": "Likviditet",
+      "taxCompliance": "Skat/Compliance",
+      "operational": "Operationel",
+      "strategic": "Strategisk"
+    },
+    "evidence": {
+      "indication": "Indikation",
+      "strong": "Stærk evidens"
+    },
+    "card": {
+      "description": "Beskrivelse",
+      "details": "Detaljer",
+      "notesHeading": "Noter & relationer"
+    },
+    "views": {
+      "dashboard": "Dashboard",
+      "executive": "Executive summary",
+      "person": "Person & netværk",
+      "companies": "Selskaber",
+      "financials": "Financials",
+      "hypotheses": "Hypoteser",
+      "cashflow": "Cashflow & DSO",
+      "sector": "Sektoranalyse",
+      "timeline": "Tidslinje",
+      "risk": "Risk heatmap",
+      "actions": "Handlingspunkter",
+      "counterparties": "Modparter",
+      "scenarios": "Scenarier",
+      "business": "Erhverv",
+      "personal": "Privat",
+      "savedViews": "Gemte visninger"
+    }
+  },
+  "executive": {
+    "eyebrow": "Executive Resumé",
+    "title": "Executive Resumé",
+    "subtitle": "Kondenseret status for økonomi, risici og handlinger — klar til bestyrelsen.",
+    "export": "Eksporter PDF",
+    "exporting": "Eksporterer…",
+    "openTimeline": "Åbn tidslinje",
+    "card": {
+      "financial": {
+        "title": "Finansiel oversigt",
+        "subtitle": "Vigtige KPI'er 2021-2024"
+      },
+      "actions": {
+        "title": "Handlinger og tidslinje",
+        "subtitle": "Næste 30 dage og kritiske hændelser"
+      }
+    },
+    "metric": {
+      "grossProfit": "Bruttofortjeneste",
+      "profitAfterTax": "Resultat efter skat",
+      "dsoTag": "DSO {{value}} {{days}}",
+      "yoyGrossProfit": "YoY bruttofortjeneste",
+      "yoyProfitAfterTax": "YoY resultat efter skat",
+      "liquidity": "Likviditet",
+      "dso": "DSO",
+      "intercompanyLoans": "Konsernlån"
+    },
+    "vsLastYear": "vs sidste år",
+    "chart": {
+      "grossTrend": "Bruttofortjeneste trend",
+      "profitTrend": "Resultat efter skat trend"
+    },
+    "placeholder": {
+      "unavailable": "—"
+    },
+    "units": {
+      "million": "{{value}} mio. kr.",
+      "days_one": "{{count}} dag",
+      "days_other": "{{count}} dage"
+    },
+    "criticalObservations": "Kritiske observationer",
+    "risk": {
+      "title": "Risiko & compliance",
+      "subtitle": "Myndigheder og governance",
+      "taxCase": "Skattesag",
+      "exposure": "Eksponering",
+      "monitor": "overvåg hensættelser",
+      "noActiveCase": "Ingen aktiv skattesag registreret.",
+      "complianceNote": "Overholdelsesnote",
+      "category": {
+        "legalCompliance": "Legal & Compliance",
+        "governance": "Governance",
+        "sectorOperations": "Sektor & Drift",
+        "financial": "Finansiel",
+        "reputation": "Reputationsrisiko"
+      },
+      "level": {
+        "critical": "Kritisk",
+        "high": "Høj",
+        "medium": "Moderat",
+        "low": "Lav",
+        "na": "N/A"
+      }
+    },
+    "redFlags": "Røde flag",
+    "tag": {
+      "redFlags": "Røde flag"
+    },
+    "alert": {
+      "liquidity": {
+        "label": "Likviditet",
+        "description": "Kontantbeholdning ved seneste årsrapport"
+      },
+      "dso": {
+        "label": "DSO",
+        "description": "Gennemsnitlige debitor-dage i seneste periode"
+      },
+      "intercompany": {
+        "label": "Intercompany-lån",
+        "description": "Tilgodehavender hos nærtstående parter"
+      }
+    },
+    "priority": {
+      "required": "Påkrævet",
+      "high": "Høj",
+      "medium": "Middel"
+    },
+    "horizon": {
+      "0_30": "0-30 dage",
+      "1_3": "1-3 mdr",
+      "3_12": "3-12 mdr"
+    },
+    "actions": {
+      "viewActionables": "Se handlingspunkter"
+    },
+    "upcomingDeadlines": "Kommende deadlines",
+    "noUpcomingDeadlines": "Ingen deadlines registreret inden for de næste 30 dage.",
+    "action": {
+      "responsibility": "Ansvar",
+      "horizon": "Horisont"
+    },
+    "pdf": {
+      "status": "Status {{value}}",
+      "observations": "Observationer",
+      "macroAnalysis": "Makroanalyse",
+      "noneRegistered": "Ingen registreret",
+      "taxExposure": "Skattesag eksponering",
+      "weightedRisks": "Vægtede risici",
+      "actionRadar": "Action radar",
+      "deadlines30": "Deadlines (30 dage)",
+      "nextMilestones60": "Næste milepæle (60 dage)",
+      "pageTitle": "Executive Intelligence Brief",
+      "subjectLine": "Subjekt · {{subject}}",
+      "generatedLine": "Genereret · {{date}}",
+      "footer": {
+        "meta": "{{date}} · {{subject}}",
+        "page": "Side {{current}}/{{total}}"
+      },
+      "filename": "Executive-Resumé-{{subject}}-{{date}}.pdf"
+    },
+    "notSpecified": "Ikke angivet",
+    "notApplicable": "Ikke relevant",
+    "criticalEvents": "Kritiske hændelser",
+    "boardActionables": "Bestyrelses-handlingspunkter",
+    "nextKeyEvents": "Næste vigtige hændelser"
+  }
 }

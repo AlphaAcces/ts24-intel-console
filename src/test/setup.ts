@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import '../i18n';
 
 // Polyfill ResizeObserver for tests (used by Recharts ResponsiveContainer)
 class ResizeObserver {
@@ -7,5 +8,7 @@ class ResizeObserver {
 	disconnect() {}
 }
 
-// @ts-ignore
-global.ResizeObserver = global.ResizeObserver || ResizeObserver;
+const globalWithResizeObserver = globalThis as typeof globalThis & { ResizeObserver?: typeof ResizeObserver };
+if (!globalWithResizeObserver.ResizeObserver) {
+	globalWithResizeObserver.ResizeObserver = ResizeObserver;
+}

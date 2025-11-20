@@ -8,7 +8,7 @@ export const riskHeatmapData: RiskScore[] = [
     riskLevel: 'KRITISK',
     likelihood: 5,
     impact: 5,
-    justification: 'Akut illikviditet (31 DKK i kasse) og ekstrem kapitalbinding (12,4 mio. kr. internt). Anslået eksponering på 4-4,5 mio. DKK i et uafklaret Dubai-projekt med ukendt struktur og modparter forværrer den finansielle risiko.',
+    justification: 'risk:heatmap.justifications.financial',
     linkedHypotheses: ['H3', 'H4'],
     linkedViews: ['cashflow', 'financials'],
     linkedActions: ['A03', 'A04', 'A05'],
@@ -20,7 +20,7 @@ export const riskHeatmapData: RiskScore[] = [
     riskLevel: 'HØJ',
     likelihood: 4,
     impact: 5,
-    justification: 'Verserende skattesag (4 mio. kr.) og kritisk usikkerhed om vognmandstilladelser udgør en "license to operate"-risiko. Risikoen forstærkes af makroøkonomiske pres som ny km-afgift og skærpede branchekrav.',
+    justification: 'risk:heatmap.justifications.legalCompliance',
     linkedHypotheses: ['H4'],
     linkedViews: ['timeline', 'actions'],
     linkedActions: ['A01', 'A02'],
@@ -32,7 +32,7 @@ export const riskHeatmapData: RiskScore[] = [
     riskLevel: 'HØJ',
     likelihood: 5,
     impact: 4,
-    justification: 'Strukturel kapitaldræn fra drift til holding. Store lån til ledelsen og koncernforbundne selskaber, der ikke synes at være på armslængdevilkår. 100% eneejerskab eliminerer intern kontrol.',
+    justification: 'risk:heatmap.justifications.governance',
     linkedHypotheses: ['H5'],
     linkedViews: ['companies', 'person', 'cashflow'],
     linkedActions: ['A03', 'A15'],
@@ -44,7 +44,7 @@ export const riskHeatmapData: RiskScore[] = [
     riskLevel: 'LAV',
     likelihood: 2,
     impact: 2,
-    justification: 'Ingen negativ presse. Bevidst lav digital profil ("usynlig") er en operationel strategi, ikke en direkte reputationsrisiko. Risikoen er begrænset, men kan eskalere ved en konkurssag.',
+    justification: 'risk:heatmap.justifications.socmintReputation',
     linkedHypotheses: [],
     linkedViews: ['person'],
     linkedActions: [],
@@ -56,7 +56,7 @@ export const riskHeatmapData: RiskScore[] = [
     riskLevel: 'MODERAT',
     likelihood: 4,
     impact: 3,
-    justification: 'Markant faldende marginer og halveret nettoindtjening pr. medarbejder indikerer stort pres på effektivitet og prissætning. "Captive" B2B-model øger sårbarhed.',
+    justification: 'risk:heatmap.justifications.sectorOperations',
     linkedHypotheses: ['H2', 'H6'],
     linkedViews: ['sector', 'financials'],
     linkedActions: [],
@@ -72,11 +72,11 @@ export const totalRiskScore: TotalRiskScore = {
 
 
 export const relationRiskData: RelationRisk[] = [
-    { 
-      entity: 'Dubai-projekt (Ramo/Adel)', 
-      type: 'International Investering', 
-      role: 'Ukendt struktur / højrisiko-projekt', 
-      riskScore: 75, 
+    {
+      entity: 'Dubai-projekt (Ramo/Adel)',
+      type: 'International Investering',
+      role: 'Ukendt struktur / højrisiko-projekt',
+      riskScore: 75,
       reason: 'Transnational investering på anslået 4-4,5 mio. DKK i en fjern jurisdiktion med ukendte partnere (Ramo/Adel). Markant AML-risiko, lav transparens og risiko for tab af midler. Skaber ny, uafklaret forbindelse mellem TS og Husam/Bilgruppen-netværket.',
       sourceId: 'sprint_2_5_rapport'
     },
