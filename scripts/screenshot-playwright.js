@@ -1,67 +1,78 @@
 const { chromium } = require('playwright');
+const fs = require('fs');
 
 (async () => {
+  // Ensure screenshots directory exists
+  if (!fs.existsSync('screenshots')) {
+    fs.mkdirSync('screenshots');
+  }
+
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   const base = process.env.BASE_URL || 'http://localhost:5173';
   console.log('Opening', base);
-  await page.goto(base, { waitUntil: 'networkidle' });
 
-  // Wait for TopBar
-  await page.waitForSelector('header');
-
-  // Try to open saved views (PreferencesPanel)
+  // Try to load the app and wait until the app root is ready
   try {
-    // Click the button that toggles saved views. If not visible, try to open menu first.
-    const btn = await page.$('button:has-text("Gemte visninger")');
-    if (btn) {
-      await btn.click();
+    await page.goto(base, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#app', { timeout: 20000 });
+  } catch (err) {
+    console.warn('Initial navigation or selector wait failed, trying fallback goto:', err && err.message);
+    await page.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
+    try {
+      await page.waitForSelector('#app', { timeout: 20000 });
+    } catch (e) {
+      console.warn('Fallback waitForSelector failed:', e && e.message);
+    }
+  }
+
+  // Small pause to let client-side rendering settle
+  await page.waitForTimeout(1500);
+
+  // Try opening Preferences / Saved views safely
+  try {
+    const prefBtn = await page.$('button:has-text("Gemte visninger")');
+    if (prefBtn) {
+      await prefBtn.click();
       await page.waitForTimeout(300);
     }
   } catch (e) {
-    console.warn('Could not open saved views:', e.message);
+    console.warn('Could not open saved views:', e && e.message);
   }
 
   // Screenshot TopBar area
   const header = await page.$('header');
   if (header) {
-    await header.screenshot({ path: 'screenshot-topbar.png' });
-    console.log('Wrote screenshot-topbar.png');
+    await header.screenshot({ path: 'screenshots/screenshot-topbar.png' });
+    console.log('Wrote screenshots/screenshot-topbar.png');
   }
 
-  // Navigate to Business -> Financials to produce nested breadcrumbs
+  // Deterministic dev navigation via exposed global helper
   try {
-    // Click SideNav Business button (label 'Erhverv')
-    const businessBtn = await page.$('button:has-text("Erhverv")');
-    if (businessBtn) {
-      await businessBtn.click();
-      await page.waitForTimeout(500);
-    }
-
-    // Click Financials in nav
-    const finBtn = await page.$('button:has-text("Financials")');
-    if (finBtn) {
-      await finBtn.click();
-      await page.waitForTimeout(500);
-    }
-
-    // Attempt to simulate deep breadcrumb by executing navigateTo if exposed
     await page.evaluate(() => {
-      // If your app exposes a global navigation helper, uncomment and adapt below
-      // window.__navigateTo?.('financials', { breadcrumbs: ['Erhverv', 'Financials', 'KPI', 'Report'] });
+      if (window.__navigateTo) {
+        // Use a stable breadcrumb for the business view
+        // Note: only available when the app exposes window.__navigateTo (dev only)
+        window.__navigateTo('business', { breadcrumbs: ['Dashboard', 'Erhverv'] });
+      }
     });
+  } catch (e) {
+    console.warn('Could not call __navigateTo:', e && e.message);
+  }
 
-    // Wait and screenshot breadcrumbs area
+  // Wait a bit then capture breadcrumbs area (or fallback)
+  await page.waitForTimeout(1500);
+  try {
     const crumbs = await page.$('nav[aria-label="Breadcrumb"]');
     if (crumbs) {
-      await crumbs.screenshot({ path: 'screenshot-nested-breadcrumbs.png' });
-      console.log('Wrote screenshot-nested-breadcrumbs.png');
+      await crumbs.screenshot({ path: 'screenshots/screenshot-nested-breadcrumbs.png' });
+      console.log('Wrote screenshots/screenshot-nested-breadcrumbs.png');
     } else {
-      await page.screenshot({ path: 'screenshot-nested-breadcrumbs.png', fullPage: false });
-      console.log('Wrote fallback screenshot-nested-breadcrumbs.png');
+      await page.screenshot({ path: 'screenshots/screenshot-nested-breadcrumbs.png', fullPage: false });
+      console.log('Wrote fallback screenshots/screenshot-nested-breadcrumbs.png');
     }
   } catch (e) {
-    console.warn('Breadcrumbs capture failed:', e.message);
+    console.warn('Breadcrumbs capture failed:', e && e.message);
   }
 
   // Saved views dropdown screenshot (open if not open)
@@ -71,14 +82,14 @@ const { chromium } = require('playwright');
     await page.waitForTimeout(300);
     const savedPanel = await page.$('div:has-text("Gemte visninger")');
     if (savedPanel) {
-      await savedPanel.screenshot({ path: 'screenshot-saved-views.png' });
-      console.log('Wrote screenshot-saved-views.png');
+      await savedPanel.screenshot({ path: 'screenshots/screenshot-saved-views.png' });
+      console.log('Wrote screenshots/screenshot-saved-views.png');
     } else {
-      await page.screenshot({ path: 'screenshot-saved-views.png' });
-      console.log('Wrote fallback screenshot-saved-views.png');
+      await page.screenshot({ path: 'screenshots/screenshot-saved-views.png' });
+      console.log('Wrote fallback screenshots/screenshot-saved-views.png');
     }
   } catch (e) {
-    console.warn('Saved views capture failed:', e.message);
+    console.warn('Saved views capture failed:', e && e.message);
   }
 
   await browser.close();

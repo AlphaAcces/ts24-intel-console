@@ -54,7 +54,7 @@ const HypothesisCard: React.FC<{ hypothesis: Hypothesis }> = ({ hypothesis }) =>
 
     return (
         <div className="bg-component-dark rounded-lg border border-border-dark overflow-hidden flex flex-col h-full">
-            <button 
+            <button
                 className="w-full text-left p-4 flex items-center justify-between hover:bg-gray-800/40"
                 onClick={() => setIsOpen(!isOpen)}
             >
@@ -118,12 +118,12 @@ export const HypothesesView: React.FC = memo(() => {
                 <h2 className="text-xl font-bold text-gray-200">Hypotese-Dashboard</h2>
                 <div className="flex items-center space-x-2 bg-component-dark p-1 rounded-lg border border-border-dark self-start">
                     {statusOptions.map(opt => (
-                        <button 
+                        <button
                             key={opt}
                             onClick={() => setActiveFilter(opt)}
                             className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors duration-200 ${
-                                activeFilter === opt 
-                                ? 'bg-accent-green/20 text-accent-green' 
+                                activeFilter === opt
+                                ? 'bg-accent-green/20 text-accent-green'
                                 : 'text-gray-400 hover:bg-gray-700/50'
                             }`}
                         >

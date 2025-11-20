@@ -1,0 +1,29 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Logistik",
+    "Ümit",
+    "Cetin",
+    "genai",
+    "Finanstilsynet",
+    "Brøndby",
+    "Glostrup",
+    "Albertslund",
+    "Tilgodehavender",
+    "Skattestyrelsen",
+    "Naverland",
+    "Vallensbæk",
+    "TSL",
+    "Breadcrumbs",
+    "navigateTo"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.svg"
+  ]
+}

@@ -59,6 +59,13 @@ export const App: React.FC = () => {
     setIsNavOpen,
   } = useAppNavigation();
 
+  // Expose a dev-only global navigator for deterministic Playwright screenshots
+  if (import.meta.env.DEV) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    (window as any).__navigateTo = navigateTo;
+  }
+
   if (!authUser) {
     return <LoginPage onLoginSuccess={handleLoginSuccess} />;
   }

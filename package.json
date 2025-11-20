@@ -8,6 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "screenshot": "node scripts/screenshot-playwright.js",
+    "screenshot:dev": "start-server-and-test \"npm run dev\" http://localhost:5173 \"npm run screenshot\"",
+    "preview-shots": "start-server-and-test \"npm run dev\" http://localhost:5173 \"npm run screenshot\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "vitest"
   },
@@ -42,5 +44,11 @@
     "typescript": "~5.5.4",
     "vite": "^7.2.2",
     "vitest": "^2.1.4"
+  }
+  ,
+  "optionalDependencies": {},
+  "peerDependencies": {},
+  "engines": {
+    "node": ">=16"
   }
 }
