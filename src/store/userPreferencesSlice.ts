@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { View } from '../types';
 
 type SavedView = {
   id: string;
-  payload: { view: string; breadcrumbs?: string[]; label?: string };
+  payload: { view: View; breadcrumbs?: string[]; label?: string };
 };
 
 interface UserPreferencesState {
@@ -23,7 +24,8 @@ export const userPreferencesSlice = createSlice({
       state.compactMode = action.payload;
     },
     saveView(state, action: PayloadAction<SavedView>) {
-      state.savedViews.push(action.payload);
+      // Prevent duplicates by id
+      state.savedViews = state.savedViews.filter(v => v.id !== action.payload.id).concat(action.payload);
     },
     removeView(state, action: PayloadAction<string>) {
       state.savedViews = state.savedViews.filter((v) => v.id !== action.payload);
