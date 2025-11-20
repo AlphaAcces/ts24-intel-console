@@ -1,13 +1,14 @@
 // FIX: import ReactElement to resolve JSX namespace issue and correct the type.
 import type { ReactElement } from 'react';
 
-export type View = 'dashboard' | 'executive' | 'person' | 'companies' | 'financials' | 'hypotheses' | 'cashflow' | 'sector' | 'timeline' | 'risk' | 'actions' | 'counterparties' | 'scenarios' | 'business' | 'personal';
+export type View = 'dashboard' | 'executive' | 'person' | 'companies' | 'financials' | 'hypotheses' | 'cashflow' | 'sector' | 'timeline' | 'risk' | 'actions' | 'counterparties' | 'scenarios' | 'business' | 'personal' | 'saved-views';
 
 export type Subject = 'tsl' | 'umit';
 
 export interface NavItemConfig {
   id: View;
   label: string;
+  i18nKey?: string;
   // FIX: Changed type from a function returning JSX.Element to ReactElement to match usage.
   icon: ReactElement;
   showFor: Subject[];

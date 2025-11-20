@@ -25,6 +25,7 @@ const SectorAnalysisView = lazy(() => import('./components/Sector/SectorAnalysis
 const CounterpartiesView = lazy(() => import('./components/Counterparties/CounterpartiesView').then(module => ({ default: module.CounterpartiesView })));
 const ScenariosView = lazy(() => import('./components/Scenarios/ScenariosView').then(module => ({ default: module.ScenariosView })));
 const ExecutiveSummaryView = lazy(() => import('./components/Executive/ExecutiveSummaryView').then(module => ({ default: module.ExecutiveSummaryView })));
+const SavedViewsPage = lazy(() => import('./components/Settings/SavedViewsPage').then(m => ({ default: m.SavedViewsPage })));
 
 
 export const App: React.FC = () => {
@@ -103,6 +104,8 @@ export const App: React.FC = () => {
         return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><RiskView /></ViewContainer>;
       case 'actions':
         return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><ActionsView /></ViewContainer>;
+      case 'saved-views':
+        return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><SavedViewsPage /></ViewContainer>;
       default:
         return <DashboardView activeSubject={activeSubject} onNavigate={navigateTo} />;
     }

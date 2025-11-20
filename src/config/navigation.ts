@@ -20,4 +20,5 @@ export const NAV_ITEMS: NavItemConfig[] = [
   { id: 'timeline',   label: 'Timeline',    i18nKey: 'nav.timeline', icon: React.createElement(GanttChart, { className: "h-5 w-5" }),      showFor: ['tsl', 'umit'] },
   { id: 'risk',       label: 'Risk Heatmap', i18nKey: 'nav.risk', icon: React.createElement(ShieldAlert, { className: "h-5 w-5" }),     showFor: ['tsl', 'umit'] },
   { id: 'actions',    label: 'Actionables', i18nKey: 'nav.actions', icon: React.createElement(ListChecks, { className: "h-5 w-5" }),      showFor: ['tsl', 'umit'] },
+  { id: 'saved-views', label: 'Saved Views', i18nKey: 'nav.savedViews', icon: React.createElement(Users, { className: "h-5 w-5" }), showFor: ['tsl', 'umit'] },
 ];
