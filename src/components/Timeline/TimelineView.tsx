@@ -49,7 +49,7 @@ export const TimelineView: React.FC = () => {
     return (
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                <h2 className="text-xl font-bold text-gray-200">{t('heading')}</h2>
+                <h2 className="text-xl font-bold text-gray-200">{t('timeline.heading')}</h2>
                 <div className="flex items-center space-x-2 bg-component-dark p-1 rounded-lg border border-border-dark self-start">
                     {filters.map(filter => (
                         <button

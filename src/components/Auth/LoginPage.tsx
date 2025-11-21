@@ -28,7 +28,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         if (user && user.password === password) {
             onLoginSuccess({ id: username, role: user.role });
         } else {
-            setErrorKey('error.invalidCredentials');
+            setErrorKey('auth.error.invalidCredentials');
         }
         setIsLoading(false);
     }, 500);
@@ -39,13 +39,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       <div className="w-full max-w-md p-8 space-y-8 bg-component-dark rounded-lg border border-border-dark shadow-lg">
         <div className="text-center">
             <TslLogo variant="inline" className="h-12 w-auto mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-200">{t('title')}</h1>
-          <p className="mt-2 text-sm text-gray-400">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold text-gray-200">{t('auth.title')}</h1>
+          <p className="mt-2 text-sm text-gray-400">{t('auth.subtitle')}</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="username" className="sr-only">{t('usernameLabel')}</label>
+              <label htmlFor="username" className="sr-only">{t('auth.usernameLabel')}</label>
               <input
                 id="username"
                 name="username"
@@ -53,13 +53,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 autoComplete="username"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-border-dark bg-base-dark placeholder-gray-500 text-gray-200 rounded-t-md focus:outline-none focus:ring-accent-green focus:border-accent-green focus:z-10 sm:text-sm"
-                placeholder={t('usernamePlaceholder')}
+                placeholder={t('auth.usernamePlaceholder')}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div>
-              <label htmlFor="password-input" className="sr-only">{t('passwordLabel')}</label>
+              <label htmlFor="password-input" className="sr-only">{t('auth.passwordLabel')}</label>
               <input
                 id="password-input"
                 name="password"
@@ -67,7 +67,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-border-dark bg-base-dark placeholder-gray-500 text-gray-200 rounded-b-md focus:outline-none focus:ring-accent-green focus:border-accent-green focus:z-10 sm:text-sm"
-                placeholder={t('passwordPlaceholder')}
+                placeholder={t('auth.passwordPlaceholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -86,7 +86,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-accent-green/80 hover:bg-accent-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-component-dark focus:ring-accent-green disabled:bg-gray-600 disabled:cursor-not-allowed"
             >
-              {isLoading ? t('submitting') : t('submit')}
+              {isLoading ? t('auth.submitting') : t('auth.submit')}
             </button>
           </div>
         </form>

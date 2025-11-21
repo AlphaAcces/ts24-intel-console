@@ -781,7 +781,7 @@
     }
   },
   "counterparties": {
-    "heading": "Counterparties & relations ({{subject}})",
+    "heading": "Key counterparties & relations",
     "table": {
       "headers": {
         "counterparty": "Counterparty",

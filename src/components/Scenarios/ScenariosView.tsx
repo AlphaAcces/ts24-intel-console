@@ -315,17 +315,17 @@ export const ScenariosView: React.FC = () => {
     }, [selectedScenario, actionsData]);
 
     const probabilityLabels = useMemo(() => ({
-        Lav: t('probability.low'),
-        Middel: t('probability.medium'),
-        Høj: t('probability.high'),
-        Ekstrem: t('probability.extreme'),
+        Lav: t('scenarios.probability.low'),
+        Middel: t('scenarios.probability.medium'),
+        Høj: t('scenarios.probability.high'),
+        Ekstrem: t('scenarios.probability.extreme'),
     }), [t]);
 
     const impactLabels = useMemo(() => ({
-        Lav: t('impact.low'),
-        Middel: t('impact.medium'),
-        Høj: t('impact.high'),
-        Ekstrem: t('impact.extreme'),
+        Lav: t('scenarios.impact.low'),
+        Middel: t('scenarios.impact.medium'),
+        Høj: t('scenarios.impact.high'),
+        Ekstrem: t('scenarios.impact.extreme'),
     }), [t]);
 
     const actionPriorityLabels = useMemo(() => ({
@@ -429,7 +429,7 @@ export const ScenariosView: React.FC = () => {
                     <div>
                         <h2 className="text-xl font-bold text-gray-200 mb-2 flex items-center">
                             <Route className="w-6 h-6 mr-3 text-gray-400" />
-                            {t('heading')}
+                            {t('scenarios.heading')}
                         </h2>
                         <p className="text-gray-400 max-w-3xl">{t('intro')}</p>
                     </div>
@@ -446,7 +446,7 @@ export const ScenariosView: React.FC = () => {
                                     display={display}
                                     probabilityLabel={probabilityLabels[original.probability] ?? original.probability}
                                     impactLabel={impactLabels[original.impact] ?? original.impact}
-                                    analyzeLabel={t('card.analyzeCta')}
+                                    analyzeLabel={t('scenarios.card.analyzeCta')}
                                     onAnalyze={handleAnalyze}
                                 />
                         ))}

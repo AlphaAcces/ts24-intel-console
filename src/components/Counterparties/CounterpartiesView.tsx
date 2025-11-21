@@ -24,17 +24,17 @@ const typeColors: Record<'Regulatorisk' | 'Rådgiver' | 'Kunde' | 'Finansiel' | 
 };
 
 const typeLabelKeys: Record<'Regulatorisk' | 'Rådgiver' | 'Kunde' | 'Finansiel' | 'Partner', string> = {
-    'Regulatorisk': 'types.regulatory',
-    'Rådgiver': 'types.advisor',
-    'Kunde': 'types.customer',
-    'Finansiel': 'types.financial',
-    'Partner': 'types.partner',
+    'Regulatorisk': 'counterparties.types.regulatory',
+    'Rådgiver': 'counterparties.types.advisor',
+    'Kunde': 'counterparties.types.customer',
+    'Finansiel': 'counterparties.types.financial',
+    'Partner': 'counterparties.types.partner',
 };
 
 const riskLevelLabelKeys: Record<'Høj' | 'Middel' | 'Lav', string> = {
-    'Høj': 'risk.high',
-    'Middel': 'risk.medium',
-    'Lav': 'risk.low',
+    'Høj': 'counterparties.risk.high',
+    'Middel': 'counterparties.risk.medium',
+    'Lav': 'counterparties.risk.low',
 };
 
 
@@ -47,17 +47,17 @@ export const CounterpartiesView: React.FC<CounterpartiesViewProps> = ({ onNaviga
             <div>
                 <h2 className="text-xl font-bold text-gray-200 mb-4 flex items-center">
                     <Users className="w-6 h-6 mr-3 text-gray-400" />
-                    {t('heading', { subject: 'TSL' })}
+                    {t('counterparties.heading')}
                 </h2>
             </div>
             <div className="bg-component-dark rounded-lg border border-border-dark overflow-x-auto scrollbar-hidden">
                 <table className="min-w-full divide-y divide-border-dark">
                     <thead className="bg-gray-800/50">
                         <tr>
-                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.counterparty')}</th>
-                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.typeRisk')}</th>
-                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.description')}</th>
-                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('table.headers.links')}</th>
+                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('counterparties.table.headers.counterparty')}</th>
+                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('counterparties.table.headers.typeRisk')}</th>
+                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('counterparties.table.headers.description')}</th>
+                            <th scope="col" className="py-3 px-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">{t('counterparties.table.headers.links')}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border-dark">
@@ -69,7 +69,7 @@ export const CounterpartiesView: React.FC<CounterpartiesViewProps> = ({ onNaviga
                                 <td className="py-4 px-4 align-top w-1/6">
                                     <div className="flex flex-col gap-2 items-start">
                                         <Tag label={t(typeLabelKeys[cp.type])} color={typeColors[cp.type]} />
-                                        <Tag label={t('labels.riskLevel', { level: t(riskLevelLabelKeys[cp.riskLevel]) })} color={riskLevelColors[cp.riskLevel]} />
+                                        <Tag label={t(riskLevelLabelKeys[cp.riskLevel])} color={riskLevelColors[cp.riskLevel]} />
                                     </div>
                                 </td>
                                 <td className="py-4 px-4 align-top w-2/5">
@@ -80,12 +80,12 @@ export const CounterpartiesView: React.FC<CounterpartiesViewProps> = ({ onNaviga
                                     <div className="flex flex-col gap-2 items-start text-xs">
                                         {cp.linkedRisks.length > 0 && (
                                             <button onClick={() => onNavigate('risk')} className="flex items-center text-blue-400 hover:text-blue-300">
-                                                <LinkIcon className="w-3 h-3 mr-1.5"/> {t('links.viewRisks')}
+                                                <LinkIcon className="w-3 h-3 mr-1.5"/> {t('counterparties.links.viewRisks')}
                                             </button>
                                         )}
                                         {cp.linkedHypotheses.length > 0 && (
                                              <button onClick={() => onNavigate('hypotheses')} className="flex items-center text-blue-400 hover:text-blue-300">
-                                                <LinkIcon className="w-3 h-3 mr-1.5"/> {t('links.viewHypotheses')}
+                                                <LinkIcon className="w-3 h-3 mr-1.5"/> {t('counterparties.links.viewHypotheses')}
                                             </button>
                                         )}
                                     </div>
