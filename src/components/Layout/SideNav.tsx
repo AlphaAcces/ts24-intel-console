@@ -40,7 +40,7 @@ export const SideNav: React.FC<SideNavProps> = ({ currentView, activeSubject, on
   return (
     <aside
       aria-label={t('nav.primaryMenu', { defaultValue: 'Primary navigation' })}
-      className={`fixed top-0 left-0 z-30 h-full pt-16 w-64 sm:w-72 max-w-[90vw] border-r border-border-dark bg-component-dark/95 backdrop-blur shadow-2xl lg:bg-component-dark lg:shadow-none transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:z-10 overflow-y-auto`}
+      className={`fixed top-0 left-0 z-20 h-full pt-[88px] w-64 sm:w-72 max-w-[90vw] border-r border-border-dark bg-component-dark backdrop-blur-sm shadow-2xl lg:shadow-none transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 overflow-y-auto`}
     >
       <nav className="space-y-5 p-4">
         {sections.map(section => {

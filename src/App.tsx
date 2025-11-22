@@ -128,7 +128,7 @@ export const App: React.FC = () => {
         onNavigate={(view) => navigateTo(view)}
         isOpen={isNavOpen}
       />
-      <main className="lg:pl-64 pt-16 transition-all duration-300 ease-in-out">
+      <main className="lg:pl-64 pt-[88px] transition-all duration-300 ease-in-out">
         <div className="container mx-auto p-4 md:p-6 lg:p-8">
           <DataProvider activeSubject={activeSubject}>
             <Suspense fallback={<div className="flex justify-center items-center h-64"><Loader className="w-8 h-8 animate-spin" /></div>}>
@@ -137,7 +137,7 @@ export const App: React.FC = () => {
           </DataProvider>
         </div>
       </main>
-      {isNavOpen && <div className="fixed inset-0 bg-black/60 z-20 lg:hidden" onClick={() => setIsNavOpen(false)}></div>}
+      {isNavOpen && <div className="fixed inset-0 bg-black/60 z-25 lg:hidden" onClick={() => setIsNavOpen(false)}></div>}
     </div>
     </ReduxProvider>
   );
