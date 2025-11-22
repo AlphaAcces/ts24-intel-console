@@ -1,6 +1,6 @@
 /**
  * NotificationBadge Component
- * 
+ *
  * Displays unread notification count in TopBar.
  */
 

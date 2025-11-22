@@ -1,3 +1,10 @@
+/**
+ * Intl Formatting Utilities
+ *
+ * Locale-aware formatting for currency, numbers, percentages, dates, and DSO.
+ * Supports dynamic currency and locale selection for multi-jurisdiction use cases.
+ */
+
 const DEFAULT_LOCALE = 'da-DK';
 const DEFAULT_CURRENCY = 'DKK';
 

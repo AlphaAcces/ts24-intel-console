@@ -1,6 +1,6 @@
 /**
  * Notification System Types
- * 
+ *
  * Provides type-safe notification management with priority queuing,
  * category filtering, and user preferences.
  */

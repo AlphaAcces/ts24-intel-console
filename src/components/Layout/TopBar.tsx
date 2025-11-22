@@ -20,7 +20,7 @@ interface TopBarProps {
 export const TopBar: React.FC<TopBarProps> = ({ onToggleNav, activeSubject, onSubjectChange, currentViewId, currentBreadcrumbs, navigateTo }) => {
   const { t } = useTranslation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  
+
   const {
     notifications,
     unreadCount,

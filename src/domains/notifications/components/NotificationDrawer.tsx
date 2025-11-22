@@ -1,6 +1,6 @@
 /**
  * NotificationDrawer Component
- * 
+ *
  * Slide-out panel displaying all notifications with filtering and actions.
  */
 

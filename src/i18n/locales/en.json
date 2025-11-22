@@ -1014,5 +1014,16 @@
       "medium": "Medium",
       "low": "Low"
     }
+  },
+  "settings": {
+    "currency": {
+      "label": "Currency"
+    },
+    "locale": {
+      "label": "Language & Region"
+    },
+    "country": {
+      "label": "Market"
+    }
   }
 }

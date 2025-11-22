@@ -1,6 +1,6 @@
 /**
  * NotificationItem Component
- * 
+ *
  * Individual notification card with priority indicator and actions.
  */
 

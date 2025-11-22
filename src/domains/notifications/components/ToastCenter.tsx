@@ -1,6 +1,6 @@
 /**
  * ToastCenter Component
- * 
+ *
  * Manages ephemeral toast notifications with auto-dismiss and stacking.
  */
 

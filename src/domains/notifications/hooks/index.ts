@@ -1,6 +1,6 @@
 /**
  * Notification Management Hooks
- * 
+ *
  * Provides reactive state management for notifications with
  * priority queuing, preferences, and real-time updates.
  */

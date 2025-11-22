@@ -3,6 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../../store';
 import type { View } from '../../types';
 import { setCompactMode, saveView, removeView } from '../../store/userPreferencesSlice';
+import { CurrencySwitcher } from '../../domains/settings/components/CurrencySwitcher';
+import { LocaleSwitcher } from '../../domains/settings/components/LocaleSwitcher';
+import { CountrySelector } from '../../domains/settings/components/CountrySelector';
 
 interface PreferencesPanelProps {
   currentViewId: View;
@@ -36,6 +39,9 @@ export const PreferencesPanel: React.FC<PreferencesPanelProps> = ({ currentViewI
   return (
     <div className="relative">
       <div className="flex items-center gap-3">
+        <CountrySelector />
+        <CurrencySwitcher />
+        <LocaleSwitcher />
         <label className="text-xs text-gray-400">Compact</label>
         <input
           type="checkbox"

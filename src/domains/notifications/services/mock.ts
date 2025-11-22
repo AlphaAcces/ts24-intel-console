@@ -1,6 +1,6 @@
 /**
  * Mock Notification Generator
- * 
+ *
  * Provides demo notifications for development and testing.
  */
 
@@ -77,7 +77,7 @@ const mockNotifications: Omit<Notification, 'id' | 'timestamp' | 'status'>[] = [
  */
 export const generateMockNotification = (): Notification => {
   const template = mockNotifications[Math.floor(Math.random() * mockNotifications.length)];
-  
+
   return {
     ...template,
     id: `notif-${notificationIdCounter++}`,

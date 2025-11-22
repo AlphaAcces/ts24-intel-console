@@ -1014,5 +1014,16 @@
       "medium": "Middel",
       "low": "Lav"
     }
+  },
+  "settings": {
+    "currency": {
+      "label": "Valuta"
+    },
+    "locale": {
+      "label": "Sprog & region"
+    },
+    "country": {
+      "label": "Marked"
+    }
   }
 }
