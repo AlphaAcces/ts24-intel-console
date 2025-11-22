@@ -70,7 +70,6 @@ const viewLabelKeys: { [key in Hypothesis['relatedViews'][0]]: string } = {
     scenarios: 'hypotheses.views.scenarios',
     business: 'hypotheses.views.business',
     personal: 'hypotheses.views.personal',
-    'saved-views': 'hypotheses.views.savedViews',
 };
 
 const HypothesisCard: React.FC<{ hypothesis: Hypothesis }> = ({ hypothesis }) => {

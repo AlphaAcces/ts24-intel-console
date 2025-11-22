@@ -67,8 +67,8 @@ export const PreferencesPanel: React.FC<PreferencesPanelProps> = ({ currentViewI
           className={`${primaryButtonClasses} bg-accent-green/10 border-accent-green/30`}
           type="button"
         >
-          <PlusCircle className="h-4 w-4" />
-          <span className="whitespace-nowrap">Gem visning</span>
+          <PlusCircle className="h-4 w-4 shrink-0" />
+          <span className="truncate">Gem visning</span>
         </button>
         <button
           onClick={() => setOpen(!open)}
@@ -76,14 +76,14 @@ export const PreferencesPanel: React.FC<PreferencesPanelProps> = ({ currentViewI
           className={`${primaryButtonClasses} bg-component-dark/60`}
           type="button"
         >
-          <Bookmark className="h-4 w-4" />
-          <span className="whitespace-nowrap">Gemte visninger</span>
-          <span className="text-[11px] text-gray-400">({prefs.savedViews.length})</span>
+          <Bookmark className="h-4 w-4 shrink-0" />
+          <span className="truncate">Gemte visninger</span>
+          <span className="text-[11px] text-gray-400 shrink-0">({prefs.savedViews.length})</span>
         </button>
       </div>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-[320px] rounded-2xl border border-border-dark bg-component-dark p-4 shadow-2xl shadow-black/40">
+        <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-[calc(100vw-2rem)] max-w-[320px] sm:w-[320px] rounded-2xl border border-border-dark bg-component-dark p-4 shadow-2xl shadow-black/40 z-50">
           <div className="flex items-center justify-between gap-3">
             <div>
               <h4 className="text-sm font-semibold text-gray-100">Gemte visninger</h4>

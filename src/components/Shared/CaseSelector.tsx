@@ -49,23 +49,23 @@ export const CaseSelector: React.FC<CaseSelectorProps> = ({
 
   return (
     <div className="relative w-full min-w-0" aria-live="polite">
-      <div className="rounded-xl border border-border-dark/60 bg-component-dark/60 px-3 py-2 pr-9 shadow-sm hover:border-border-dark transition-colors">
+      <div className="rounded-xl border border-accent-green/30 bg-gradient-to-br from-component-dark/90 to-component-dark/60 px-3 py-2 pr-9 shadow-md hover:border-accent-green/50 hover:shadow-lg transition-all duration-200 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           {activeSubject === 'tsl' ? (
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-green/10 text-accent-green shrink-0">
-              <Building2 className="h-3.5 w-3.5" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-green/15 text-accent-green shrink-0">
+              <Building2 className="h-4 w-4" />
             </div>
           ) : (
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-green/10 text-accent-green shrink-0">
-              <User className="h-3.5 w-3.5" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-green/15 text-accent-green shrink-0">
+              <User className="h-4 w-4" />
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-gray-100 truncate leading-tight" title={selectedCase?.name}>{selectedCase?.name ?? t('topbar.selectCase', { defaultValue: 'Vælg case' })}</p>
-            <p className="text-[10px] text-accent-green/70 font-medium leading-tight">{modeLabel}</p>
+            <p className="text-xs font-bold text-gray-50 truncate leading-tight tracking-wide" title={selectedCase?.name}>{selectedCase?.name ?? t('topbar.selectCase', { defaultValue: 'Vælg virksomhed' })}</p>
+            <p className="text-[10px] text-accent-green font-semibold leading-tight uppercase tracking-wider">{modeLabel}</p>
           </div>
         </div>
-        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" aria-hidden="true" />
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-accent-green/60" aria-hidden="true" />
       </div>
 
       <select

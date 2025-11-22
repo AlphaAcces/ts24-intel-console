@@ -10,8 +10,12 @@ function getEnv(key: string) {
     return importMetaEnv[key] ?? processEnv[key];
 }
 
-export async function generateGeminiContent(prompt: string): Promise<string> {
-    const apiKey = getEnv('VITE_GEMINI_API_KEY') || getEnv('GEMINI_API_KEY') || getEnv('API_KEY');
+export const getGeminiApiKey = (): string | undefined => {
+    return getEnv('VITE_GEMINI_API_KEY') || getEnv('GEMINI_API_KEY') || getEnv('API_KEY');
+};
+
+export async function generateGeminiContent(prompt: string, apiKeyOverride?: string): Promise<string> {
+    const apiKey = apiKeyOverride ?? getGeminiApiKey();
     if (!apiKey) {
         throw new Error('Gemini API-nøgle mangler. Tilføj VITE_GEMINI_API_KEY til .env.local');
     }

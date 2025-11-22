@@ -659,7 +659,9 @@
       "panelTitle": "AI-analyse: {{name}}",
       "loading": "Genererer analyse...",
       "linkedActions": "Relevante handlinger",
-      "error": "Der opstod en uventet fejl under AI-analysen."
+      "error": "Der opstod en uventet fejl under AI-analysen.",
+      "missingKey": "AI-modulet er ikke aktiveret. Tilføj VITE_GEMINI_API_KEY for at køre analyser.",
+      "moduleLoadError": "AI-modulet kunne ikke indlæses i denne session. Prøv at genopfriske siden."
     }
   },
   "timeline": {
@@ -1016,14 +1018,16 @@
     }
   },
   "settings": {
+    "language": {
+      "label": "Sprog",
+      "description": "Styrer UI-tekster og oversættelser"
+    },
+    "market": {
+      "label": "Marked",
+      "description": "Styrer jurisdiktion, regnskabsregler og standardvaluta"
+    },
     "currency": {
       "label": "Valuta"
-    },
-    "locale": {
-      "label": "Sprog & region"
-    },
-    "country": {
-      "label": "Marked"
     }
   }
 }

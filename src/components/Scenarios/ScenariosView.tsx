@@ -1,13 +1,32 @@
+/**
+ * ScenariosView Component
+ *
+ * Displays strategic scenarios (Best/Base/Worst/Exit) with AI-powered analysis.
+ *
+ * Features:
+ * - Graceful degradation: Shows fallback UI if VITE_GEMINI_API_KEY is missing
+ * - Lazy AI module loading: Only imports Gemini SDK when API key is available
+ * - Caches AI responses in sessionStorage to reduce redundant API calls
+ * - Parses structured Markdown analysis (consequences, actions, mini-playbook)
+ * - Links to related action items with priority/category tagging
+ *
+ * Error handling:
+ * - Missing API key → translated error message with setup instructions
+ * - Module load failure → translated technical error with refresh prompt
+ * - API errors → inline error display with retry option
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useCaseData } from '../../context/DataContext';
 import { Scenario, ActionItem } from '../../types';
 import { Tag } from '../Shared/Tag';
 import { Route, Check, AlertTriangle, X, LogOut, Loader, XCircle, Bot } from 'lucide-react';
-import { generateGeminiContent } from '../../lib/ai';
 import { AiErrorMessage } from '../Shared/AiErrorMessage';
 import { useTranslation } from 'react-i18next';
+import { getGeminiApiKey } from '../../lib/ai';
 
 const AI_CACHE_KEY = 'ai_scenario_history';
+
 
 const categoryConfig: Record<Scenario['category'], { color: 'green' | 'yellow' | 'red' | 'blue', icon: React.ReactNode }> = {
     'Best': { color: 'green', icon: <Check className="w-5 h-5" /> },
@@ -130,23 +149,23 @@ const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, display, probabil
             <div className="p-4 space-y-4 flex-grow">
                 <p className="text-sm text-gray-400">{display.description}</p>
                 <div>
-                    <h4 className="font-semibold text-gray-300 text-sm mb-2">{t('card.assumptions')}</h4>
+                    <h4 className="font-semibold text-gray-300 text-sm mb-2">{t('scenarios.card.assumptions')}</h4>
                     <ul className="list-disc list-inside text-sm text-gray-400 space-y-1 font-mono">
                         {display.assumptions.map((ass, i) => <li key={i}>{ass}</li>)}
                     </ul>
                 </div>
                  <div>
-                    <h4 className="font-semibold text-gray-300 text-sm mb-2">{t('card.outcome')}</h4>
+                    <h4 className="font-semibold text-gray-300 text-sm mb-2">{t('scenarios.card.outcome')}</h4>
                     <p className={`text-sm font-bold text-${config.color}-300`}>{display.expectedOutcome}</p>
                 </div>
             </div>
              <div className="p-4 border-t border-border-dark flex justify-between items-center text-xs">
                 <div>
-                    <span className="font-semibold text-gray-500 mr-2">{t('card.labels.probability')}:</span>
+                    <span className="font-semibold text-gray-500 mr-2">{t('scenarios.card.labels.probability')}:</span>
                     <Tag label={probabilityLabel} color={probabilityImpactColor[scenario.probability]} />
                 </div>
                  <div>
-                    <span className="font-semibold text-gray-500 mr-2">{t('card.labels.impact')}:</span>
+                    <span className="font-semibold text-gray-500 mr-2">{t('scenarios.card.labels.impact')}:</span>
                     <Tag label={impactLabel} color={probabilityImpactColor[scenario.impact]} />
                 </div>
             </div>
@@ -264,28 +283,28 @@ const ScenariosView: React.FC = () => {
 
     const scenarioContentMap = useMemo<Record<string, DisplayScenario>>(() => ({
         'scen-best': {
-            name: t('items.best.name'),
-            description: t('items.best.description'),
-            assumptions: t('items.best.assumptions', { returnObjects: true }) as string[],
-            expectedOutcome: t('items.best.expectedOutcome'),
+            name: t('scenarios.items.best.name'),
+            description: t('scenarios.items.best.description'),
+            assumptions: t('scenarios.items.best.assumptions', { returnObjects: true }) as string[],
+            expectedOutcome: t('scenarios.items.best.expectedOutcome'),
         },
         'scen-base': {
-            name: t('items.base.name'),
-            description: t('items.base.description'),
-            assumptions: t('items.base.assumptions', { returnObjects: true }) as string[],
-            expectedOutcome: t('items.base.expectedOutcome'),
+            name: t('scenarios.items.base.name'),
+            description: t('scenarios.items.base.description'),
+            assumptions: t('scenarios.items.base.assumptions', { returnObjects: true }) as string[],
+            expectedOutcome: t('scenarios.items.base.expectedOutcome'),
         },
         'scen-worst': {
-            name: t('items.worst.name'),
-            description: t('items.worst.description'),
-            assumptions: t('items.worst.assumptions', { returnObjects: true }) as string[],
-            expectedOutcome: t('items.worst.expectedOutcome'),
+            name: t('scenarios.items.worst.name'),
+            description: t('scenarios.items.worst.description'),
+            assumptions: t('scenarios.items.worst.assumptions', { returnObjects: true }) as string[],
+            expectedOutcome: t('scenarios.items.worst.expectedOutcome'),
         },
         'scen-exit': {
-            name: t('items.exit.name'),
-            description: t('items.exit.description'),
-            assumptions: t('items.exit.assumptions', { returnObjects: true }) as string[],
-            expectedOutcome: t('items.exit.expectedOutcome'),
+            name: t('scenarios.items.exit.name'),
+            description: t('scenarios.items.exit.description'),
+            assumptions: t('scenarios.items.exit.assumptions', { returnObjects: true }) as string[],
+            expectedOutcome: t('scenarios.items.exit.expectedOutcome'),
         },
     }), [t]);
 
@@ -363,13 +382,20 @@ const ScenariosView: React.FC = () => {
                     const cache = JSON.parse(cachedData);
                     if(cache[selectedScenario.original.id]) {
                         setAnalysisResult(cache[selectedScenario.original.id]);
-                        setIsLoading(false); // We have a cached result, no need to fetch
+                        setIsLoading(false);
                         return;
                     }
                 } catch (e) {
                     console.error("Failed to parse AI cache", e);
                     localStorage.removeItem(AI_CACHE_KEY);
                 }
+            }
+
+            const apiKey = getGeminiApiKey();
+            if (!apiKey) {
+                setError(t('scenarios.ai.missingKey', { defaultValue: 'AI-modulet er ikke aktiveret. Tilføj VITE_GEMINI_API_KEY for at køre analyser.' }));
+                setIsLoading(false);
+                return;
             }
 
             try {
@@ -401,7 +427,8 @@ const ScenariosView: React.FC = () => {
                     * **Triggere at Overvåge:** Hvilke 3 konkrete signaler eller hændelser indikerer, at virksomheden er på vej ind i dette scenarie?
                 `;
 
-                const resultText = await generateGeminiContent(prompt);
+                const { generateGeminiContent } = await import('../../lib/ai');
+                const resultText = await generateGeminiContent(prompt, apiKey);
                 setAnalysisResult(resultText);
 
                 const currentCacheData = localStorage.getItem(AI_CACHE_KEY);
@@ -410,7 +437,10 @@ const ScenariosView: React.FC = () => {
                 localStorage.setItem(AI_CACHE_KEY, JSON.stringify(cache));
 
             } catch (e: any) {
-                setError(e.message || t('ai.error'));
+                const message = e?.message?.includes('Cannot find module')
+                    ? t('scenarios.ai.moduleLoadError', { defaultValue: 'AI-modulet kunne ikke indlæses i denne session.' })
+                    : e?.message || t('scenarios.ai.error');
+                setError(message);
                 console.error(e);
             } finally {
                 setIsLoading(false);
@@ -431,7 +461,7 @@ const ScenariosView: React.FC = () => {
                             <Route className="w-6 h-6 mr-3 text-gray-400" />
                             {t('scenarios.heading')}
                         </h2>
-                        <p className="text-gray-400 max-w-3xl">{t('intro')}</p>
+                        <p className="text-gray-400 max-w-3xl">{t('scenarios.intro')}</p>
                     </div>
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 auto-rows-fr">
                         {resolvedScenarios

@@ -169,16 +169,18 @@
     }
   },
   "business": {
-    "heading": {
-      "eyebrow": "Business",
-      "title": "Business dashboard",
-      "subtitle": "KPIs, risks and trend indicators"
-    },
-    "placeholder": {
-      "kpiCards": "Business KPI cards (placeholder)",
-      "filters": "Filters (placeholder)",
-      "trendChart": "Trend chart (placeholder)",
-      "tables": "Tables (placeholder)"
+    "settings": {
+      "language": {
+        "label": "Language",
+        "description": "Controls UI text and translations"
+      },
+      "market": {
+        "label": "Market",
+        "description": "Sets jurisdiction context and reporting defaults"
+      },
+      "currency": {
+        "label": "Currency"
+      }
     }
   },
   "person": {
@@ -659,7 +661,9 @@
       "panelTitle": "AI analysis: {{name}}",
       "loading": "Generating analysis…",
       "linkedActions": "Relevant actions",
-      "error": "An unexpected error occurred during the AI analysis."
+      "error": "An unexpected error occurred during the AI analysis.",
+      "missingKey": "AI module is disabled. Add VITE_GEMINI_API_KEY to enable analyses.",
+      "moduleLoadError": "The AI module could not be loaded in this session. Try refreshing and run again."
     }
   },
   "timeline": {

@@ -25,11 +25,10 @@ const SectorAnalysisView = lazy(() => import('./components/Sector/SectorAnalysis
 const CounterpartiesView = lazy(() => import('./components/Counterparties/CounterpartiesView').then(module => ({ default: module.CounterpartiesView })));
 const ScenariosView = lazy(() => import('./components/Scenarios/ScenariosView'));
 const ExecutiveSummaryView = lazy(() => import('./components/Executive/ExecutiveSummaryView').then(module => ({ default: module.ExecutiveSummaryView })));
-const SavedViewsPage = lazy(() => import('./components/Settings/SavedViewsPage').then(m => ({ default: m.SavedViewsPage })));
-
 
 export const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<{ id: string; role: 'admin' | 'user' } | null>(null);
+  const [topBarHeight, setTopBarHeight] = useState(96);
 
   useEffect(() => {
     try {
@@ -46,6 +45,11 @@ export const App: React.FC = () => {
   const handleLoginSuccess = (user: { id: string; role: 'admin' | 'user' }) => {
     setAuthUser(user);
     sessionStorage.setItem('authUser', JSON.stringify(user));
+  };
+
+  const handleLogout = () => {
+    setAuthUser(null);
+    sessionStorage.removeItem('authUser');
   };
 
 
@@ -104,8 +108,6 @@ export const App: React.FC = () => {
         return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><RiskView /></ViewContainer>;
       case 'actions':
         return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><ActionsView /></ViewContainer>;
-      case 'saved-views':
-        return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><SavedViewsPage /></ViewContainer>;
       default:
         return <DashboardView activeSubject={activeSubject} onNavigate={navigateTo} />;
     }
@@ -118,17 +120,26 @@ export const App: React.FC = () => {
         onToggleNav={() => setIsNavOpen(!isNavOpen)}
         activeSubject={activeSubject}
         onSubjectChange={handleSubjectChange}
-        currentViewId={navState.activeView}
+        currentView={navState.activeView}
         currentBreadcrumbs={navState.breadcrumbs}
-        navigateTo={navigateTo}
+        onNavigate={navigateTo}
+        onHeightChange={setTopBarHeight}
+        user={authUser}
       />
       <SideNav
         currentView={navState.activeView}
         activeSubject={activeSubject}
         onNavigate={(view) => navigateTo(view)}
         isOpen={isNavOpen}
+        navigateToFull={navigateTo}
+        user={authUser}
+        onLogout={handleLogout}
+        topOffset={topBarHeight}
       />
-      <main className="lg:pl-64 pt-[88px] transition-all duration-300 ease-in-out">
+      <main
+        className="lg:pl-64 transition-all duration-300 ease-in-out"
+        style={{ paddingTop: topBarHeight }}
+      >
         <div className="container mx-auto p-4 md:p-6 lg:p-8">
           <DataProvider activeSubject={activeSubject}>
             <Suspense fallback={<div className="flex justify-center items-center h-64"><Loader className="w-8 h-8 animate-spin" /></div>}>

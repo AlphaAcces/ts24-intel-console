@@ -17,6 +17,8 @@ export const EXCHANGE_RATES: Record<Currency, number> = {
   [Currency.EUR]: 0.134,      // 1 DKK ≈ 0.134 EUR
   [Currency.USD]: 0.145,      // 1 DKK ≈ 0.145 USD
   [Currency.GBP]: 0.115,      // 1 DKK ≈ 0.115 GBP
+  [Currency.JPY]: 21.50,      // 1 DKK ≈ 21.50 JPY
+  [Currency.CNY]: 1.05,       // 1 DKK ≈ 1.05 CNY
   [Currency.SEK]: 1.52,       // 1 DKK ≈ 1.52 SEK
   [Currency.NOK]: 1.54,       // 1 DKK ≈ 1.54 NOK
   [Currency.USDT]: 0.145,     // 1 DKK ≈ 0.145 USDT (USD parity)

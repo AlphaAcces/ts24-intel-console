@@ -9,9 +9,9 @@ interface CompanyDetailModalProps {
 }
 
 const DetailRow: React.FC<{ label: string; value: string | undefined; fallback: string }> = ({ label, value, fallback }) => (
-    <div className="py-2 grid grid-cols-3 gap-4">
+    <div className="py-2 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
         <dt className="text-sm font-medium text-gray-400">{label}</dt>
-    <dd className="text-sm text-gray-200 col-span-2 font-mono">{value || fallback}</dd>
+    <dd className="text-sm text-gray-200 sm:col-span-2 font-mono">{value || fallback}</dd>
     </div>
 );
 

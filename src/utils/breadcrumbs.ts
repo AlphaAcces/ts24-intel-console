@@ -17,7 +17,6 @@ const KEY_MAP: Record<View, string> = {
   scenarios: 'nav.scenarios',
   business: 'nav.business',
   personal: 'nav.personal',
-  'saved-views': 'nav.savedViews',
 };
 
 export const buildBreadcrumbs = (view: View, trail?: string[]): string[] => {

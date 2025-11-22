@@ -22,7 +22,7 @@ const getShortCode = (locale: AppLocale) => {
 };
 
 export const LocaleSwitcher: React.FC<LocaleSwitcherProps> = ({ variant = 'standard' }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const { locale } = useUserSettings();
 
@@ -54,14 +54,17 @@ export const LocaleSwitcher: React.FC<LocaleSwitcherProps> = ({ variant = 'stand
     ? 'w-full sm:w-auto sm:min-w-[110px] bg-component-dark/60 text-xs font-semibold leading-tight px-2 py-1 rounded-lg border border-border-dark/70 text-gray-100'
     : 'bg-component-dark text-gray-200 text-sm rounded-lg px-3 py-1.5 border border-border-dark focus:ring-2 focus:ring-accent-green/50 focus:outline-none transition-colors';
 
+  const description = t('settings.language.description', { defaultValue: 'Controls UI text and translations' });
+  const label = t('settings.language.label', { defaultValue: 'Language' });
+
   return (
-    <div className="flex items-center gap-2" title="App language - Controls UI text and messages">
+    <div className="flex items-center gap-2" title={description}>
       <Globe className="w-4 h-4 shrink-0 text-gray-400" />
       <select
         value={locale}
         onChange={handleChange}
         className={`${selectClasses} focus:ring-2 focus:ring-accent-green/40 focus:outline-none transition-colors`}
-        aria-label="App language - Controls UI text and messages"
+        aria-label={`${label} – ${description}`}
       >
         {Object.values(AppLocale).map((loc) => {
           const config = LOCALE_CONFIGS[loc];

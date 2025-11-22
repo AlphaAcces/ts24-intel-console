@@ -51,7 +51,7 @@ export const KpiCard: React.FC<KpiCardProps> = ({ title, value, unit, change, ch
 
     return (
         <div 
-            className={`bg-component-dark rounded-lg border border-border-dark flex flex-col justify-between transition-all duration-200 ${onClick ? 'cursor-pointer hover:border-accent-green/50 hover:shadow-lg hover:shadow-accent-green/5' : ''}`}
+            className={`bg-component-dark rounded-lg border border-border-dark flex flex-col justify-between transition-all duration-200 min-w-[280px] ${onClick ? 'cursor-pointer hover:border-accent-green/50 hover:shadow-lg hover:shadow-accent-green/5' : ''}`}
             onClick={onClick}
             {...(onClick ? { role: 'button', tabIndex: 0, onKeyPress: (e) => e.key === 'Enter' && onClick() } : {})}
         >
