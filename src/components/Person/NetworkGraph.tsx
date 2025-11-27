@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { NetworkNode, NetworkEdge, NetworkCluster, ViewportBounds, NetworkLoadingState } from '../../types';
+import aiService from '../../domains/network/services/aiNetworkAnalysisService';
 import { useTranslation } from 'react-i18next';
 
 // Lazy loading hook for network data
@@ -330,6 +331,15 @@ const Tooltip: React.FC<{ node: NetworkNode }> = ({ node }) => {
                  <div className="bg-base-dark p-2 rounded-md border border-border-dark text-center shadow-lg text-xs">
                      <p className="font-bold text-gray-300">{node.cvr ? t('person.network.tooltip.cvr', { cvr: node.cvr }) : t('person.network.tooltip.personFallback')}</p>
                      <p className="text-gray-400 mt-1">{node.notes}</p>
+                     {node.ai && (
+                         <div className="text-xs text-gray-400 mt-2">
+                             <div><strong>{t('person.network.ai.score')}:</strong> {typeof node.ai.score === 'number' ? `${node.ai.score}` : '—'}</div>
+                             <div><strong>{t('person.network.ai.sentiment')}:</strong> {node.ai.sentiment ?? '—'}</div>
+                             <div><strong>{t('person.network.ai.category')}:</strong> {node.ai.category ?? '—'}</div>
+                             <div><strong>{t('person.network.ai.generatedAt')}:</strong> {node.ai.generatedAt ? new Date(node.ai.generatedAt).toLocaleString() : '—'}</div>
+                             <div><strong>{t('person.network.ai.source')}:</strong> {node.ai.source ?? '—'}</div>
+                         </div>
+                     )}
                  </div>
             </foreignObject>
              <path d={`M -5 -5 L 0 0 L 5 -5`} fill="#121418" stroke="#2d3748" strokeWidth={1} transform={`translate(0, -5)`}/>
@@ -348,6 +358,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
 }) => {
     const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+    const [aiMap, setAiMap] = useState<Record<string, any>>({});
     const [viewportBounds, setViewportBounds] = useState<ViewportBounds>({
         x: 0, y: 0, width: 700, height: 400
     });
@@ -421,6 +432,27 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
         setViewportBounds(bounds);
     }, []);
 
+    // Subscribe to AI analysis service updates and merge results into AI map
+    useEffect(() => {
+        const unsub = aiService.subscribeToNetworkAnalysis((entry) => {
+            setAiMap(prev => ({ ...prev, [entry.id]: entry }));
+        });
+
+        // Hydrate aiMap from cache on mount
+        try {
+            const cached = allNodes
+                .map(n => ({ id: n.id, entry: aiService.getCachedAnalysis(n.id) }))
+                .filter(x => x.entry)
+                .reduce((acc, cur) => ({ ...acc, [cur.id]: cur.entry }), {} as Record<string, any>);
+            if (Object.keys(cached).length > 0) setAiMap(cached);
+        } catch (e) { /* ignore */ }
+
+        return () => unsub();
+    }, [allNodes]);
+
+    // Merge AI data into nodes for rendering
+    const nodesWithAi = useMemo(() => processedNodes.map(n => ({ ...n, ai: aiMap[n.id] ?? n.ai })), [processedNodes, aiMap]);
+
     return (
         <div className="relative w-full h-full bg-base-darker rounded-lg overflow-hidden">
             {loadingState.isLoading && <LoadingIndicator />}
@@ -465,13 +497,13 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                 {enableVirtualization ? visibleNodes.map(node => (
                     <Node
                         key={node.id}
-                        node={node}
+                        node={{ ...node, ai: (nodesWithAi.find(n=>n.id===node.id)?.ai) ?? node.ai }}
                         onMouseEnter={() => setHoveredNodeId(node.id)}
                         onMouseLeave={() => setHoveredNodeId(null)}
                         onClick={() => handleNodeClick(node)}
                         scale={selectedNodeId === node.id ? 1.1 : 1}
                     />
-                )) : processedNodes.map(node => (
+                )) : nodesWithAi.map(node => (
                     <Node
                         key={node.id}
                         node={node}
