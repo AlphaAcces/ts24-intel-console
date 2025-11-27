@@ -5,6 +5,7 @@
  */
 
 import type { View, Priority, ActionCategory } from './core';
+import type { Identifiable } from './shared';
 import type { ExecutiveRiskHighlights } from './risk';
 import type { ActionItem } from './actions';
 
@@ -55,8 +56,7 @@ export interface ExecutiveFinancialHighlights {
 /**
  * Executive action item summary
  */
-export interface ExecutiveActionItemSummary {
-  id: string;
+export interface ExecutiveActionItemSummary extends Identifiable {
   title: string;
   priority: ActionItem['priority'];
   ownerRole?: ActionItem['ownerRole'];
@@ -135,8 +135,7 @@ export interface ExecutiveHeroKpi {
 /**
  * Executive quick insight
  */
-export interface ExecutiveQuickInsight {
-  id: string;
+export interface ExecutiveQuickInsight extends Identifiable {
   text: string;
   category: ActionCategory;
   severity: Priority;
@@ -155,8 +154,7 @@ export interface ExecutiveKeyTakeaway {
 /**
  * Executive priority action
  */
-export interface ExecutivePriorityAction {
-  id: string;
+export interface ExecutivePriorityAction extends Identifiable {
   title: string;
   category: ActionCategory;
   priority: Priority;

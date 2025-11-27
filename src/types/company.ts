@@ -5,6 +5,7 @@
  */
 
 import type { CompanyRole, CompanyStatus, SimpleRiskLevel, RiskCategory, CounterpartyType } from './core';
+import type { NamedEntity, Addressable, Address } from './shared';
 
 // ============================================================================
 // Company Types
@@ -13,9 +14,7 @@ import type { CompanyRole, CompanyStatus, SimpleRiskLevel, RiskCategory, Counter
 /**
  * Company entity
  */
-export interface Company {
-  id: string;
-  name: string;
+export interface Company extends NamedEntity, Addressable {
   cvr: string;
   role: CompanyRole;
   industryCode: string;
@@ -26,6 +25,7 @@ export interface Company {
   status: CompanyStatus;
   notes: string;
   riskLevel?: SimpleRiskLevel;
+  registeredAddress?: Address;
 }
 
 // ============================================================================
@@ -143,9 +143,7 @@ export interface SectorComparisonMetric {
 /**
  * Counterparty entity
  */
-export interface Counterparty {
-  id: string;
-  name: string;
+export interface Counterparty extends NamedEntity, Addressable {
   type: CounterpartyType;
   riskLevel: 'Høj' | 'Middel' | 'Lav';
   relationType: string;
@@ -161,8 +159,7 @@ export interface Counterparty {
 /**
  * Person data for the investigation subject
  */
-export interface PersonData {
-  name: string;
+export interface PersonData extends NamedEntity {
   aliases: string[];
   birthYear: string;
   currentAddress: string;

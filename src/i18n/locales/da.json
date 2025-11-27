@@ -674,6 +674,10 @@
       "operational": "Operationel",
       "compliance": "Skat / compliance"
     },
+    "aiAnalysis": {
+      "title": "AI-analyse · {{name}}",
+      "summaryFallback": "AI-analysen blev opdateret."
+    },
     "yearSummary_one": "({{count}} hændelse)",
     "yearSummary_other": "({{count}} hændelser)",
     "noEvents": "Ingen hændelser matcher det valgte filter.",

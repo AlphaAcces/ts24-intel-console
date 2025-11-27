@@ -18,6 +18,7 @@ import type {
   TimeHorizon,
   RiskCategory,
 } from './core';
+import type { Identifiable, NamedEntity, DescribedEntity } from './shared';
 
 // ============================================================================
 // Action Item Types
@@ -26,12 +27,10 @@ import type {
 /**
  * Individual action item
  */
-export interface ActionItem {
-  id: string;
+export interface ActionItem extends Identifiable, DescribedEntity {
   title: string;
   category: ActionCategory;
   priority: Priority;
-  description: string;
   evidenceType: string;
   status: ActionStatus;
   owner?: OwnerRole;
@@ -61,8 +60,7 @@ export interface ActionFilter {
 /**
  * Investigation hypothesis
  */
-export interface Hypothesis {
-  id: string;
+export interface Hypothesis extends Identifiable {
   title: string;
   summary: string;
   description: string[];
@@ -93,11 +91,8 @@ export interface HypothesisFilter {
 /**
  * Investigation scenario
  */
-export interface Scenario {
-  id: string;
-  name: string;
+export interface Scenario extends NamedEntity, DescribedEntity {
   category: ScenarioCategory;
-  description: string;
   assumptions: string[];
   expectedOutcome: string;
   probability: 'Lav' | 'Middel' | 'Høj';

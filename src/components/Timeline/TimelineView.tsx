@@ -1,8 +1,13 @@
-import React, { useState, useMemo } from 'react';
-import { useEnrichedCaseData } from '../../context/DataContext';
-import { TimelineEvent } from '../../types';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useEnrichedCaseData, useCaseData } from '../../context/DataContext';
+import { TimelineEvent, Scenario } from '../../types';
 import { TimelineEventCard } from './TimelineEventCard';
 import { useTranslation } from 'react-i18next';
+import { fetchScenarioAnalysisRealtime } from '../../domains/scenarios/api/scenarioAnalysisApi';
+import {
+    subscribeToScenarioAnalysis,
+    type ScenarioAnalysisResult,
+} from '../../domains/scenarios/services/aiScenarioAnalysisService';
 
 const FILTER_CONFIG = [
     { key: 'all', eventTypes: [] as TimelineEvent['type'][] },
@@ -15,9 +20,115 @@ const FILTER_CONFIG = [
 
 type FilterKey = typeof FILTER_CONFIG[number]['key'];
 
+const AI_TIMELINE_SOURCE = 'AI Scenario Engine';
+
+const extractAnalysisSummary = (result: ScenarioAnalysisResult): string => {
+    const sectionWithContent = result.sections.find(section => section.paragraphs.length > 0 || section.bullets.length > 0);
+    if (sectionWithContent) {
+        return sectionWithContent.paragraphs[0] ?? sectionWithContent.bullets[0] ?? '';
+    }
+
+    const fallbackLine = result.rawText
+        .split(/\r?\n/)
+        .map(line => line.replace(/^[-*•]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1').trim())
+        .find(Boolean);
+
+    return fallbackLine ?? '';
+};
+
+const mapResultToTimelineEvent = (
+    scenario: Scenario,
+    result: ScenarioAnalysisResult,
+    translate: (key: string, options?: Record<string, unknown>) => string,
+): TimelineEvent => {
+    const summary = extractAnalysisSummary(result);
+    const title = translate('timeline.aiAnalysis.title', {
+        name: scenario.name,
+        defaultValue: `AI-analyse · ${scenario.name}`,
+    });
+
+    return {
+        date: result.generatedAt ?? new Date().toISOString(),
+        type: 'Operationel',
+        title,
+        description:
+            summary ||
+            translate('timeline.aiAnalysis.summaryFallback', {
+                defaultValue: 'AI-analysen blev opdateret.',
+            }),
+        source: AI_TIMELINE_SOURCE,
+        sourceId: `ai-analysis-${scenario.id}`,
+        isCritical: scenario.impact === 'Ekstrem' || scenario.category === 'Worst' || scenario.category === 'Exit',
+        linkedViews: ['scenarios', 'timeline'],
+        linkedActions: scenario.linkedActions,
+    };
+};
+
 export const TimelineView: React.FC = () => {
     const { timelineData } = useEnrichedCaseData();
+    const { scenariosData, actionsData } = useCaseData();
     const { t } = useTranslation();
+    const [aiEventsByScenario, setAiEventsByScenario] = useState<Record<string, TimelineEvent>>({});
+
+    useEffect(() => {
+        let isCancelled = false;
+
+        // Remove stale AI events when scenarios change
+        setAiEventsByScenario(prev => {
+            const next: Record<string, TimelineEvent> = {};
+            scenariosData.forEach(scenario => {
+                if (prev[scenario.id]) {
+                    next[scenario.id] = prev[scenario.id];
+                }
+            });
+            return next;
+        });
+
+        const loadInitialAnalyses = async () => {
+            const responses = await Promise.all(
+                scenariosData.map(async scenario => {
+                    try {
+                        const response = await fetchScenarioAnalysisRealtime(scenario, actionsData);
+                        if (response.status === 200 && response.data) {
+                            return { scenario, result: response.data };
+                        }
+                    } catch (error) {
+                        console.error('AI timeline fetch failed', error);
+                    }
+                    return null;
+                })
+            );
+
+            if (isCancelled) return;
+
+            setAiEventsByScenario(prev => {
+                const next = { ...prev };
+                responses.forEach(entry => {
+                    if (!entry) return;
+                    next[entry.scenario.id] = mapResultToTimelineEvent(entry.scenario, entry.result, t);
+                });
+                return next;
+            });
+        };
+
+        loadInitialAnalyses();
+
+        const unsubscribe = subscribeToScenarioAnalysis(result => {
+            if (isCancelled) return;
+            const scenario = scenariosData.find(item => item.id === result.scenarioId);
+            if (!scenario) return;
+
+            setAiEventsByScenario(prev => ({
+                ...prev,
+                [scenario.id]: mapResultToTimelineEvent(scenario, result, t),
+            }));
+        });
+
+        return () => {
+            isCancelled = true;
+            unsubscribe();
+        };
+    }, [actionsData, scenariosData, t]);
 
     const filters = useMemo(() => FILTER_CONFIG.map(config => ({
         ...config,
@@ -26,12 +137,21 @@ export const TimelineView: React.FC = () => {
 
     const [activeFilter, setActiveFilter] = useState<FilterKey>('all');
 
+    const aiTimelineEvents = useMemo(() => Object.values(aiEventsByScenario), [aiEventsByScenario]);
+
+    const combinedTimelineEvents = useMemo(
+        () => [...timelineData, ...aiTimelineEvents],
+        [timelineData, aiTimelineEvents],
+    );
+
     const filteredEvents = useMemo(() => {
-        const sortedEvents = [...timelineData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const sortedEvents = [...combinedTimelineEvents].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
         if (activeFilter === 'all') return sortedEvents;
         const typesToMatch = FILTER_CONFIG.find(config => config.key === activeFilter)?.eventTypes ?? [];
         return sortedEvents.filter(event => typesToMatch.includes(event.type));
-    }, [timelineData, activeFilter]);
+    }, [combinedTimelineEvents, activeFilter]);
 
     const groupedEvents = useMemo(() => {
         return filteredEvents.reduce((acc, event) => {

@@ -4,6 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '../../../store';
 import DataProvider from '../../../context/DataContext';
 import { ExecutiveSummaryView } from '../ExecutiveSummaryView';
+import { TenantProvider } from '../../../domains/tenant/TenantContext';
 
 import * as PdfModule from '../../../pdf/executiveReport';
 vi.mock('../../../pdf/executiveReport', async () => ({
@@ -16,9 +17,11 @@ describe('Executive export trigger', () => {
   test('calls generateExecutiveReportPdf when export clicked (mock provider)', async () => {
     render(
       <ReduxProvider store={store}>
-        <DataProvider activeSubject="tsl">
-          <ExecutiveSummaryView />
-        </DataProvider>
+        <TenantProvider>
+          <DataProvider activeSubject="tsl">
+            <ExecutiveSummaryView />
+          </DataProvider>
+        </TenantProvider>
       </ReduxProvider>
     );
 

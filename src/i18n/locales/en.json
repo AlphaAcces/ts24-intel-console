@@ -676,6 +676,10 @@
       "operational": "Operational",
       "compliance": "Tax / compliance"
     },
+    "aiAnalysis": {
+      "title": "AI analysis · {{name}}",
+      "summaryFallback": "AI analysis updated."
+    },
     "yearSummary_one": "({{count}} event)",
     "yearSummary_other": "({{count}} events)",
     "noEvents": "No events match the selected filter.",

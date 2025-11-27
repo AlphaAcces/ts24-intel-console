@@ -6,6 +6,18 @@
  */
 
 // ============================================================================
+// Shared Base Types
+// ============================================================================
+export type {
+  Identifiable,
+  NamedEntity,
+  DescribedEntity,
+  Address,
+  Addressable,
+  TemporalMetadata,
+} from './shared';
+
+// ============================================================================
 // Core Types (Views, Navigation, Categories, Statuses)
 // ============================================================================
 export type {
