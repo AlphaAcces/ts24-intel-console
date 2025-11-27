@@ -1,3 +1,32 @@
+import { ExportPayload, ExportFormat } from '../types';
+import pdfRenderer from '../renderers/pdfRenderer';
+import excelRenderer from '../renderers/excelRenderer';
+import csvRenderer from '../renderers/csvRenderer';
+import jsonExporter from '../renderers/jsonExporter';
+
+export class ExportOrchestrator {
+  async export(payload: ExportPayload, format: ExportFormat): Promise<Uint8Array | string> {
+    // Ensure payload includes tenant and RBAC-relevant info
+    const { tenant, aiOverlay } = payload;
+
+    // Optionally transform payload here (filter by tenant permissions, redact, etc.)
+    // For now we forward payload to renderers which can implement format-specific logic.
+    switch (format) {
+      case 'pdf':
+        return pdfRenderer.renderPdf(payload);
+      case 'excel':
+        return excelRenderer.renderExcel(payload);
+      case 'csv':
+        return csvRenderer.renderCsv(payload);
+      case 'json':
+        return jsonExporter.renderJson(payload);
+      default:
+        throw new Error('unsupported export format');
+    }
+  }
+}
+
+export default new ExportOrchestrator();
 /**
  * Export Orchestrator Service
  *

@@ -1,6 +1,9 @@
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const DATA_PATH = path.resolve(__dirname, './data/aiKeys.json');
 
 export type StoredRecord = Record<string, { cipherText: string; iv: string; tag: string }>;
