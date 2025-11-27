@@ -86,6 +86,7 @@
   "data": {
     "loading": "Indlæser casedata…",
     "loadError": "Kunne ikke indlæse de seneste data. Prøv igen.",
+    "tenantMismatch": "Adgang nægtet: Data tilhører en anden organisation.",
     "unknownError": "Ukendt datafejl"
   },
   "dashboard": {

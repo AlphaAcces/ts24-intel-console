@@ -47,7 +47,11 @@ const DataProvider: React.FC<DataProviderProps> = ({ children, activeSubject }) 
         }
 
         // Filter data by tenant ID for multi-tenant isolation
-        if (tenantId && data.tenantId !== tenantId) {
+        // Allow 'default-tenant' in development mode for mock data compatibility
+        const isDefaultTenant = data.tenantId === 'default-tenant';
+        const isDevelopment = import.meta.env.DEV;
+
+        if (tenantId && data.tenantId !== tenantId && !(isDefaultTenant && isDevelopment)) {
           console.warn(`Case data tenantId (${data.tenantId}) does not match active tenantId (${tenantId})`);
           setErrorKey('tenantMismatch');
           setIsLoading(false);

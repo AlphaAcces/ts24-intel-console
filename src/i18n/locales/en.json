@@ -86,6 +86,7 @@
   "data": {
     "loading": "Loading case data…",
     "loadError": "We could not load the latest case data. Please try again.",
+    "tenantMismatch": "Access denied: Data belongs to a different organization.",
     "unknownError": "Unknown data error"
   },
   "dashboard": {
