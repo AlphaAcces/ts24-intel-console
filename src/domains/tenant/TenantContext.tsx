@@ -260,6 +260,14 @@ export const useTenant = (): TenantContextType => {
 };
 
 /**
+ * Optional tenant hook that returns null when no provider is present.
+ * Useful for components rendered in tests without a TenantProvider.
+ */
+export const useOptionalTenant = (): TenantContextType | null => {
+  return useContext(TenantContext);
+};
+
+/**
  * Hook to access current tenant config
  */
 export const useTenantConfig = (): TenantConfig | null => {

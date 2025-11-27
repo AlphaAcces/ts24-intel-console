@@ -76,7 +76,7 @@ interface AnalyzeOptions {
 
 export async function analyzeNetworkItem({ node, edge, apiKey }: AnalyzeOptions): Promise<AiEntry | null> {
   // Build a short prompt for analysis. If no apiKey provided, return cached if exists.
-  const id = node?.id ?? edge ? `${edge.from}->${edge.to}` : 'unknown';
+  const id = node?.id ?? (edge ? `${edge.from}->${edge.to}` : 'unknown');
 
   const cached = getCachedAnalysis(id);
   if (!apiKey && cached) return cached;

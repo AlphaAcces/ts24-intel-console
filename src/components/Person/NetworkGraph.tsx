@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { NetworkNode, NetworkEdge, NetworkCluster, ViewportBounds, NetworkLoadingState } from '../../types';
 import aiService from '../../domains/network/services/aiNetworkAnalysisService';
+import { useOptionalTenant } from '../../domains/tenant';
 import { useTranslation } from 'react-i18next';
 
 // Lazy loading hook for network data
@@ -107,15 +108,32 @@ const Node: React.FC<{
     onMouseEnter: () => void,
     onMouseLeave: () => void,
     onClick?: () => void,
-    scale?: number
-}> = ({ node, onMouseEnter, onMouseLeave, onClick, scale = 1 }) => {
+    scale?: number,
+    aiEnabled?: boolean
+}> = ({ node, onMouseEnter, onMouseLeave, onClick, scale = 1, aiEnabled = false }) => {
     const riskColor = riskColors[node.riskLevel] || riskColors.None;
     const typeColor = typeColors[node.type] || typeColors.company;
     const statusColor = statusColors[node.status || 'active'];
     const isHighlighted = node.isHighlighted;
 
-    const width = nodeDimensions.width * (node.size || 1) * scale;
-    const height = nodeDimensions.height * (node.size || 1) * scale;
+    // If AI overlay present, map category -> color and score -> extra scale/opacity
+    const aiCategory = aiEnabled ? node.ai?.category : undefined;
+    const aiScore = aiEnabled && typeof node.ai?.score === 'number' ? node.ai.score : undefined;
+    const aiCategoryColors: Record<string, string> = {
+        economy: '#f6ad55',
+        risk: '#e53e3e',
+        legal: '#805ad5',
+        social: '#38bdf8',
+        governance: '#7dd3fc',
+        socmint: '#f97316',
+        other: '#9ca3af',
+    };
+
+    const aiColor = aiCategory ? (aiCategoryColors[aiCategory.toLowerCase()] || aiCategoryColors.other) : undefined;
+
+    const scoreScale = aiScore ? (1 + Math.min(0.9, aiScore / 100 * 0.9)) : 1;
+    const width = nodeDimensions.width * (node.size || 1) * scale * scoreScale;
+    const height = nodeDimensions.height * (node.size || 1) * scale * scoreScale;
 
     return (
         <g
@@ -146,7 +164,7 @@ const Node: React.FC<{
                 rx={nodeDimensions.radius}
                 ry={nodeDimensions.radius}
                 fill="#1a1c20"
-                stroke={riskColor}
+                stroke={aiColor ?? riskColor}
                 strokeWidth={isHighlighted ? 3 : 2}
                 className="transition-all duration-200"
             />
@@ -216,13 +234,24 @@ const Edge: React.FC<{
     edge: NetworkEdge,
     fromNode: NetworkNode,
     toNode: NetworkNode,
-    onClick?: () => void
-}> = ({ edge, fromNode, toNode, onClick }) => {
+    onClick?: () => void,
+    aiEnabled?: boolean
+}> = ({ edge, fromNode, toNode, onClick, aiEnabled = false }) => {
     const isHighlighted = edge.isHighlighted;
     const strokeWidth = Math.max(1, (edge.weight || 1) * 1.5);
-    const strokeColor = edge.type === 'historical'
-        ? (isHighlighted ? "#00cc66" : "#4a5568")
-        : (isHighlighted ? "#00cc66" : "#718096");
+    // If AI classification present on edge, color by category
+    const aiCat = aiEnabled ? edge.ai?.category : undefined;
+    const aiEdgeColors: Record<string, string> = {
+        economy: '#f6ad55',
+        risk: '#e53e3e',
+        legal: '#805ad5',
+        social: '#38bdf8',
+        governance: '#7dd3fc',
+        socmint: '#f97316',
+        other: '#9ca3af',
+    };
+
+    const strokeColor = aiCat ? (aiEdgeColors[aiCat.toLowerCase()] || aiEdgeColors.other) : (edge.type === 'historical' ? (isHighlighted ? "#00cc66" : "#4a5568") : (isHighlighted ? "#00cc66" : "#718096"));
 
     // Calculate edge label position
     const midX = (fromNode.x + toNode.x) / 2;
@@ -363,6 +392,43 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
         x: 0, y: 0, width: 700, height: 400
     });
 
+    // Tenant / RBAC (use optional tenant hook to avoid throwing in tests)
+    const tenantCtx = useOptionalTenant();
+    const canUseAi = tenantCtx ? tenantCtx.hasPermission('ai:use') : false;
+    const tenant = tenantCtx?.tenant ?? null;
+
+    // AI overlay toggle persisted per tenant
+    const AI_PREF_KEY = `ui:ai-overlays-enabled:${tenant?.id ?? 'global'}`;
+    const isLocalStorageAvailable = () => {
+        try { return typeof window !== 'undefined' && !!window.localStorage; } catch { return false; }
+    };
+
+    const [aiEnabled, setAiEnabled] = useState<boolean>(() => {
+        try {
+            const raw = isLocalStorageAvailable() ? window.localStorage.getItem(AI_PREF_KEY) : null;
+            return raw === 'true';
+        } catch { return false; }
+    });
+
+    useEffect(() => {
+        if (!isLocalStorageAvailable()) return;
+        try { window.localStorage.setItem(AI_PREF_KEY, String(aiEnabled)); } catch { }
+    }, [aiEnabled, AI_PREF_KEY]);
+
+    // When enabling AI overlays, trigger analysis (only if allowed)
+    useEffect(() => {
+        if (!aiEnabled) return;
+        if (!canUseAi) return;
+
+        (async () => {
+            try {
+                await aiService.analyzeWholeGraph(allNodes, allEdges);
+            } catch (e) {
+                console.warn('Analyze whole graph failed', e);
+            }
+        })();
+    }, [aiEnabled, canUseAi, allNodes, allEdges]);
+
     // Use lazy loading for large networks (batchSize can be adjusted based on maxNodesToShow)
     const {
         nodes: processedNodes,
@@ -457,6 +523,15 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
         <div className="relative w-full h-full bg-base-darker rounded-lg overflow-hidden">
             {loadingState.isLoading && <LoadingIndicator />}
 
+            {/* AI overlay toggle (top-right) */}
+            <div className="absolute top-4 right-4 z-20 flex items-center space-x-2">
+                <div className="text-xs text-gray-300">AI overlay</div>
+                <label className={`inline-flex relative items-center cursor-pointer ${!canUseAi ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <input type="checkbox" className="sr-only peer" checked={aiEnabled && canUseAi} onChange={() => { if (!canUseAi) return; setAiEnabled(v=>!v); }} aria-label="Toggle AI overlays" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-primary relative" />
+                </label>
+            </div>
+
             <svg
                 width="100%"
                 height="400"
@@ -489,6 +564,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                             fromNode={fromNode}
                             toNode={toNode}
                             onClick={() => handleEdgeClick(edge)}
+                            aiEnabled={aiEnabled && canUseAi}
                         />
                     );
                 })}
@@ -502,6 +578,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                         onMouseLeave={() => setHoveredNodeId(null)}
                         onClick={() => handleNodeClick(node)}
                         scale={selectedNodeId === node.id ? 1.1 : 1}
+                        aiEnabled={aiEnabled && canUseAi}
                     />
                 )) : nodesWithAi.map(node => (
                     <Node
@@ -511,6 +588,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                         onMouseLeave={() => setHoveredNodeId(null)}
                         onClick={() => handleNodeClick(node)}
                         scale={selectedNodeId === node.id ? 1.1 : 1}
+                        aiEnabled={aiEnabled && canUseAi}
                     />
                 ))}
 
@@ -521,23 +599,20 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
             {/* Legend */}
             <div className="absolute bottom-4 left-4 bg-base-dark p-3 rounded-md border border-border-dark text-xs">
                 <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                        <span>Active</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-                        <span>Inactive</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 rounded bg-red-500"></div>
-                        <span>High Risk</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 rounded bg-yellow-500"></div>
-                        <span>Medium Risk</span>
-                    </div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full bg-green-500"></div><span>Active</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full bg-gray-500"></div><span>Inactive</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded bg-red-500"></div><span>High Risk</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded bg-yellow-500"></div><span>Medium Risk</span></div>
+
+                    {/* AI categories */}
+                    <div className="col-span-2 mt-2 font-semibold">AI categories</div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#f6ad55' }}></div><span>Economy</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#e53e3e' }}></div><span>Risk</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#805ad5' }}></div><span>Legal</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#38bdf8' }}></div><span>SOCMINT / Social</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#9ca3af' }}></div><span>Other</span></div>
                 </div>
+                <div className="mt-2 text-xs text-gray-400">AI overlay: {canUseAi ? (aiEnabled ? 'Enabled' : 'Disabled') : 'Not permitted'}</div>
             </div>
         </div>
     );

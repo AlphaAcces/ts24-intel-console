@@ -40,6 +40,7 @@ export {
   useModule,
   useBranding,
   useTenantId,
+  useOptionalTenant,
   WithPermission,
   WithModule,
   DEFAULT_BRANDING,
