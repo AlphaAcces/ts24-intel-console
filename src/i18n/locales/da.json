@@ -26,6 +26,7 @@
     "actions": "Handlinger",
     "counterparties": "Modparter",
     "scenarios": "Scenarier",
+    "vault": "Intel Vault",
     "savedViews": "Gemte visninger"
   }
   ,
@@ -1168,6 +1169,79 @@
       "requests": "Forespørgsler",
       "latency": "Latens",
       "errorRate": "Fejlrate"
+    }
+  },
+  "vault": {
+    "title": "Intel Vault",
+    "subtitle": "Sikkert dokumentarkiv",
+    "search": {
+      "placeholder": "Søg dokumenter efter titel, filnavn, tags..."
+    },
+    "filters": {
+      "title": "Filtre",
+      "all": "Alle",
+      "clear": "Ryd filtre",
+      "category": "Kategori",
+      "securityLevel": "Sikkerhedsniveau",
+      "status": "Status",
+      "caseId": "Sags-ID"
+    },
+    "results": {
+      "showing": "Viser {{from}} til {{to}} af {{total}} dokumenter"
+    },
+    "sort": {
+      "label": "Sortér efter:",
+      "date": "Dato"
+    },
+    "table": {
+      "document": "Dokument",
+      "category": "Kategori",
+      "security": "Sikkerhed",
+      "status": "Status",
+      "size": "Størrelse",
+      "modified": "Ændret",
+      "actions": "Handlinger"
+    },
+    "empty": {
+      "title": "Ingen dokumenter fundet",
+      "description": "Prøv at justere din søgning eller filtre"
+    },
+    "actions": {
+      "view": "Se detaljer",
+      "download": "Download",
+      "delete": "Slet"
+    },
+    "detail": {
+      "description": "Beskrivelse",
+      "category": "Kategori",
+      "size": "Filstørrelse",
+      "createdAt": "Oprettet",
+      "updatedAt": "Sidst ændret",
+      "createdBy": "Oprettet af",
+      "caseId": "Sags-ID",
+      "tags": "Tags"
+    },
+    "category": {
+      "intelligence-report": "Efterretningsrapport",
+      "financial-analysis": "Finansiel analyse",
+      "risk-assessment": "Risikovurdering",
+      "legal-document": "Juridisk dokument",
+      "corporate-filing": "Selskabsdokument",
+      "surveillance-log": "Overvågningslog",
+      "network-analysis": "Netværksanalyse",
+      "other": "Andet"
+    },
+    "security": {
+      "unclassified": "Uklassificeret",
+      "confidential": "Fortrolig",
+      "secret": "Hemmelig",
+      "top-secret": "Strengt hemmelig"
+    },
+    "status": {
+      "draft": "Kladde",
+      "active": "Aktiv",
+      "archived": "Arkiveret",
+      "pending-review": "Afventer gennemgang"
     }
   }
 }

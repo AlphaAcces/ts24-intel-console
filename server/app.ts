@@ -1,9 +1,13 @@
 import express from 'express';
 import storage from './storage';
 import { encrypt, decrypt } from './crypto';
+import monitoringRoutes from './monitoring';
 
 const app = express();
 app.use(express.json());
+
+// Mount monitoring routes
+app.use('/api', monitoringRoutes);
 
 // Simple RBAC middleware for this example. In real deployments integrate with your auth layer.
 function requirePermission(permission: string) {

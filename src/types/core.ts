@@ -29,7 +29,8 @@ export type View =
   | 'counterparties'
   | 'scenarios'
   | 'business'
-  | 'personal';
+  | 'personal'
+  | 'vault';
 
 /**
  * Available investigation subjects

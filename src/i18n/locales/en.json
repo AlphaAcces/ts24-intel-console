@@ -25,7 +25,8 @@
     "risk": "Risk Heatmap",
     "actions": "Actionables",
     "counterparties": "Counterparties",
-    "scenarios": "Scenarios"
+    "scenarios": "Scenarios",
+    "vault": "Intel Vault"
     ,"savedViews": "Saved Views"
   }
   ,
@@ -1168,6 +1169,79 @@
       "requests": "Requests",
       "latency": "Latency",
       "errorRate": "Error Rate"
+    }
+  },
+  "vault": {
+    "title": "Intel Vault",
+    "subtitle": "Secure document repository",
+    "search": {
+      "placeholder": "Search documents by title, filename, tags..."
+    },
+    "filters": {
+      "title": "Filters",
+      "all": "All",
+      "clear": "Clear filters",
+      "category": "Category",
+      "securityLevel": "Security Level",
+      "status": "Status",
+      "caseId": "Case ID"
+    },
+    "results": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} documents"
+    },
+    "sort": {
+      "label": "Sort by:",
+      "date": "Date"
+    },
+    "table": {
+      "document": "Document",
+      "category": "Category",
+      "security": "Security",
+      "status": "Status",
+      "size": "Size",
+      "modified": "Modified",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "No documents found",
+      "description": "Try adjusting your search or filters"
+    },
+    "actions": {
+      "view": "View details",
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "detail": {
+      "description": "Description",
+      "category": "Category",
+      "size": "File Size",
+      "createdAt": "Created",
+      "updatedAt": "Last Modified",
+      "createdBy": "Created By",
+      "caseId": "Case ID",
+      "tags": "Tags"
+    },
+    "category": {
+      "intelligence-report": "Intelligence Report",
+      "financial-analysis": "Financial Analysis",
+      "risk-assessment": "Risk Assessment",
+      "legal-document": "Legal Document",
+      "corporate-filing": "Corporate Filing",
+      "surveillance-log": "Surveillance Log",
+      "network-analysis": "Network Analysis",
+      "other": "Other"
+    },
+    "security": {
+      "unclassified": "Unclassified",
+      "confidential": "Confidential",
+      "secret": "Secret",
+      "top-secret": "Top Secret"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "archived": "Archived",
+      "pending-review": "Pending Review"
     }
   }
 }

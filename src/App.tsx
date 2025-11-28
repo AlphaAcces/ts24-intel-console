@@ -28,6 +28,7 @@ const SectorAnalysisView = lazy(() => import('./components/Sector/SectorAnalysis
 const CounterpartiesView = lazy(() => import('./components/Counterparties/CounterpartiesView').then(module => ({ default: module.CounterpartiesView })));
 const ScenariosView = lazy(() => import('./components/Scenarios/ScenariosView'));
 const ExecutiveSummaryView = lazy(() => import('./components/Executive/ExecutiveSummaryView').then(module => ({ default: module.ExecutiveSummaryView })));
+const IntelVaultView = lazy(() => import('./components/Vault/IntelVaultView'));
 
 export const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<{ id: string; role: 'admin' | 'user' } | null>(null);
@@ -146,6 +147,8 @@ export const App: React.FC = () => {
         return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><RiskView /></ViewContainer>;
       case 'actions':
         return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><ActionsView /></ViewContainer>;
+      case 'vault':
+        return <ViewContainer {...commonViewProps} breadcrumbs={navState.breadcrumbs}><IntelVaultView /></ViewContainer>;
       default:
         return <DashboardView activeSubject={activeSubject} onNavigate={navigateTo} />;
     }

@@ -1,27 +1,66 @@
 /**
- * Monitoring API Service
+ * Server-side Monitoring API
  *
- * Connects to real API endpoints for system status and network statistics.
- * Falls back to simulated data in development or when API is unavailable.
+ * Provides real-time system status and network statistics.
+ * In production, these would integrate with actual monitoring infrastructure.
  */
 
-import type {
-  SystemStatus,
-  SystemComponent,
-  SystemComponentStatus,
-  NetworkStats,
-  NetworkStat,
-} from '../types';
+import { Router } from 'express';
+
+const router = Router();
 
 // ============================================================================
-// Configuration
+// Types
 // ============================================================================
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_MONITORING !== 'false';
+type SystemComponentStatus = 'operational' | 'degraded' | 'outage' | 'unknown';
+
+interface SystemComponent {
+  id: string;
+  name: string;
+  status: SystemComponentStatus;
+  latency?: number;
+  lastCheck: string;
+  message?: string;
+}
+
+interface SystemStatus {
+  overall: SystemComponentStatus;
+  components: SystemComponent[];
+  lastUpdated: string;
+  uptime: number;
+  activeAlerts: number;
+}
+
+interface NetworkStat {
+  id: string;
+  label: string;
+  value: number;
+  unit: string;
+  trend?: 'up' | 'down' | 'stable';
+  change?: number;
+}
+
+interface NetworkStats {
+  bandwidth: {
+    current: number;
+    max: number;
+    unit: string;
+  };
+  activeConnections: number;
+  requestsPerMinute: number;
+  errorRate: number;
+  latency: {
+    avg: number;
+    p95: number;
+    p99: number;
+  };
+  stats: NetworkStat[];
+  lastUpdated: string;
+}
 
 // ============================================================================
-// Mock Data Generators (Fallback)
+// Mock Data Generators (In production, these would query real systems)
 // ============================================================================
 
 function randomStatus(): SystemComponentStatus {
@@ -81,14 +120,13 @@ function generateSystemComponents(): SystemComponent[] {
     },
   ];
 
-  // Add messages for non-operational components
   return components.map((c) => ({
     ...c,
     message:
       c.status === 'degraded'
-        ? 'Oplever forhøjet latens'
+        ? 'Experiencing elevated latency'
         : c.status === 'outage'
-          ? 'Tjeneste utilgængelig'
+          ? 'Service unavailable'
           : undefined,
   }));
 }
@@ -106,7 +144,7 @@ function generateNetworkStats(): NetworkStat[] {
   return [
     {
       id: 'api-calls',
-      label: 'API Kald',
+      label: 'API Calls',
       value: Math.round(1200 + Math.random() * 500),
       unit: '/min',
       trend: Math.random() > 0.5 ? 'up' : 'stable',
@@ -114,7 +152,7 @@ function generateNetworkStats(): NetworkStat[] {
     },
     {
       id: 'data-transfer',
-      label: 'Data Overført',
+      label: 'Data Transferred',
       value: Math.round(45 + Math.random() * 30),
       unit: 'MB/s',
       trend: 'stable',
@@ -129,7 +167,7 @@ function generateNetworkStats(): NetworkStat[] {
     },
     {
       id: 'active-users',
-      label: 'Aktive Brugere',
+      label: 'Active Users',
       value: Math.round(25 + Math.random() * 15),
       unit: '',
       trend: Math.random() > 0.5 ? 'up' : 'down',
@@ -139,7 +177,7 @@ function generateNetworkStats(): NetworkStat[] {
 }
 
 // ============================================================================
-// API Functions
+// Cache
 // ============================================================================
 
 let cachedSystemStatus: SystemStatus | null = null;
@@ -149,35 +187,21 @@ let lastNetworkUpdate = 0;
 
 const CACHE_TTL = 5000; // 5 seconds
 
+// ============================================================================
+// Routes
+// ============================================================================
+
 /**
- * Fetch system status from API with fallback to mock data
+ * GET /api/system-status
+ * Returns current system status and health of all components
  */
-export async function fetchSystemStatus(): Promise<SystemStatus> {
+router.get('/system-status', (_req, res) => {
   const now = Date.now();
 
   // Use cached data if still valid
   if (cachedSystemStatus && now - lastSystemUpdate < CACHE_TTL) {
-    return cachedSystemStatus;
+    return res.json(cachedSystemStatus);
   }
-
-  // Try real API first (unless explicitly using mock)
-  if (!USE_MOCK_DATA) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/system-status`, {
-        headers: { 'Accept': 'application/json' },
-      });
-      if (response.ok) {
-        cachedSystemStatus = await response.json();
-        lastSystemUpdate = now;
-        return cachedSystemStatus!;
-      }
-    } catch {
-      // Fall through to mock data
-    }
-  }
-
-  // Fallback: generate mock data
-  await new Promise((resolve) => setTimeout(resolve, 100 + Math.random() * 200));
 
   const components = generateSystemComponents();
   const overall = calculateOverallStatus(components);
@@ -189,43 +213,25 @@ export async function fetchSystemStatus(): Promise<SystemStatus> {
     overall,
     components,
     lastUpdated: new Date().toISOString(),
-    uptime: 99.5 + Math.random() * 0.49, // 99.5% - 99.99%
+    uptime: 99.5 + Math.random() * 0.49,
     activeAlerts,
   };
 
   lastSystemUpdate = now;
-  return cachedSystemStatus;
-}
+  res.json(cachedSystemStatus);
+});
 
 /**
- * Fetch network stats from API with fallback to mock data
+ * GET /api/network-stats
+ * Returns current network statistics and performance metrics
  */
-export async function fetchNetworkStats(): Promise<NetworkStats> {
+router.get('/network-stats', (_req, res) => {
   const now = Date.now();
 
   // Use cached data if still valid
   if (cachedNetworkStats && now - lastNetworkUpdate < CACHE_TTL) {
-    return cachedNetworkStats;
+    return res.json(cachedNetworkStats);
   }
-
-  // Try real API first (unless explicitly using mock)
-  if (!USE_MOCK_DATA) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/network-stats`, {
-        headers: { 'Accept': 'application/json' },
-      });
-      if (response.ok) {
-        cachedNetworkStats = await response.json();
-        lastNetworkUpdate = now;
-        return cachedNetworkStats!;
-      }
-    } catch {
-      // Fall through to mock data
-    }
-  }
-
-  // Fallback: generate mock data
-  await new Promise((resolve) => setTimeout(resolve, 80 + Math.random() * 150));
 
   const bandwidthCurrent = Math.round(65 + Math.random() * 25);
 
@@ -248,13 +254,19 @@ export async function fetchNetworkStats(): Promise<NetworkStats> {
   };
 
   lastNetworkUpdate = now;
-  return cachedNetworkStats;
-}
+  res.json(cachedNetworkStats);
+});
 
-// Force refresh (bypass cache)
-export function invalidateMonitoringCache(): void {
+/**
+ * POST /api/monitoring/refresh
+ * Force refresh of cached monitoring data
+ */
+router.post('/monitoring/refresh', (_req, res) => {
   cachedSystemStatus = null;
   cachedNetworkStats = null;
   lastSystemUpdate = 0;
   lastNetworkUpdate = 0;
-}
+  res.json({ ok: true, message: 'Cache invalidated' });
+});
+
+export default router;
