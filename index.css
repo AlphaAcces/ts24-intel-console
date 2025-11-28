@@ -515,3 +515,363 @@ body::-webkit-scrollbar,
     font-size: 2.5rem;
   }
 }
+
+/* ============================================
+ * INTEL24 TOPBAR STYLES
+ * Harmonized header with 56px height
+ * ============================================ */
+
+.topbar {
+  height: auto;
+  min-height: 56px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+}
+
+.topbar__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  height: 56px;
+}
+
+.topbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  min-width: 0;
+}
+
+.topbar__center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.topbar__divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border);
+}
+
+.topbar__menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.topbar__menu-btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-gold);
+}
+
+.topbar__icon-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.topbar__icon-btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-gold);
+  background: var(--color-surface-hover);
+}
+
+.topbar__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-gold);
+  color: var(--color-background);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.topbar__dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-sm));
+  right: 0;
+  min-width: 280px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: 50;
+  overflow: hidden;
+  animation: fade-in-up 0.2s ease-out;
+}
+
+.topbar__dropdown-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-hover);
+}
+
+.topbar__dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.topbar__dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.topbar__dropdown-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.topbar__theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.topbar__theme-btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-gold);
+}
+
+.topbar__theme-btn--active {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-background);
+}
+
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-hover);
+}
+
+.topbar__user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-copper) 100%);
+  color: var(--color-background);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.topbar__user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar__user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar__user-role {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.topbar__mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+/* ============================================
+ * INTEL24 SIDENAV STYLES
+ * Collapsible sections with micro-animations
+ * ============================================ */
+
+.sidenav__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.sidenav-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.sidenav-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: default;
+  transition: color var(--transition-fast);
+  width: 100%;
+  text-align: left;
+}
+
+.sidenav-section__header--collapsible {
+  cursor: pointer;
+  border-radius: var(--radius-md);
+}
+
+.sidenav-section__header--collapsible:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+}
+
+.sidenav-section__header--has-active {
+  color: var(--color-gold);
+}
+
+.sidenav-section__label {
+  flex: 1;
+}
+
+.sidenav-section__chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.sidenav-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.sidenav-section__list--collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Placeholder item styles */
+.sidenav-item--placeholder {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sidenav-item__icon--placeholder {
+  opacity: 0.4;
+}
+
+/* Enhanced sidenav-item hover animation */
+.sidenav-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.sidenav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--color-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  transition: height var(--transition-fast);
+}
+
+.sidenav-item:hover::before {
+  height: 60%;
+}
+
+.sidenav-item--active::before {
+  height: 100%;
+  background: var(--color-background);
+}
+
+/* Icon animation on hover */
+.sidenav-item__icon {
+  transition: transform var(--transition-fast);
+}
+
+.sidenav-item:hover .sidenav-item__icon {
+  transform: scale(1.1);
+}
+
+.sidenav-item--active .sidenav-item__icon {
+  transform: scale(1);
+}

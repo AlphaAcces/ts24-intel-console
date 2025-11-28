@@ -28,7 +28,29 @@
     "scenarios": "Scenarios",
     "vault": "Intel Vault",
     "accessRequests": "Access Requests",
-    "savedViews": "Saved Views"
+    "savedViews": "Saved Views",
+    "comingSoon": "Coming soon",
+    "sections": {
+      "core": "Core",
+      "analysis": "Analysis",
+      "operations": "Operations",
+      "riskActions": "Risk & Actions",
+      "intel": "Intel",
+      "admin": "Admin",
+      "settings": "Settings"
+    },
+    "placeholders": {
+      "marketIntel": "Market Intelligence",
+      "portfolioAnalysis": "Portfolio Analysis",
+      "alertCenter": "Alert Center",
+      "dataExports": "Data Exports"
+    }
+  },
+  "topbar": {
+    "openNavigation": "Open navigation",
+    "settings": "Settings",
+    "configuration": "Configuration",
+    "saveView": "Save view"
   },
   "theme": {
     "light": "Light",
@@ -154,7 +176,7 @@
       "backToDashboard": "Back to dashboard"
     },
     "logo": {
-      "alt": "TS Logistik logo"
+      "alt": "TS24 Intelligence"
     }
   },
   "auth": {
@@ -178,6 +200,9 @@
     "unknownError": "Unknown data error"
   },
   "dashboard": {
+    "comingSoon": "Coming Soon",
+    "learnMore": "Learn more",
+    "upcomingFeatures": "Upcoming Features",
     "common": {
       "noDrivers": "No key drivers identified",
       "drivers": {
