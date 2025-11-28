@@ -1125,5 +1125,49 @@
         "description": "Tilgodehavender hos nærtstående parter"
       }
     }
+  },
+  "ai": {
+    "title": "AI Assistent",
+    "thinking": "Tænker...",
+    "processing": "Behandler forespørgsel...",
+    "placeholder": "Stil et spørgsmål til AI-assistenten...",
+    "hint": "Tryk Enter for at sende, Shift+Enter for ny linje",
+    "emptyState": "Ingen kommandoer endnu. Start med at stille et spørgsmål.",
+    "clearHistory": "Ryd historik",
+    "remove": "Fjern",
+    "showMore": "Vis {{count}} flere",
+    "error": {
+      "noApiKey": "AI API-nøgle mangler. Konfigurer venligst din API-nøgle.",
+      "generic": "Der opstod en fejl ved behandling af din forespørgsel."
+    }
+  },
+  "monitoring": {
+    "system": {
+      "title": "Systemstatus",
+      "uptime": "Oppetid: {{value}}%",
+      "alerts": "advarsler",
+      "components": {
+        "database": "Database",
+        "apiGateway": "API Gateway",
+        "aiEngine": "AI Motor",
+        "firewall": "Firewall",
+        "cache": "Cache",
+        "storage": "Lagring"
+      },
+      "status": {
+        "operational": "Operationel",
+        "degraded": "Forringet",
+        "outage": "Udfald",
+        "unknown": "Ukendt"
+      }
+    },
+    "network": {
+      "title": "Netværksstatus",
+      "bandwidth": "Båndbredde",
+      "connections": "Forbindelser",
+      "requests": "Forespørgsler",
+      "latency": "Latens",
+      "errorRate": "Fejlrate"
+    }
   }
 }

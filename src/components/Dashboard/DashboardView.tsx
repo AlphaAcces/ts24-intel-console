@@ -5,10 +5,14 @@ import { KpiCard } from '../Shared/KpiCard';
 import { ShieldAlert, TrendingUp, DollarSign, Banknote, Users } from 'lucide-react';
 import { FileWarning } from 'lucide-react';
 import { useDashboardKpis } from '../../domains/kpi';
+import { useMonitoring } from '../../domains/monitoring';
 
 const PriorityActionsCard = lazy(() => import('./PriorityActionsCard').then(module => ({ default: module.PriorityActionsCard })));
 const IntelligenceSummaryCard = lazy(() => import('./IntelligenceSummaryCard').then(module => ({ default: module.IntelligenceSummaryCard })));
 const RecentEventsCard = lazy(() => import('./RecentEventsCard').then(module => ({ default: module.RecentEventsCard })));
+const AiCommandPanel = lazy(() => import('./AiCommandPanel').then(module => ({ default: module.AiCommandPanel })));
+const SystemStatusCard = lazy(() => import('./SystemStatusCard').then(module => ({ default: module.SystemStatusCard })));
+const NetworkStatsCard = lazy(() => import('./NetworkStatsCard').then(module => ({ default: module.NetworkStatsCard })));
 
 const CardSkeleton: React.FC = () => (
     <div className="h-full min-h-[8rem] rounded-lg border border-border-dark/60 bg-component-dark/40 animate-pulse" />
@@ -29,6 +33,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
         financialSummary,
         riskBreakdown,
     } = useDashboardKpis(subjectType);
+
+    // Use monitoring hook for system status and network stats
+    const { systemStatus, networkStats, isLoading: isMonitoringLoading, refresh: refreshMonitoring } = useMonitoring({
+        refreshInterval: 30000,
+    });
 
     // Personal/UMIT dashboard
     if (activeSubject === 'umit') {
@@ -101,6 +110,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                     <Suspense fallback={<CardSkeleton />}>
                         <RecentEventsCard />
                     </Suspense>
+                </section>
+
+                {/* AI Command Panel and System Monitoring */}
+                <section>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2">
+                            <Suspense fallback={<CardSkeleton />}>
+                                <AiCommandPanel context={{ subject: activeSubject, view: 'dashboard' }} />
+                            </Suspense>
+                        </div>
+                        <div className="space-y-6">
+                            <Suspense fallback={<CardSkeleton />}>
+                                <SystemStatusCard
+                                    status={systemStatus}
+                                    isLoading={isMonitoringLoading}
+                                    onRefresh={refreshMonitoring}
+                                />
+                            </Suspense>
+                            <Suspense fallback={<CardSkeleton />}>
+                                <NetworkStatsCard
+                                    stats={networkStats}
+                                    isLoading={isMonitoringLoading}
+                                    onRefresh={refreshMonitoring}
+                                />
+                            </Suspense>
+                        </div>
+                    </div>
                 </section>
             </div>
         );
@@ -178,6 +214,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                 <Suspense fallback={<CardSkeleton />}>
                     <RecentEventsCard />
                 </Suspense>
+            </section>
+
+            {/* AI Command Panel and System Monitoring */}
+            <section>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2">
+                        <Suspense fallback={<CardSkeleton />}>
+                            <AiCommandPanel context={{ subject: activeSubject, view: 'dashboard' }} />
+                        </Suspense>
+                    </div>
+                    <div className="space-y-6">
+                        <Suspense fallback={<CardSkeleton />}>
+                            <SystemStatusCard
+                                status={systemStatus}
+                                isLoading={isMonitoringLoading}
+                                onRefresh={refreshMonitoring}
+                            />
+                        </Suspense>
+                        <Suspense fallback={<CardSkeleton />}>
+                            <NetworkStatsCard
+                                stats={networkStats}
+                                isLoading={isMonitoringLoading}
+                                onRefresh={refreshMonitoring}
+                            />
+                        </Suspense>
+                    </div>
+                </div>
             </section>
         </div>
     );

@@ -1125,5 +1125,49 @@
         "description": "Receivables from related parties"
       }
     }
+  },
+  "ai": {
+    "title": "AI Assistant",
+    "thinking": "Thinking...",
+    "processing": "Processing query...",
+    "placeholder": "Ask a question to the AI assistant...",
+    "hint": "Press Enter to send, Shift+Enter for new line",
+    "emptyState": "No commands yet. Start by asking a question.",
+    "clearHistory": "Clear history",
+    "remove": "Remove",
+    "showMore": "Show {{count}} more",
+    "error": {
+      "noApiKey": "AI API key is missing. Please configure your API key.",
+      "generic": "An error occurred while processing your request."
+    }
+  },
+  "monitoring": {
+    "system": {
+      "title": "System Status",
+      "uptime": "Uptime: {{value}}%",
+      "alerts": "alerts",
+      "components": {
+        "database": "Database",
+        "apiGateway": "API Gateway",
+        "aiEngine": "AI Engine",
+        "firewall": "Firewall",
+        "cache": "Cache",
+        "storage": "Storage"
+      },
+      "status": {
+        "operational": "Operational",
+        "degraded": "Degraded",
+        "outage": "Outage",
+        "unknown": "Unknown"
+      }
+    },
+    "network": {
+      "title": "Network Status",
+      "bandwidth": "Bandwidth",
+      "connections": "Connections",
+      "requests": "Requests",
+      "latency": "Latency",
+      "errorRate": "Error Rate"
+    }
   }
 }
