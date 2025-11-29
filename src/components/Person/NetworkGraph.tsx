@@ -3,6 +3,7 @@ import { NetworkNode, NetworkEdge, NetworkCluster, ViewportBounds, NetworkLoadin
 import aiService from '../../domains/network/services/aiNetworkAnalysisService';
 import { useOptionalTenant } from '../../domains/tenant';
 import { useTranslation } from 'react-i18next';
+import { palette } from '../../theme/palette';
 
 // Lazy loading hook for network data
 const useLazyNetworkLoading = (
@@ -76,31 +77,35 @@ interface NetworkGraphProps {
 const nodeDimensions = { width: 180, height: 60, radius: 8 };
 
 const riskColors = {
-    High: '#e53e3e',
-    Medium: '#dd6b20',
-    Low: '#d69e2e',
-    None: '#2d3748'
+    High: palette.danger,
+    Medium: palette.warning,
+    Low: palette.gold,
+    None: palette.borderStrong
 };
 
 const typeColors = {
-    person: '#00cc66',
-    company: '#4a5568',
-    historical: '#2d3748',
-    property: '#805ad5',
-    vehicle: '#3182ce',
-    account: '#38a169',
-    external: '#e53e3e'
+    person: palette.gold,
+    company: palette.copper,
+    historical: palette.border,
+    property: palette.deepBlueLight,
+    vehicle: palette.info,
+    account: palette.success,
+    external: palette.danger
 };
 
 const statusColors = {
-    active: '#00cc66',
-    inactive: '#a0aec0',
-    suspended: '#e53e3e'
+    active: palette.gold,
+    inactive: palette.textMuted,
+    suspended: palette.danger
 };
 
 const clusterColors = [
-    '#667eea', '#764ba2', '#f093fb', '#f5576c',
-    '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'
+    palette.gold,
+    palette.copper,
+    palette.deepBlueLight,
+    palette.info,
+    palette.warning,
+    palette.success
 ];
 
 const Node: React.FC<{
@@ -123,13 +128,13 @@ const Node: React.FC<{
     const aiCategory = rawCategory && enabledCategories.has(rawCategory.toLowerCase()) ? rawCategory : undefined;
     const aiScore = aiEnabled && typeof node.ai?.score === 'number' && aiCategory ? node.ai.score : undefined;
     const aiCategoryColors: Record<string, string> = {
-        economy: '#f6ad55',
-        risk: '#e53e3e',
-        legal: '#805ad5',
-        social: '#38bdf8',
-        governance: '#7dd3fc',
-        socmint: '#f97316',
-        other: '#9ca3af',
+        economy: palette.warning,
+        risk: palette.danger,
+        legal: palette.deepBlueLight,
+        social: palette.info,
+        governance: palette.accent,
+        socmint: palette.copper,
+        other: palette.textMuted,
     };
 
     const aiColor = aiCategory ? (aiCategoryColors[aiCategory.toLowerCase()] || aiCategoryColors.other) : undefined;
@@ -146,7 +151,7 @@ const Node: React.FC<{
             onClick={onClick}
             className="cursor-pointer transition-all duration-200"
             style={{
-                filter: isHighlighted ? 'drop-shadow(0 0 8px rgba(0, 204, 102, 0.6))' : 'none',
+                filter: isHighlighted ? 'drop-shadow(0 0 8px rgba(227, 178, 60, 0.6))' : 'none',
                 opacity: node.status === 'inactive' ? 0.6 : 1
             }}
         >
@@ -156,7 +161,7 @@ const Node: React.FC<{
                 cy={8}
                 r={4}
                 fill={statusColor}
-                stroke="#1a1c20"
+                stroke={palette.surface}
                 strokeWidth={1}
             />
 
@@ -166,7 +171,7 @@ const Node: React.FC<{
                 height={height}
                 rx={nodeDimensions.radius}
                 ry={nodeDimensions.radius}
-                fill="#1a1c20"
+                fill={palette.surface}
                 stroke={aiColor ?? riskColor}
                 strokeWidth={isHighlighted ? 3 : 2}
                 className="transition-all duration-200"
@@ -186,7 +191,7 @@ const Node: React.FC<{
             <text
                 x={12}
                 y={height * 0.4}
-                fill="#e2e8f0"
+                fill={palette.text}
                 fontSize={Math.max(12, 14 * scale)}
                 fontWeight="bold"
                 className="pointer-events-none"
@@ -198,7 +203,7 @@ const Node: React.FC<{
             <text
                 x={12}
                 y={height * 0.75}
-                fill="#a0aec0"
+                fill={palette.textMuted}
                 fontSize={Math.max(10, 12 * scale)}
                 className="pointer-events-none font-mono"
             >
@@ -211,8 +216,8 @@ const Node: React.FC<{
                     cx={8}
                     cy={height - 8}
                     r={6}
-                    fill="#4a5568"
-                    stroke="#1a1c20"
+                    fill={palette.border}
+                    stroke={palette.surface}
                     strokeWidth={1}
                 />
             )}
@@ -220,7 +225,7 @@ const Node: React.FC<{
                 <text
                     x={8}
                     y={height - 8}
-                    fill="#e2e8f0"
+                    fill={palette.text}
                     fontSize="10"
                     textAnchor="middle"
                     dominantBaseline="middle"
@@ -247,16 +252,20 @@ const Edge: React.FC<{
     const rawAiCat = aiEnabled ? edge.ai?.category : undefined;
     const aiCat = rawAiCat && enabledCategories.has(rawAiCat.toLowerCase()) ? rawAiCat : undefined;
     const aiEdgeColors: Record<string, string> = {
-        economy: '#f6ad55',
-        risk: '#e53e3e',
-        legal: '#805ad5',
-        social: '#38bdf8',
-        governance: '#7dd3fc',
-        socmint: '#f97316',
-        other: '#9ca3af',
+        economy: palette.warning,
+        risk: palette.danger,
+        legal: palette.deepBlueLight,
+        social: palette.info,
+        governance: palette.accent,
+        socmint: palette.copper,
+        other: palette.textMuted,
     };
 
-    const strokeColor = aiCat ? (aiEdgeColors[aiCat.toLowerCase()] || aiEdgeColors.other) : (edge.type === 'historical' ? (isHighlighted ? "#00cc66" : "#4a5568") : (isHighlighted ? "#00cc66" : "#718096"));
+    const strokeColor = aiCat
+        ? (aiEdgeColors[aiCat.toLowerCase()] || aiEdgeColors.other)
+        : (edge.type === 'historical'
+            ? (isHighlighted ? palette.gold : palette.border)
+            : (isHighlighted ? palette.gold : palette.textMuted));
 
     // Calculate edge label position
     const midX = (fromNode.x + toNode.x) / 2;
@@ -274,7 +283,7 @@ const Edge: React.FC<{
                 strokeDasharray={edge.type === 'historical' ? '4 4' : 'none'}
                 className="transition-all duration-200"
                 style={{
-                    filter: isHighlighted ? 'drop-shadow(0 0 4px rgba(0, 204, 102, 0.4))' : 'none'
+                    filter: isHighlighted ? 'drop-shadow(0 0 4px rgba(227, 178, 60, 0.4))' : 'none'
                 }}
             />
 
@@ -287,7 +296,7 @@ const Edge: React.FC<{
                         width={40}
                         height={16}
                         rx={4}
-                        fill="#1a1c20"
+                        fill={palette.surface}
                         stroke={strokeColor}
                         strokeWidth={1}
                         opacity={0.9}
@@ -295,7 +304,7 @@ const Edge: React.FC<{
                     <text
                         x={0}
                         y={0}
-                        fill="#e2e8f0"
+                        fill={palette.text}
                         fontSize="10"
                         textAnchor="middle"
                         dominantBaseline="middle"
@@ -349,7 +358,7 @@ const LoadingIndicator: React.FC = () => (
     <div className="absolute top-4 right-4 bg-base-dark p-2 rounded-md border border-border-dark">
         <div className="flex items-center space-x-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-            <span className="text-sm text-gray-300">Loading network...</span>
+            <span className="text-sm text-[var(--color-text)]">Loading network...</span>
         </div>
     </div>
 );
@@ -363,10 +372,10 @@ const Tooltip: React.FC<{ node: NetworkNode }> = ({ node }) => {
         <g transform={`translate(${xOffset}, ${yOffset})`} style={{ pointerEvents: 'none' }}>
             <foreignObject x={-125} y={-80} width={250} height={75}>
                  <div className="bg-base-dark p-2 rounded-md border border-border-dark text-center shadow-lg text-xs">
-                     <p className="font-bold text-gray-300">{node.cvr ? t('person.network.tooltip.cvr', { cvr: node.cvr }) : t('person.network.tooltip.personFallback')}</p>
-                     <p className="text-gray-400 mt-1">{node.notes}</p>
+                     <p className="font-bold text-[var(--color-text)]">{node.cvr ? t('person.network.tooltip.cvr', { cvr: node.cvr }) : t('person.network.tooltip.personFallback')}</p>
+                     <p className="text-[var(--color-text-muted)] mt-1">{node.notes}</p>
                      {node.ai && (
-                         <div className="text-xs text-gray-400 mt-2">
+                         <div className="text-xs text-[var(--color-text-muted)] mt-2">
                              <div><strong>{t('person.network.ai.score')}:</strong> {typeof node.ai.score === 'number' ? `${node.ai.score}` : '—'}</div>
                              <div><strong>{t('person.network.ai.sentiment')}:</strong> {node.ai.sentiment ?? '—'}</div>
                              <div><strong>{t('person.network.ai.category')}:</strong> {node.ai.category ?? '—'}</div>
@@ -376,7 +385,7 @@ const Tooltip: React.FC<{ node: NetworkNode }> = ({ node }) => {
                      )}
                  </div>
             </foreignObject>
-             <path d={`M -5 -5 L 0 0 L 5 -5`} fill="#121418" stroke="#2d3748" strokeWidth={1} transform={`translate(0, -5)`}/>
+               <path d={`M -5 -5 L 0 0 L 5 -5`} fill={palette.surface} stroke={palette.border} strokeWidth={1} transform={`translate(0, -5)`}/>
         </g>
     )
 }
@@ -634,20 +643,20 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
             {/* Legend */}
             <div className="absolute bottom-4 left-4 bg-base-dark p-3 rounded-md border border-border-dark text-xs">
                 <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full bg-green-500"></div><span>Active</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full bg-gray-500"></div><span>Inactive</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded bg-red-500"></div><span>High Risk</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded bg-yellow-500"></div><span>Medium Risk</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.gold }}></div><span>Active</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.textMuted }}></div><span>Inactive</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded" style={{ background: palette.danger }}></div><span>High Risk</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded" style={{ background: palette.warning }}></div><span>Medium Risk</span></div>
 
                     {/* AI categories */}
                     <div className="col-span-2 mt-2 font-semibold">AI categories</div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#f6ad55' }}></div><span>Economy</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#e53e3e' }}></div><span>Risk</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#805ad5' }}></div><span>Legal</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#38bdf8' }}></div><span>SOCMINT / Social</span></div>
-                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: '#9ca3af' }}></div><span>Other</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.warning }}></div><span>Economy</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.danger }}></div><span>Risk</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.deepBlueLight }}></div><span>Legal</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.info }}></div><span>SOCMINT / Social</span></div>
+                    <div className="flex items-center space-x-2"><div className="w-3 h-3 rounded-full" style={{ background: palette.textMuted }}></div><span>Other</span></div>
                 </div>
-                <div className="mt-2 text-xs text-gray-400">AI overlay: {canUseAi ? (aiEnabled ? 'Enabled' : 'Disabled') : 'Not permitted'}</div>
+                <div className="mt-2 text-xs text-[var(--color-text-muted)]">AI overlay: {canUseAi ? (aiEnabled ? 'Enabled' : 'Disabled') : 'Not permitted'}</div>
             </div>
         </div>
     );

@@ -327,7 +327,7 @@ describe('Multi-Tenant System', () => {
   describe('White-Labeling', () => {
     it('should provide default branding', () => {
       expect(DEFAULT_BRANDING.companyName).toBe('TSL Intelligence');
-      expect(DEFAULT_BRANDING.colors.primary).toBe('#00cc66');
+      expect(DEFAULT_BRANDING.colors.primary).toBe('#1E3A5F');
     });
 
     it('should provide default features', () => {
@@ -339,7 +339,7 @@ describe('Multi-Tenant System', () => {
     it('should generate CSS variables from colors', () => {
       const css = generateCssVariables(DEFAULT_BRANDING.colors);
 
-      expect(css).toContain('--tenant-primary: #00cc66');
+      expect(css).toContain('--tenant-primary: #1E3A5F');
       expect(css).toContain('--tenant-background:');
       expect(css).toContain('--tenant-text:');
     });

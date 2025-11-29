@@ -28,7 +28,29 @@
     "scenarios": "Scenarios",
     "vault": "Intel Vault",
     "accessRequests": "Access Requests",
-    "savedViews": "Saved Views"
+    "savedViews": "Saved Views",
+    "comingSoon": "Coming soon",
+    "sections": {
+      "core": "Core",
+      "analysis": "Analysis",
+      "operations": "Operations",
+      "riskActions": "Risk & Actions",
+      "intel": "Intel",
+      "admin": "Admin",
+      "settings": "Settings"
+    },
+    "placeholders": {
+      "marketIntel": "Market Intelligence",
+      "portfolioAnalysis": "Portfolio Analysis",
+      "alertCenter": "Alert Center",
+      "dataExports": "Data Exports"
+    }
+  },
+  "topbar": {
+    "openNavigation": "Open navigation",
+    "settings": "Settings",
+    "configuration": "Configuration",
+    "saveView": "Save view"
   },
   "theme": {
     "light": "Light",
@@ -154,19 +176,53 @@
       "backToDashboard": "Back to dashboard"
     },
     "logo": {
-      "alt": "TS Logistik logo"
-    }
+      "alt": "TS24 Intelligence"
+    },
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "auth": {
     "title": "Secure access",
     "subtitle": "Use your TS-Intel credentials to continue",
+    "heroSubline": "Secure agent ingress · Zero trust",
     "usernameLabel": "Username",
     "usernamePlaceholder": "Enter username",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Enter password",
-    "submit": "Sign in",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "pinLabel": "PIN code",
+    "pinPlaceholder": "Enter PIN",
+    "showPin": "Show PIN",
+    "hidePin": "Hide PIN",
+    "tokenLabel": "Token (optional)",
+    "tokenPlaceholder": "Enter token",
+    "submit": "LOG IN",
     "submitting": "Signing in…",
     "securityNotice": "Secured with hardware key authentication. All access attempts are logged and monitored.",
+    "securityNoticeShort": "Access requires authorized hardware key.",
+    "securityNoticeLog": "All attempts are logged.",
+    "secureComm": {
+      "label": "Secure communication / PGP"
+    },
+    "requestAccess": {
+      "title": "Request access",
+      "subtitle": "Secure onboarding via command desk",
+      "fields": {
+        "name": "Full name",
+        "email": "Work email",
+        "org": "Organization",
+        "role": "Role / clearance",
+        "purpose": "Mission brief / mandate"
+      },
+      "submit": "Send request",
+      "submitting": "Sending…",
+      "success": "Secure request received. An officer will respond shortly.",
+      "error": {
+        "generic": "We couldn't send your request. Please try again.",
+        "withReason": "Request failed: {{reason}}"
+      }
+    },
     "error": {
       "invalidCredentials": "Invalid username or password"
     }
@@ -178,6 +234,9 @@
     "unknownError": "Unknown data error"
   },
   "dashboard": {
+    "comingSoon": "Coming Soon",
+    "learnMore": "Learn more",
+    "upcomingFeatures": "Upcoming Features",
     "common": {
       "noDrivers": "No key drivers identified",
       "drivers": {
@@ -201,6 +260,27 @@
         "high": "High",
         "critical": "Critical"
       }
+    },
+    "threatOverview": {
+      "title": "Threat overview",
+      "alertsLabel": "{{count}} active alerts",
+      "updated": "Updated {{time}}",
+      "unknown": "Awaiting telemetry",
+      "systemTitle": "System health",
+      "systemSubtitle": "{{count}} components with alerts",
+      "systemStatuses": {
+        "operational": "Operational",
+        "degraded": "Degraded",
+        "outage": "Outage",
+        "unknown": "Unknown"
+      },
+      "networkTitle": "Network load",
+      "networkSubtitle": "Avg latency {{value}} ms",
+      "aiTitle": "AI command log",
+      "aiPending": "Pending",
+      "aiFailed": "Errors",
+      "aiUpdated": "Last command {{time}}",
+      "aiEmpty": "No commands executed yet"
     },
     "personal": {
       "caseHeader": "Case: Ümit Cetin (Personal profile)",

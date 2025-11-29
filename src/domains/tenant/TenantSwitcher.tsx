@@ -235,26 +235,39 @@ export const TenantSwitcher: React.FC<TenantSwitcherProps> = ({
     return (
       <div className={`relative ${className}`} ref={dropdownRef}>
         <button
+          type="button"
           onClick={() => hasMultipleTenants && setIsOpen(!isOpen)}
           disabled={!hasMultipleTenants || isLoading}
-          className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border border-border-dark/60 bg-component-dark/50 transition-colors ${
-            hasMultipleTenants ? 'hover:bg-component-dark/80 cursor-pointer' : 'cursor-default'
-          }`}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          className={`group flex items-center gap-3 rounded-full border px-4 py-2 transition-all ${
+            hasMultipleTenants ? 'cursor-pointer hover:border-[var(--color-gold)]/60 hover:bg-[var(--color-surface-hover)]/60' : 'cursor-default'
+          } border-[var(--color-border)] bg-[var(--color-surface)]/70 text-[var(--color-text)] shadow-sm`}
         >
           {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
+            <Loader2 className="w-4 h-4 animate-spin text-[var(--color-text-muted)]" />
           ) : currentTenant ? (
             <>
               <TenantLogo tenant={currentTenant} size="sm" />
-              <span className="text-sm font-medium text-gray-200 max-w-[120px] truncate">
-                {currentTenant.name}
-              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold truncate max-w-[140px]">{currentTenant.name}</p>
+                {showRole && user?.role && (
+                  <p className="text-[10px] uppercase tracking-[0.35em] text-[var(--color-text-muted)]">{t(`tenant.roles.${user.role}`, user.role)}</p>
+                )}
+              </div>
             </>
           ) : (
-            <Building2 className="w-4 h-4 text-gray-500" />
+            <Building2 className="w-4 h-4 text-[var(--color-text-muted)]" />
           )}
-          {hasMultipleTenants && <ChevronDown className="w-3.5 h-3.5 text-gray-500" />}
+          {hasMultipleTenants && (
+            <ChevronDown className={`w-3.5 h-3.5 text-[var(--color-text-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          )}
         </button>
+        {hasMultipleTenants && (
+          <p className="mt-1 text-[10px] uppercase tracking-[0.35em] text-[var(--color-text-muted)] text-center">
+            {t('tenant.tenantCount', '{{count}} organisationer tilgængelige', { count: tenants.length })}
+          </p>
+        )}
 
         {isOpen && hasMultipleTenants && (
           <TenantDropdown
@@ -349,14 +362,15 @@ const TenantDropdown: React.FC<TenantDropdownProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-1 z-50 min-w-[240px] rounded-xl border border-border-dark/70 bg-component-dark/95 backdrop-blur-xl shadow-xl overflow-hidden">
-      <div className="px-3 py-2 border-b border-border-dark/50">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+    <div className="absolute top-full left-0 right-0 mt-2 z-50 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] backdrop-blur-xl shadow-2xl overflow-hidden">
+      <div className="px-4 py-3 border-b border-[var(--color-border)]">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[var(--color-text-muted)]">
           {t('tenant.switchOrganization', 'Skift organisation')}
         </p>
+        <p className="text-xs text-[var(--color-text-muted)]">{t('tenant.selectSubtitle', 'Vælg hvilken organisation du vil arbejde i')}</p>
       </div>
 
-      <div className="max-h-[300px] overflow-y-auto py-1">
+      <div className="max-h-[320px] overflow-y-auto py-2">
         {tenants.map(tenant => {
           const isActive = tenant.id === currentTenantId;
 
@@ -365,30 +379,32 @@ const TenantDropdown: React.FC<TenantDropdownProps> = ({
               key={tenant.id}
               onClick={() => onSelect(tenant.id)}
               disabled={isActive || isSwitching}
-              className={`w-full flex items-center gap-3 px-3 py-2 transition-colors ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 transition-colors ${
                 isActive
-                  ? 'bg-accent-green/10 cursor-default'
-                  : 'hover:bg-gray-800/50 cursor-pointer'
+                  ? 'bg-[var(--color-gold)]/10 cursor-default'
+                  : 'hover:bg-[var(--color-surface-hover)] cursor-pointer'
               }`}
             >
               <TenantLogo tenant={tenant} size="sm" />
               <div className="flex-1 min-w-0 text-left">
-                <p className={`text-sm font-medium truncate ${isActive ? 'text-accent-green' : 'text-gray-200'}`}>
+                <p className={`text-sm font-semibold truncate ${isActive ? 'text-[var(--color-gold)]' : 'text-[var(--color-text)]'}`}>
                   {tenant.name}
                 </p>
-                {showRole && (
-                  <p className="text-[10px] text-gray-500 capitalize">{tenant.role}</p>
+                {showRole && tenant.role && (
+                  <div className="mt-1">
+                    <RoleBadge role={tenant.role} />
+                  </div>
                 )}
               </div>
-              {isActive && <Check className="w-4 h-4 text-accent-green shrink-0" />}
-              {isSwitching && !isActive && <Loader2 className="w-4 h-4 animate-spin text-gray-500 shrink-0" />}
+              {isActive && <Check className="w-4 h-4 text-[var(--color-gold)] shrink-0" />}
+              {isSwitching && !isActive && <Loader2 className="w-4 h-4 animate-spin text-[var(--color-text-muted)] shrink-0" />}
             </button>
           );
         })}
       </div>
 
-      <div className="px-3 py-2 border-t border-border-dark/50 bg-gray-900/30">
-        <p className="text-[10px] text-gray-500 text-center">
+      <div className="px-4 py-2.5 border-t border-[var(--color-border)] bg-[var(--color-background)]/40">
+        <p className="text-[10px] text-[var(--color-text-muted)] text-center uppercase tracking-[0.35em]">
           {t('tenant.tenantCount', '{{count}} organisationer tilgængelige', { count: tenants.length })}
         </p>
       </div>

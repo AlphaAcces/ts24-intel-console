@@ -28,7 +28,29 @@
     "scenarios": "Scenarier",
     "vault": "Intel Vault",
     "accessRequests": "Adgangsanmodninger",
-    "savedViews": "Gemte visninger"
+    "savedViews": "Gemte visninger",
+    "comingSoon": "Kommer snart",
+    "sections": {
+      "core": "Kerne",
+      "analysis": "Analyse",
+      "operations": "Operationer",
+      "riskActions": "Risiko & Handlinger",
+      "intel": "Intel",
+      "admin": "Administration",
+      "settings": "Indstillinger"
+    },
+    "placeholders": {
+      "marketIntel": "Markedsintelligens",
+      "portfolioAnalysis": "Porteføljeanalyse",
+      "alertCenter": "Alarmcenter",
+      "dataExports": "Dataeksport"
+    }
+  },
+  "topbar": {
+    "openNavigation": "Åbn navigation",
+    "settings": "Indstillinger",
+    "configuration": "Konfiguration",
+    "saveView": "Gem visning"
   },
   "theme": {
     "light": "Lyst",
@@ -154,19 +176,53 @@
       "backToDashboard": "Tilbage til dashboard"
     },
     "logo": {
-      "alt": "TS Logistik-logo"
-    }
+      "alt": "TS24 Intelligence"
+    },
+    "copy": "Kopiér",
+    "copied": "Kopieret"
   },
   "auth": {
     "title": "Sikker adgang",
     "subtitle": "Brug dine TS-Intel legitimationsoplysninger",
+    "heroSubline": "Sikker agent-adgang · Zero trust",
     "usernameLabel": "Brugernavn",
     "usernamePlaceholder": "Indtast brugernavn",
     "passwordLabel": "Adgangskode",
     "passwordPlaceholder": "Indtast adgangskode",
-    "submit": "Log ind",
+    "showPassword": "Vis adgangskode",
+    "hidePassword": "Skjul adgangskode",
+    "pinLabel": "PIN-kode",
+    "pinPlaceholder": "Indtast PIN",
+    "showPin": "Vis PIN",
+    "hidePin": "Skjul PIN",
+    "tokenLabel": "Token (valgfri)",
+    "tokenPlaceholder": "Indtast token",
+    "submit": "LOG IND",
     "submitting": "Logger ind…",
     "securityNotice": "Sikret med hardware-nøgle autentifikation. Alle adgangsforsøg logges og overvåges.",
+    "securityNoticeShort": "Adgang kræver autoriseret hardware-nøgle.",
+    "securityNoticeLog": "Alle forsøg logges.",
+    "secureComm": {
+      "label": "Sikker kommunikation / PGP"
+    },
+    "requestAccess": {
+      "title": "Anmod om adgang",
+      "subtitle": "Sikker onboarding via kontrolcenteret",
+      "fields": {
+        "name": "Fulde navn",
+        "email": "Arbejdsmail",
+        "org": "Organisation",
+        "role": "Rolle / clearance",
+        "purpose": "Formål / mandat"
+      },
+      "submit": "Send forespørgsel",
+      "submitting": "Sender…",
+      "success": "Sikker anmodning modtaget. En officer svarer hurtigst muligt.",
+      "error": {
+        "generic": "Vi kunne ikke sende din forespørgsel. Prøv igen.",
+        "withReason": "Forespørgslen fejlede: {{reason}}"
+      }
+    },
     "error": {
       "invalidCredentials": "Forkert brugernavn eller adgangskode"
     }
@@ -178,6 +234,9 @@
     "unknownError": "Ukendt datafejl"
   },
   "dashboard": {
+    "comingSoon": "Kommer snart",
+    "learnMore": "Læs mere",
+    "upcomingFeatures": "Kommende funktioner",
     "common": {
       "noDrivers": "Ingen drivere identificeret",
       "drivers": {
@@ -201,6 +260,27 @@
         "high": "Høj",
         "critical": "Kritisk"
       }
+    },
+    "threatOverview": {
+      "title": "Overordnet trusselsbillede",
+      "alertsLabel": "{{count}} aktive alarmer",
+      "updated": "Opdateret {{time}}",
+      "unknown": "Afventer telemetri",
+      "systemTitle": "Systemstatus",
+      "systemSubtitle": "{{count}} komponenter med alarmer",
+      "systemStatuses": {
+        "operational": "Stabil",
+        "degraded": "Degraderet",
+        "outage": "Nedbrud",
+        "unknown": "Ukendt"
+      },
+      "networkTitle": "Netværksbelastning",
+      "networkSubtitle": "Gns. latency {{value}} ms",
+      "aiTitle": "AI-kommando log",
+      "aiPending": "Afventer",
+      "aiFailed": "Fejl",
+      "aiUpdated": "Seneste kommando {{time}}",
+      "aiEmpty": "Ingen kommandoer endnu"
     },
     "personal": {
       "caseHeader": "Case: Ümit Cetin (Privatprofil)",

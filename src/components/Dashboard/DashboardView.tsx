@@ -7,6 +7,8 @@ import { FileWarning } from 'lucide-react';
 import { useDashboardKpis } from '../../domains/kpi';
 import { useMonitoring } from '../../domains/monitoring';
 import { ThreatWidget, ThreatLevel } from './ThreatWidget';
+import { ThreatOverviewCard } from './ThreatOverviewCard';
+import { useAiCommand } from '../../domains/ai';
 
 const PriorityActionsCard = lazy(() => import('./PriorityActionsCard').then(module => ({ default: module.PriorityActionsCard })));
 const IntelligenceSummaryCard = lazy(() => import('./IntelligenceSummaryCard').then(module => ({ default: module.IntelligenceSummaryCard })));
@@ -35,6 +37,7 @@ interface DashboardViewProps {
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, activeSubject }) => {
     const { t } = useTranslation();
+    const { state: aiState } = useAiCommand();
 
     // Use the new KPI hook - calculates all dashboard KPIs in one place
     const subjectType = activeSubject === 'umit' ? 'personal' : 'corporate';
@@ -48,6 +51,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
     const { systemStatus, networkStats, isLoading: isMonitoringLoading, refresh: refreshMonitoring } = useMonitoring({
         refreshInterval: 30000,
     });
+
+    const aiEntries = aiState.entries;
+    const aiPending = aiEntries.filter((entry) => entry.status === 'pending').length;
+    const aiFailed = aiEntries.filter((entry) => entry.status === 'error').length;
+    const aiLastTimestamp = aiEntries.length ? aiEntries[aiEntries.length - 1].timestamp : undefined;
+
+    const sharedThreatProps = {
+        systemStatus,
+        networkStats,
+        aiStats: {
+            total: aiEntries.length,
+            pending: aiPending,
+            failed: aiFailed,
+            lastTimestamp: aiLastTimestamp,
+        },
+    } as const;
 
     // Personal/UMIT dashboard
     if (activeSubject === 'umit') {
@@ -63,6 +82,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                         {t('dashboard.personal.caseHeader')}
                     </p>
                 </div>
+
+                <ThreatOverviewCard
+                    score={riskScore}
+                    activeAlerts={systemStatus?.activeAlerts ?? 0}
+                    {...sharedThreatProps}
+                />
 
                 {/* Top Row: Threat Widget + KPI Cards */}
                 <section>
@@ -176,6 +201,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, active
                     {t('dashboard.corporate.caseHeader')}
                 </p>
             </div>
+
+            <ThreatOverviewCard
+                score={corpRiskScore}
+                activeAlerts={systemStatus?.activeAlerts ?? 0}
+                {...sharedThreatProps}
+            />
 
             {/* Top Row: Threat Widget + KPI Cards */}
             <section>

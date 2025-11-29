@@ -57,21 +57,42 @@ const DEFAULT_ROLE_PERMISSIONS: Record<TenantRole, Permission[]> = {
 const DEFAULT_BRANDING: TenantBranding = {
   companyName: 'TSL Intelligence',
   colors: {
-    primary: '#00cc66',
-    primaryHover: '#00b359',
-    secondary: '#4a5568',
-    accent: '#667eea',
-    danger: '#e53e3e',
-    warning: '#dd6b20',
-    success: '#38a169',
-    info: '#3182ce',
-    background: '#0a0c0e',
-    backgroundDark: '#121418',
-    surface: '#1a1c20',
-    surfaceHover: '#2d3748',
-    border: '#2d3748',
-    text: '#e2e8f0',
-    textMuted: '#a0aec0',
+    primary: '#1E3A5F',
+    primaryHover: '#2A4A73',
+    secondary: '#B87333',
+    accent: '#E3B23C',
+    accentHover: '#CCA030',
+    accentMuted: '#B8942E',
+    danger: '#F87171',
+    dangerSoft: 'rgba(248, 113, 113, 0.2)',
+    warning: '#F59E0B',
+    warningSoft: 'rgba(245, 158, 11, 0.18)',
+    success: '#34D399',
+    successSoft: 'rgba(52, 211, 153, 0.18)',
+    info: '#4F8CC9',
+    infoSoft: 'rgba(79, 140, 201, 0.24)',
+    background: '#0C0E1A',
+    backgroundDark: '#080A12',
+    surface: '#141824',
+    surfaceHover: '#1C2230',
+    surfaceElevated: '#1F2535',
+    border: '#2A2E3D',
+    borderStrong: '#383D4F',
+    borderSubtle: 'rgba(255, 255, 255, 0.08)',
+    text: '#E8E6E3',
+    textMuted: '#9CA3AF',
+    textGold: '#E3B23C',
+    copper: '#B87333',
+    copperHover: '#A66429',
+    copperMuted: 'rgba(184, 115, 51, 0.4)',
+    gold: '#E3B23C',
+    goldHover: '#CCA030',
+    goldMuted: '#B8942E',
+    deepBlue: '#1E3A5F',
+    deepBlueLight: '#2A4A73',
+    overlay: 'rgba(8, 10, 18, 0.9)',
+    shadow: '0 0 20px rgba(227, 178, 60, 0.15)',
+    shadowStrong: '0 0 30px rgba(227, 178, 60, 0.25)',
   },
 };
 
@@ -127,22 +148,57 @@ export const TenantProvider: React.FC<TenantProviderProps> = ({
     if (tenant?.branding?.colors) {
       const root = document.documentElement;
       const colors = tenant.branding.colors;
+      const setVar = (name: string, value?: string, fallback?: string) => {
+        if (value) {
+          root.style.setProperty(name, value);
+        } else if (fallback) {
+          root.style.setProperty(name, fallback);
+        }
+      };
 
-      root.style.setProperty('--color-primary', colors.primary);
-      root.style.setProperty('--color-primary-hover', colors.primaryHover);
-      root.style.setProperty('--color-secondary', colors.secondary);
-      root.style.setProperty('--color-accent', colors.accent);
-      root.style.setProperty('--color-danger', colors.danger);
-      root.style.setProperty('--color-warning', colors.warning);
-      root.style.setProperty('--color-success', colors.success);
-      root.style.setProperty('--color-info', colors.info);
-      root.style.setProperty('--color-background', colors.background);
-      root.style.setProperty('--color-background-dark', colors.backgroundDark);
-      root.style.setProperty('--color-surface', colors.surface);
-      root.style.setProperty('--color-surface-hover', colors.surfaceHover);
-      root.style.setProperty('--color-border', colors.border);
-      root.style.setProperty('--color-text', colors.text);
-      root.style.setProperty('--color-text-muted', colors.textMuted);
+      setVar('--color-primary', colors.primary);
+      setVar('--color-primary-hover', colors.primaryHover);
+      setVar('--color-secondary', colors.secondary);
+      setVar('--color-accent', colors.accent);
+      setVar('--color-accent-hover', colors.accentHover, colors.accent);
+      setVar('--color-accent-muted', colors.accentMuted, colors.accent);
+      setVar('--color-accent-blue', colors.deepBlue ?? colors.primary);
+      setVar('--color-accent-copper', colors.copper ?? colors.secondary);
+      setVar('--color-danger', colors.danger);
+      setVar('--color-danger-soft', colors.dangerSoft, 'rgba(229, 62, 62, 0.15)');
+      setVar('--color-warning', colors.warning);
+      setVar('--color-warning-soft', colors.warningSoft, 'rgba(221, 107, 32, 0.15)');
+      setVar('--color-success', colors.success);
+      setVar('--color-success-soft', colors.successSoft, 'rgba(56, 161, 105, 0.15)');
+      setVar('--color-info', colors.info);
+      setVar('--color-info-soft', colors.infoSoft, 'rgba(49, 130, 206, 0.2)');
+      setVar('--color-background', colors.background);
+      setVar('--color-background-dark', colors.backgroundDark);
+      setVar('--color-surface', colors.surface);
+      setVar('--color-surface-hover', colors.surfaceHover);
+      setVar('--color-surface-elevated', colors.surfaceElevated, colors.surface);
+      setVar('--color-border', colors.border);
+      setVar('--color-border-strong', colors.borderStrong, colors.border);
+      setVar('--color-border-subtle', colors.borderSubtle, 'rgba(255, 255, 255, 0.08)');
+      setVar('--color-text', colors.text);
+      setVar('--color-text-muted', colors.textMuted);
+      setVar('--color-text-gold', colors.textGold, colors.accent);
+      setVar('--color-gold', colors.gold, colors.accent);
+      setVar('--color-gold-hover', colors.goldHover, colors.accentHover ?? colors.accent);
+      setVar('--color-gold-muted', colors.goldMuted, colors.accentMuted ?? colors.accent);
+      setVar('--color-copper', colors.copper, colors.secondary);
+      setVar('--color-copper-hover', colors.copperHover, colors.secondary);
+      setVar('--color-copper-muted', colors.copperMuted, colors.secondary);
+      setVar('--color-deep-blue', colors.deepBlue, colors.primary);
+      setVar('--color-deep-blue-light', colors.deepBlueLight, colors.primaryHover);
+      setVar('--color-overlay', colors.overlay, document.body.classList.contains('dark')
+        ? 'rgba(8, 10, 18, 0.85)'
+        : 'rgba(0, 0, 0, 0.45)');
+      setVar('--shadow-gold', colors.shadow, '0 0 20px rgba(227, 178, 60, 0.15)');
+      setVar('--shadow-gold-strong', colors.shadowStrong, '0 0 30px rgba(227, 178, 60, 0.25)');
+
+      const isDark = document.body.classList.contains('dark');
+      root.style.setProperty('--color-border-gold', isDark ? 'rgba(227, 178, 60, 0.3)' : 'rgba(184, 148, 46, 0.35)');
     }
 
     // Apply custom CSS if provided
