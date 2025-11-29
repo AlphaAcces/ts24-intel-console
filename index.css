@@ -17,9 +17,9 @@
   --color-deep-blue-light: #2A4A73;
 
   /* Core theme colors */
-  --color-primary: #00cc66;
-  --color-primary-hover: #00b359;
-  --color-secondary: #4a5568;
+  --color-primary: #1E3A5F;
+  --color-primary-hover: #2A4A73;
+  --color-secondary: #B87333;
   --color-accent: #E3B23C;
   --color-accent-hover: #CCA030;
   --color-accent-blue: #1E3A5F;
@@ -81,13 +81,13 @@
 /* Light theme overrides via class */
 body.light {
   color-scheme: light;
-  --color-primary: #059669;
-  --color-primary-hover: #047857;
-  --color-secondary: #64748b;
+  --color-primary: #1E3A5F;
+  --color-primary-hover: #2F4E77;
+  --color-secondary: #B87333;
   --color-accent: #B8942E;
   --color-accent-hover: #9A7A24;
-  --color-accent-blue: #3B5998;
-  --color-accent-copper: #A66429;
+  --color-accent-blue: #2F4E77;
+  --color-accent-copper: #B87333;
   --color-danger: #dc2626;
   --color-warning: #ea580c;
   --color-success: #16a34a;

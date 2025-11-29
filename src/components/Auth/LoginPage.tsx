@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, Eye, EyeOff, Shield } from 'lucide-react';
 
@@ -17,6 +18,86 @@ const SYSTEMS: SystemConfig[] = [
   { id: 'greyeye', name: 'GreyEYE', displayName: 'GreyEYE', tagline: 'Data Intelligence Portal' },
   { id: 'blackboxeye', name: 'BlackboxEYE', displayName: 'BlackboxEYE', tagline: 'Deep Analysis Suite' },
 ];
+
+type SystemTheme = {
+  background: string;
+  backgroundDark: string;
+  surface: string;
+  surfaceHover: string;
+  border: string;
+  borderAccent: string;
+  text: string;
+  textMuted: string;
+  accent: string;
+  accentHover: string;
+  accentMuted: string;
+  secondary: string;
+  deepBlue: string;
+  glowGradient: string;
+  shadow: string;
+  shadowStrong: string;
+  danger: string;
+};
+
+const SYSTEM_THEMES: Record<SystemType, SystemTheme> = {
+  intel24: {
+    background: '#0C0E1A',
+    backgroundDark: '#080A12',
+    surface: '#1A1E2D',
+    surfaceHover: '#242838',
+    border: '#2A2E3D',
+    borderAccent: 'rgba(227, 178, 60, 0.3)',
+    text: '#E8E6E3',
+    textMuted: '#9CA3AF',
+    accent: '#E3B23C',
+    accentHover: '#CCA030',
+    accentMuted: '#B8942E',
+    secondary: '#B87333',
+    deepBlue: '#1E3A5F',
+    glowGradient: 'radial-gradient(ellipse at center, rgba(227, 178, 60, 0.08) 0%, transparent 70%)',
+    shadow: '0 0 20px rgba(227, 178, 60, 0.15)',
+    shadowStrong: '0 0 30px rgba(227, 178, 60, 0.25)',
+    danger: '#E53E3E',
+  },
+  greyeye: {
+    background: '#080A10',
+    backgroundDark: '#05060B',
+    surface: '#141824',
+    surfaceHover: '#1C2030',
+    border: '#2D3245',
+    borderAccent: 'rgba(156, 163, 175, 0.25)',
+    text: '#ECEFF4',
+    textMuted: '#A0AEC0',
+    accent: '#9CA3AF',
+    accentHover: '#7E8899',
+    accentMuted: '#6B7280',
+    secondary: '#4B5563',
+    deepBlue: '#6B7280',
+    glowGradient: 'radial-gradient(ellipse at center, rgba(156, 163, 175, 0.12) 0%, transparent 70%)',
+    shadow: '0 0 20px rgba(156, 163, 175, 0.12)',
+    shadowStrong: '0 0 30px rgba(156, 163, 175, 0.2)',
+    danger: '#F87171',
+  },
+  blackboxeye: {
+    background: '#050910',
+    backgroundDark: '#03050A',
+    surface: '#0F1624',
+    surfaceHover: '#161F33',
+    border: '#1E2A44',
+    borderAccent: 'rgba(30, 58, 95, 0.35)',
+    text: '#E5E7EB',
+    textMuted: '#94A3B8',
+    accent: '#1E3A5F',
+    accentHover: '#2A4A73',
+    accentMuted: '#2F517E',
+    secondary: '#E3B23C',
+    deepBlue: '#1E3A5F',
+    glowGradient: 'radial-gradient(ellipse at center, rgba(30, 58, 95, 0.18) 0%, transparent 75%)',
+    shadow: '0 0 20px rgba(30, 58, 95, 0.2)',
+    shadowStrong: '0 0 30px rgba(30, 58, 95, 0.35)',
+    danger: '#FB923C',
+  },
+};
 
 interface LoginPageProps {
   onLoginSuccess: (user: { id: string; role: 'admin' | 'user' }) => void;
@@ -41,6 +122,32 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const { t } = useTranslation();
 
   const currentSystem = SYSTEMS.find(s => s.id === selectedSystem) || SYSTEMS[0];
+  const theme = useMemo(() => SYSTEM_THEMES[selectedSystem], [selectedSystem]);
+  const themeVariables = useMemo<CSSProperties>(() => ({
+    '--color-background': theme.background,
+    '--color-background-dark': theme.backgroundDark,
+    '--color-surface': theme.surface,
+    '--color-surface-hover': theme.surfaceHover,
+    '--color-surface-elevated': theme.surface,
+    '--color-border': theme.border,
+    '--color-border-gold': theme.borderAccent,
+    '--color-border-subtle': theme.borderAccent,
+    '--color-text': theme.text,
+    '--color-text-muted': theme.textMuted,
+    '--color-text-gold': theme.accent,
+    '--color-gold': theme.accent,
+    '--color-gold-hover': theme.accentHover,
+    '--color-gold-muted': theme.accentMuted,
+    '--color-copper': theme.secondary,
+    '--color-accent': theme.accent,
+    '--color-accent-hover': theme.accentHover,
+    '--color-accent-blue': theme.deepBlue,
+    '--color-accent-copper': theme.secondary,
+    '--color-deep-blue': theme.deepBlue,
+    '--color-danger': theme.danger,
+    '--shadow-gold': theme.shadow,
+    '--shadow-gold-strong': theme.shadowStrong,
+  }) as CSSProperties, [theme]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,10 +233,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[var(--color-background)]">
+    <div
+      className="flex items-center justify-center min-h-screen bg-[var(--color-background)]"
+      style={themeVariables}
+    >
       {/* Background gradient effect */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(227,178,60,0.06)_0%,transparent_70%)]" />
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px]"
+          style={{ background: theme.glowGradient }}
+        />
       </div>
 
       <div className="relative w-full max-w-[440px] mx-4">
