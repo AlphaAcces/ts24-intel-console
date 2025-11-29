@@ -6,6 +6,8 @@ import monitoringRoutes from './monitoring';
 const app = express();
 app.use(express.json());
 
+const DEFAULT_PUBLIC_TENANT_ID = process.env.DEFAULT_PUBLIC_TENANT_ID || 'tenant-001';
+
 // Mount monitoring routes
 app.use('/api', monitoringRoutes);
 
@@ -274,6 +276,61 @@ app.post('/api/access-requests/:tenantId', async (req, res) => {
     res.status(201).json(request);
   } catch (err) {
     res.status(500).json({ error: 'internal', message: 'Failed to create access request' });
+  }
+});
+
+/**
+ * POST /api/access-requests/public
+ * Create an access request from the public login form (pre-auth)
+ */
+app.post('/api/access-requests/public', async (req, res) => {
+  const {
+    name,
+    email,
+    organization,
+    role,
+    justification,
+    locale,
+    tenantId,
+  } = req.body || {};
+
+  if (!name || !email || !justification) {
+    return res.status(400).json({
+      error: 'validation',
+      message: 'name, email, and justification are required'
+    });
+  }
+
+  const targetTenantId = tenantId || DEFAULT_PUBLIC_TENANT_ID;
+
+  try {
+    const request = await accessRequestsStorage.createAccessRequest(targetTenantId, {
+      requesterId: `public-${Date.now()}`,
+      requesterName: name,
+      requesterEmail: email,
+      type: 'api_access',
+      resourceId: 'intel24-login',
+      resourceName: 'Intel24 Command Deck',
+      justification,
+      metadata: {
+        organization: organization || null,
+        role: role || null,
+        locale: locale || null,
+        channel: 'login_request',
+      },
+    });
+
+    await logAudit({
+      timestamp: new Date().toISOString(),
+      tenantId: targetTenantId,
+      userId: request.requesterId,
+      action: 'access_request:public_created',
+      details: { requestId: request.id },
+    });
+
+    res.status(201).json({ success: true, requestId: request.id });
+  } catch (err) {
+    res.status(500).json({ error: 'internal', message: 'Failed to submit access request' });
   }
 });
 

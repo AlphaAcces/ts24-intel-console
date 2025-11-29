@@ -12,14 +12,22 @@
         theme: {
           extend: {
             colors: {
-              'base-dark': '#121418',
-              'component-dark': '#1a1c20',
-              'border-dark': '#2d3748',
-              'accent-green': '#00cc66',
-              'brand-orange': '#FF8A3C',
-              'risk-high': '#e53e3e',
-              'risk-medium': '#dd6b20',
-              'risk-low': '#d69e2e',
+              'base-dark': 'var(--color-background)',
+              'component-dark': 'var(--color-surface)',
+              'border-dark': 'var(--color-border)',
+              'accent-gold': 'var(--color-gold)',
+              'accent-gold-hover': 'var(--color-gold-hover)',
+              'accent-copper': 'var(--color-copper)',
+              'text-gold': 'var(--color-text-gold)',
+              'text-muted': 'var(--color-text-muted)',
+              'risk-high': 'var(--color-danger)',
+              'risk-medium': 'var(--color-warning)',
+              'risk-low': 'var(--color-success)',
+              overlay: 'var(--color-overlay)',
+            },
+            boxShadow: {
+              'glow-gold': 'var(--shadow-gold)',
+              'glow-gold-strong': 'var(--shadow-gold-strong)',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
@@ -50,7 +58,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-base-dark text-gray-300 font-sans antialiased">
+  <body class="bg-[var(--color-background)] text-[var(--color-text)] font-sans antialiased">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

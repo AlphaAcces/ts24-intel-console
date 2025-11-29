@@ -5,6 +5,14 @@ import react from '@vitejs/plugin-react';
 // Manual chunk names double as documentation for the build pipeline; update README when adjusting.
 export default defineConfig({
   plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.VITE_DEV_API_PROXY || 'http://localhost:4001',
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     rollupOptions: {
       output: {

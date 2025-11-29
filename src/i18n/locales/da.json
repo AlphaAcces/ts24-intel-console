@@ -177,17 +177,24 @@
     },
     "logo": {
       "alt": "TS24 Intelligence"
-    }
+    },
+    "copy": "Kopiér",
+    "copied": "Kopieret"
   },
   "auth": {
     "title": "Sikker adgang",
     "subtitle": "Brug dine TS-Intel legitimationsoplysninger",
+    "heroSubline": "Sikker agent-adgang · Zero trust",
     "usernameLabel": "Brugernavn",
     "usernamePlaceholder": "Indtast brugernavn",
     "passwordLabel": "Adgangskode",
     "passwordPlaceholder": "Indtast adgangskode",
+    "showPassword": "Vis adgangskode",
+    "hidePassword": "Skjul adgangskode",
     "pinLabel": "PIN-kode",
     "pinPlaceholder": "Indtast PIN",
+    "showPin": "Vis PIN",
+    "hidePin": "Skjul PIN",
     "tokenLabel": "Token (valgfri)",
     "tokenPlaceholder": "Indtast token",
     "submit": "LOG IND",
@@ -195,6 +202,27 @@
     "securityNotice": "Sikret med hardware-nøgle autentifikation. Alle adgangsforsøg logges og overvåges.",
     "securityNoticeShort": "Adgang kræver autoriseret hardware-nøgle.",
     "securityNoticeLog": "Alle forsøg logges.",
+    "secureComm": {
+      "label": "Sikker kommunikation / PGP"
+    },
+    "requestAccess": {
+      "title": "Anmod om adgang",
+      "subtitle": "Sikker onboarding via kontrolcenteret",
+      "fields": {
+        "name": "Fulde navn",
+        "email": "Arbejdsmail",
+        "org": "Organisation",
+        "role": "Rolle / clearance",
+        "purpose": "Formål / mandat"
+      },
+      "submit": "Send forespørgsel",
+      "submitting": "Sender…",
+      "success": "Sikker anmodning modtaget. En officer svarer hurtigst muligt.",
+      "error": {
+        "generic": "Vi kunne ikke sende din forespørgsel. Prøv igen.",
+        "withReason": "Forespørgslen fejlede: {{reason}}"
+      }
+    },
     "error": {
       "invalidCredentials": "Forkert brugernavn eller adgangskode"
     }
@@ -232,6 +260,27 @@
         "high": "Høj",
         "critical": "Kritisk"
       }
+    },
+    "threatOverview": {
+      "title": "Overordnet trusselsbillede",
+      "alertsLabel": "{{count}} aktive alarmer",
+      "updated": "Opdateret {{time}}",
+      "unknown": "Afventer telemetri",
+      "systemTitle": "Systemstatus",
+      "systemSubtitle": "{{count}} komponenter med alarmer",
+      "systemStatuses": {
+        "operational": "Stabil",
+        "degraded": "Degraderet",
+        "outage": "Nedbrud",
+        "unknown": "Ukendt"
+      },
+      "networkTitle": "Netværksbelastning",
+      "networkSubtitle": "Gns. latency {{value}} ms",
+      "aiTitle": "AI-kommando log",
+      "aiPending": "Afventer",
+      "aiFailed": "Fejl",
+      "aiUpdated": "Seneste kommando {{time}}",
+      "aiEmpty": "Ingen kommandoer endnu"
     },
     "personal": {
       "caseHeader": "Case: Ümit Cetin (Privatprofil)",

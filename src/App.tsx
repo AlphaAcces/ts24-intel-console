@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
 import { SideNav } from './components/Layout/SideNav';
 import { TopBar } from './components/Layout/TopBar';
 import { ViewContainer } from './components/Layout/ViewContainer';
+import { CommandDeck } from './components/Layout/CommandDeck';
 import { useAppNavigation } from './hooks/useAppNavigation';
 import DataProvider from './context/DataContext';
 import { LoginPage } from './components/Auth/LoginPage';
@@ -38,6 +39,7 @@ export const App: React.FC = () => {
   const [tenantConfig, setTenantConfig] = useState<TenantConfig | null>(null);
   const [tenantUser, setTenantUser] = useState<TenantUser | null>(null);
   const [isTenantLoading, setIsTenantLoading] = useState(true);
+  const [isCommandDeckOpen, setIsCommandDeckOpen] = useState(false);
 
   // Initialize tenant on app load
   useEffect(() => {
@@ -91,6 +93,7 @@ export const App: React.FC = () => {
   const handleLogout = () => {
     setAuthUser(null);
     sessionStorage.removeItem('authUser');
+    setIsCommandDeckOpen(false);
   };
 
 
@@ -115,6 +118,10 @@ export const App: React.FC = () => {
   if (!authUser) {
     return <LoginPage onLoginSuccess={handleLoginSuccess} />;
   }
+
+  const openCommandDeck = () => setIsCommandDeckOpen(true);
+  const closeCommandDeck = () => setIsCommandDeckOpen(false);
+  const toggleCommandDeck = () => setIsCommandDeckOpen((prev) => !prev);
 
   const renderView = () => {
     const commonViewProps = {
@@ -188,6 +195,8 @@ export const App: React.FC = () => {
         onHeightChange={setTopBarHeight}
         user={authUser}
         onTenantChange={handleTenantChange}
+        onOpenCommandDeck={openCommandDeck}
+        onLogout={handleLogout}
       />
       <SideNav
         currentView={navState.activeView}
@@ -195,13 +204,12 @@ export const App: React.FC = () => {
         onNavigate={(view) => navigateTo(view)}
         isOpen={isNavOpen}
         navigateToFull={navigateTo}
-        user={authUser}
-        onLogout={handleLogout}
         topOffset={topBarHeight}
+        onOpenCommandDeck={openCommandDeck}
       />
       <main
         className="lg:pl-64 transition-all duration-300 ease-in-out"
-        style={{ paddingTop: topBarHeight }}
+        style={{ paddingTop: topBarHeight + 24 }}
       >
         <div className="container mx-auto p-4 md:p-6 lg:p-8">
           <DataProvider activeSubject={activeSubject}>
@@ -211,6 +219,18 @@ export const App: React.FC = () => {
           </DataProvider>
         </div>
       </main>
+      <CommandDeck
+        activeSubject={activeSubject}
+        currentView={navState.activeView}
+        onNavigate={navigateTo}
+        user={authUser}
+        onLogout={handleLogout}
+        topOffset={topBarHeight}
+        isOpen={isCommandDeckOpen}
+        onOpen={openCommandDeck}
+        onClose={closeCommandDeck}
+        onToggle={toggleCommandDeck}
+      />
       {isNavOpen && <div className="fixed inset-0 bg-black/60 z-25 lg:hidden" onClick={() => setIsNavOpen(false)}></div>}
     </div>
     </ThemeProvider>

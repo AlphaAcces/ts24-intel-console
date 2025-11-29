@@ -48,6 +48,20 @@ export interface TenantSwitchResult {
   token?: string;
 }
 
+export interface AccessRequestSubmissionPayload {
+  name: string;
+  email: string;
+  organization?: string;
+  role?: string;
+  justification: string;
+  tenantId?: TenantId;
+  locale?: string;
+}
+
+export interface AccessRequestSubmissionResult {
+  requestId: string;
+}
+
 // ============================================================================
 // Mock Data (Development)
 // ============================================================================
@@ -74,21 +88,42 @@ const MOCK_TENANTS: TenantConfig[] = [
       companyName: 'TSL Intelligence',
       logoUrl: '/assets/logo/tsl-logo.svg',
       colors: {
-        primary: '#00cc66',
-        primaryHover: '#00b359',
-        secondary: '#4a5568',
-        accent: '#667eea',
-        danger: '#e53e3e',
-        warning: '#dd6b20',
-        success: '#38a169',
-        info: '#3182ce',
-        background: '#0a0c0e',
-        backgroundDark: '#121418',
-        surface: '#1a1c20',
-        surfaceHover: '#2d3748',
-        border: '#2d3748',
-        text: '#e2e8f0',
-        textMuted: '#a0aec0',
+        primary: '#1E3A5F',
+        primaryHover: '#2A4A73',
+        secondary: '#B87333',
+        accent: '#E3B23C',
+        accentHover: '#CCA030',
+        accentMuted: '#B8942E',
+        danger: '#F87171',
+        dangerSoft: 'rgba(248, 113, 113, 0.2)',
+        warning: '#F59E0B',
+        warningSoft: 'rgba(245, 158, 11, 0.18)',
+        success: '#34D399',
+        successSoft: 'rgba(52, 211, 153, 0.18)',
+        info: '#4F8CC9',
+        infoSoft: 'rgba(79, 140, 201, 0.24)',
+        background: '#0C0E1A',
+        backgroundDark: '#080A12',
+        surface: '#141824',
+        surfaceHover: '#1C2230',
+        surfaceElevated: '#1F2535',
+        border: '#2A2E3D',
+        borderStrong: '#383D4F',
+        borderSubtle: 'rgba(255, 255, 255, 0.08)',
+        text: '#E8E6E3',
+        textMuted: '#9CA3AF',
+        textGold: '#E3B23C',
+        copper: '#B87333',
+        copperHover: '#A66429',
+        copperMuted: 'rgba(184, 115, 51, 0.4)',
+        gold: '#E3B23C',
+        goldHover: '#CCA030',
+        goldMuted: '#B8942E',
+        deepBlue: '#1E3A5F',
+        deepBlueLight: '#2A4A73',
+        overlay: 'rgba(8, 10, 18, 0.9)',
+        shadow: '0 0 20px rgba(227, 178, 60, 0.15)',
+        shadowStrong: '0 0 30px rgba(227, 178, 60, 0.25)',
       },
       supportEmail: 'support@tsl-intelligence.com',
     },
@@ -363,6 +398,36 @@ export const tenantApi = {
     }
 
     return createResponse(user);
+  },
+
+  /**
+   * Submit a pre-auth access request from the login screen
+   */
+  async submitAccessRequest(
+    payload: AccessRequestSubmissionPayload
+  ): Promise<TenantApiResponse<AccessRequestSubmissionResult>> {
+    try {
+      const response = await fetch(`${TENANT_API_BASE_URL}/access-requests/public`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => null);
+        const message = errorBody?.message || `HTTP ${response.status}`;
+        return createErrorResponse(message);
+      }
+
+      const data = await response.json();
+      return createResponse({ requestId: data.requestId as string });
+    } catch (err) {
+      return createErrorResponse(
+        err instanceof Error ? err.message : 'Failed to submit access request'
+      );
+    }
   },
 
   /**

@@ -73,17 +73,38 @@ export interface TenantColorScheme {
   primaryHover: string;
   secondary: string;
   accent: string;
+  accentHover?: string;
+  accentMuted?: string;
   danger: string;
   warning: string;
   success: string;
+  successSoft?: string;
+  warningSoft?: string;
+  dangerSoft?: string;
   info: string;
+  infoSoft?: string;
   background: string;
   backgroundDark: string;
   surface: string;
   surfaceHover: string;
+  surfaceElevated?: string;
   border: string;
+  borderStrong?: string;
+  borderSubtle?: string;
   text: string;
   textMuted: string;
+  textGold?: string;
+  copper?: string;
+  copperHover?: string;
+  copperMuted?: string;
+  gold?: string;
+  goldHover?: string;
+  goldMuted?: string;
+  deepBlue?: string;
+  deepBlueLight?: string;
+  overlay?: string;
+  shadow?: string;
+  shadowStrong?: string;
 }
 
 /**

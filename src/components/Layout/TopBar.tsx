@@ -9,30 +9,23 @@
  * - Dark/light theme support
  */
 
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Bell,
   UserCircle2,
   Settings,
-  Globe,
-  MapPin,
-  ChevronDown,
   Menu,
-  Sun,
-  Moon,
-  Monitor
+  ChevronDown,
+  LogOut,
 } from 'lucide-react';
 import { Ts24Logo } from '../Shared/Ts24Logo';
 import { CaseSelector } from '../Shared/CaseSelector';
 import { NotificationDrawer } from '../../domains/notifications/components/NotificationDrawer';
-import { LocaleSwitcher } from '../../domains/settings/components/LocaleSwitcher';
-import { CountrySelector } from '../../domains/settings/components/CountrySelector';
 import { useNotifications } from '../../domains/notifications/hooks';
 import { PreferencesPanel } from '../Shared/PreferencesPanel';
 import { Subject, View } from '../../types';
 import { TenantSwitcher } from '../../domains/tenant/TenantSwitcher';
-import { useTheme } from '../../domains/tenant/ThemeContext';
 
 interface TopBarProps {
   onToggleNav: () => void;
@@ -44,6 +37,8 @@ interface TopBarProps {
   onHeightChange?: (height: number) => void;
   user?: { id: string; role: 'admin' | 'user' } | null;
   onTenantChange?: (tenantId: string) => void;
+  onOpenCommandDeck: () => void;
+  onLogout?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -56,24 +51,14 @@ export const TopBar: React.FC<TopBarProps> = ({
   onHeightChange,
   user,
   onTenantChange,
+  onOpenCommandDeck,
+  onLogout,
 }) => {
   const { t } = useTranslation();
-  const { mode, setMode } = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
-  const settingsRef = useRef<HTMLDivElement | null>(null);
-
-  // Close settings dropdown when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
-        setIsSettingsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   // Measure header height dynamically
   useLayoutEffect(() => {
@@ -97,6 +82,28 @@ export const TopBar: React.FC<TopBarProps> = ({
     return () => window.removeEventListener('resize', updateHeight);
   }, [onHeightChange]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const {
     notifications,
     unreadCount,
@@ -112,9 +119,13 @@ export const TopBar: React.FC<TopBarProps> = ({
       ? t('auth.roles.user', { defaultValue: 'Bruger' })
       : null;
 
+  const userDisplayName = user?.id ?? t('auth.guest', { defaultValue: 'Guest' });
   const userInitials = (user?.id ?? '?').slice(0, 2).toUpperCase();
-
-  const ThemeIcon = mode === 'dark' ? Moon : mode === 'light' ? Sun : Monitor;
+  const toggleUserMenu = () => setIsUserMenuOpen((prev) => !prev);
+  const handleLogoutClick = () => {
+    onLogout?.();
+    setIsUserMenuOpen(false);
+  };
 
   return (
     <header
@@ -157,74 +168,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           />
 
           {/* Settings Dropdown */}
-          <div className="relative" ref={settingsRef}>
-            <button
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className="topbar__icon-btn"
-              aria-label={t('topbar.settings', { defaultValue: 'Settings' })}
-              aria-expanded={isSettingsOpen}
-            >
-              <Settings className="h-4 w-4" />
-              <ChevronDown className={`h-3 w-3 transition-transform ${isSettingsOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {isSettingsOpen && (
-              <div className="topbar__dropdown">
-                <div className="topbar__dropdown-header">
-                  {t('topbar.configuration', { defaultValue: 'Configuration' })}
-                </div>
-
-                {/* Language Setting */}
-                <div className="topbar__dropdown-item">
-                  <div className="topbar__dropdown-label">
-                    <Globe className="h-4 w-4" />
-                    <span>{t('settings.language.label', { defaultValue: 'Language' })}</span>
-                  </div>
-                  <LocaleSwitcher variant="condensed" />
-                </div>
-
-                {/* Market Setting */}
-                <div className="topbar__dropdown-item">
-                  <div className="topbar__dropdown-label">
-                    <MapPin className="h-4 w-4" />
-                    <span>{t('settings.market.label', { defaultValue: 'Market' })}</span>
-                  </div>
-                  <CountrySelector variant="condensed" />
-                </div>
-
-                {/* Theme Setting */}
-                <div className="topbar__dropdown-item">
-                  <div className="topbar__dropdown-label">
-                    <ThemeIcon className="h-4 w-4" />
-                    <span>{t('theme.title', { defaultValue: 'Theme' })}</span>
-                  </div>
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => setMode('light')}
-                      className={`topbar__theme-btn ${mode === 'light' ? 'topbar__theme-btn--active' : ''}`}
-                      title={t('theme.light')}
-                    >
-                      <Sun className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setMode('dark')}
-                      className={`topbar__theme-btn ${mode === 'dark' ? 'topbar__theme-btn--active' : ''}`}
-                      title={t('theme.dark')}
-                    >
-                      <Moon className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setMode('system')}
-                      className={`topbar__theme-btn ${mode === 'system' ? 'topbar__theme-btn--active' : ''}`}
-                      title={t('theme.system')}
-                    >
-                      <Monitor className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <button
+            onClick={onOpenCommandDeck}
+            className="topbar__icon-btn"
+            aria-label={t('topbar.settings', { defaultValue: 'Settings' })}
+          >
+            <Settings className="h-4 w-4" />
+          </button>
 
           {/* Notifications */}
           <button
@@ -239,14 +189,36 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
 
           {/* User Profile */}
-          <div className="topbar__user">
-            <div className="topbar__user-avatar">
-              {user ? userInitials : <UserCircle2 className="h-5 w-5" />}
-            </div>
-            <div className="topbar__user-info hidden lg:block">
-              <span className="topbar__user-name">{user?.id ?? t('auth.guest', { defaultValue: 'Guest' })}</span>
-              {roleLabel && <span className="topbar__user-role">{roleLabel}</span>}
-            </div>
+          <div className="relative" ref={userMenuRef}>
+            <button
+              type="button"
+              className="topbar__user"
+              onClick={toggleUserMenu}
+              aria-haspopup="menu"
+              aria-expanded={isUserMenuOpen}
+            >
+              <div className="topbar__user-avatar">
+                {user ? userInitials : <UserCircle2 className="h-5 w-5" />}
+              </div>
+              <div className="topbar__user-info hidden lg:block">
+                <span className="topbar__user-name">{userDisplayName}</span>
+                {roleLabel && <span className="topbar__user-role">{roleLabel}</span>}
+              </div>
+              <ChevronDown className="topbar__user-chevron" aria-hidden="true" />
+            </button>
+            {isUserMenuOpen && (
+              <div className="topbar__user-menu" role="menu">
+                <button
+                  type="button"
+                  className="topbar__user-menu-item"
+                  onClick={handleLogoutClick}
+                  role="menuitem"
+                >
+                  <LogOut className="h-4 w-4" />
+                  {t('auth.logout', { defaultValue: 'Log out' })}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -18,7 +18,8 @@ import type {
 // ============================================================================
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_MONITORING !== 'false';
+// Default to real API calls unless VITE_USE_MOCK_MONITORING=true is provided for offline previews.
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_MONITORING === 'true';
 
 // ============================================================================
 // Mock Data Generators (Fallback)
