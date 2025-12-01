@@ -77,4 +77,10 @@ describe('ExecutiveSummaryView – mock dashboard layout', () => {
 
     expect(await screen.findByTestId('executive-kpi-empty')).toBeInTheDocument();
   });
+
+  it('renders export case button when a case is active', async () => {
+    renderExecutiveView();
+
+    expect(await screen.findByTestId('export-case-button')).toBeInTheDocument();
+  });
 });

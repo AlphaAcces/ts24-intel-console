@@ -1,6 +1,7 @@
 import type { CaseData, CaseMeta } from '../../types';
 import type { CaseEvent } from '../events/caseEvents';
 import type { CaseKpiSummary } from '../kpi/caseKpis';
+import type { CaseExportPayload } from '../export/caseExport';
 
 const API_BASE_URL = '/api';
 
@@ -35,8 +36,14 @@ async function parsePayload(response: Response): Promise<unknown> {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const fetchImpl = globalThis.fetch;
+
+  if (!fetchImpl) {
+    throw new Error('Fetch API is not available in this environment');
+  }
+
   try {
-    const response = await fetch(path, {
+    const response = await fetchImpl(path, {
       cache: init?.cache ?? 'no-store',
       credentials: init?.credentials ?? 'same-origin',
       ...init,
@@ -92,4 +99,12 @@ export async function fetchCaseKpis(id: string): Promise<CaseKpiSummary> {
   const encodedId = encodeURIComponent(id);
   const response = await request<{ summary: CaseKpiSummary }>(buildUrl(`/cases/${encodedId}/kpis`));
   return response.summary;
+}
+
+export async function requestCaseExport(id: string): Promise<CaseExportPayload> {
+  const encodedId = encodeURIComponent(id);
+  const response = await request<{ export: CaseExportPayload }>(buildUrl(`/cases/${encodedId}/export`), {
+    method: 'POST',
+  });
+  return response.export;
 }

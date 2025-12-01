@@ -27,6 +27,7 @@ import { useDataContext } from '../../context/DataContext';
 import { CaseTimeline } from '../Cases/CaseTimeline';
 import { useTranslation } from 'react-i18next';
 import type { CaseKpiMetric, KpiSeverity } from '../../domains/kpi/caseKpis';
+import { ExportCaseButton } from './ExportCaseButton';
 
 interface ExecutiveSummaryViewProps {
   onNavigate?: (view: View) => void;
@@ -113,7 +114,7 @@ export const ExecutiveSummaryView: React.FC<ExecutiveSummaryViewProps> = ({ onNa
   const controller = useExecutiveSummaryController(onNavigate);
   const summary = useMemo(() => dataOverride ?? getMockExecutiveSummary(), [dataOverride]);
   const threatLastUpdated = useMemo(() => new Date(summary.threat.lastUpdated), [summary.threat.lastUpdated]);
-  const { events, eventsLoading, eventsSource, kpis, kpisLoading, kpisSource } = useDataContext();
+  const { caseId, events, eventsLoading, eventsSource, kpis, kpisLoading, kpisSource } = useDataContext();
   const { t, i18n } = useTranslation('executive');
 
   const caseKpiMetrics: CaseKpiMetric[] = kpis?.metrics ?? [];
@@ -188,7 +189,7 @@ export const ExecutiveSummaryView: React.FC<ExecutiveSummaryViewProps> = ({ onNa
             <p className="text-sm text-[var(--color-text-muted)] mt-1">{summary.header.subtitle}</p>
             <p className="text-xs text-[var(--color-text-muted)] mt-2">{summary.header.updatedAt}</p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
               onClick={controller.header.onExport}
@@ -197,6 +198,7 @@ export const ExecutiveSummaryView: React.FC<ExecutiveSummaryViewProps> = ({ onNa
             >
               {controller.header.isExporting ? controller.header.exportingLabel : controller.header.exportLabel}
             </button>
+            {caseId && <ExportCaseButton caseId={caseId} />}
             <button
               type="button"
               onClick={controller.header.onTimeline}

@@ -3,6 +3,7 @@ import { tslData } from '../../data/tsl';
 import type { CaseData, CaseMeta } from '../../types';
 import type { CaseEvent } from '../../domains/events/caseEvents';
 import type { CaseKpiSummary } from '../../domains/kpi/caseKpis';
+import type { CaseExportPayload } from '../../domains/export/caseExport';
 
 const defaultCaseData: CaseData = tslData;
 const defaultCaseMeta: CaseMeta[] = [
@@ -47,10 +48,21 @@ const defaultCaseKpis: CaseKpiSummary = {
   ],
 };
 
+const defaultCaseExport: CaseExportPayload = {
+  caseId: 'tsl',
+  format: 'json',
+  generatedAt: '2025-01-05T10:05:00.000Z',
+  source: 'api',
+  case: defaultCaseData,
+  events: defaultCaseEvents,
+  kpis: defaultCaseKpis,
+};
+
 const fetchCaseMock = vi.fn().mockResolvedValue(defaultCaseData);
 const fetchCasesMock = vi.fn().mockResolvedValue(defaultCaseMeta);
 const fetchCaseEventsMock = vi.fn().mockResolvedValue(defaultCaseEvents);
 const fetchCaseKpisMock = vi.fn().mockResolvedValue(defaultCaseKpis);
+const requestCaseExportMock = vi.fn().mockResolvedValue(defaultCaseExport);
 
 class MockApiError extends Error {
   status: number;
@@ -69,10 +81,12 @@ export const caseApiMock = {
   defaultCaseMeta,
   defaultCaseEvents,
   defaultCaseKpis,
+  defaultCaseExport,
   fetchCaseMock,
   fetchCasesMock,
   fetchCaseEventsMock,
   fetchCaseKpisMock,
+  requestCaseExportMock,
   reset() {
     fetchCaseMock.mockReset();
     fetchCaseMock.mockResolvedValue(defaultCaseData);
@@ -82,6 +96,8 @@ export const caseApiMock = {
     fetchCaseEventsMock.mockResolvedValue(defaultCaseEvents);
     fetchCaseKpisMock.mockReset();
     fetchCaseKpisMock.mockResolvedValue(defaultCaseKpis);
+    requestCaseExportMock.mockReset();
+    requestCaseExportMock.mockResolvedValue(defaultCaseExport);
   },
 };
 
@@ -91,4 +107,5 @@ vi.mock('../../domains/api/client', () => ({
   fetchCases: caseApiMock.fetchCasesMock,
   fetchCaseEvents: caseApiMock.fetchCaseEventsMock,
   fetchCaseKpis: caseApiMock.fetchCaseKpisMock,
+  requestCaseExport: caseApiMock.requestCaseExportMock,
 }));

@@ -6,6 +6,7 @@ import monitoringRoutes from './monitoring';
 import { listCases, getCaseById } from '../src/domains/cases/caseStore';
 import { deriveEventsFromCaseData } from '../src/domains/events/caseEvents';
 import { deriveKpisFromCaseData } from '../src/domains/kpi/caseKpis';
+import { buildCaseExportPayload } from '../src/domains/export/caseExport';
 
 const SSO_EXPECTED_ISS = 'ts24-intel';
 const SSO_EXPECTED_AUD = 'ts24-intel';
@@ -19,6 +20,26 @@ const DEFAULT_PUBLIC_TENANT_ID = process.env.DEFAULT_PUBLIC_TENANT_ID || 'tenant
 
 // Mount monitoring routes
 app.use('/api', monitoringRoutes);
+
+// Public readiness endpoint for DNS/TLS verification
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({
+    service: 'TS24 Intel Console',
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version ?? 'dev',
+  });
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  // Dev helper so ops can verify SSO wiring without hitting protected routes
+  app.get('/api/health/sso', (_req, res) => {
+    res.json({
+      canHandleSsoLogin: true,
+      expectedPath: '/sso-login',
+    });
+  });
+}
 
 app.get('/api/auth/sso-health', (req, res) => {
   if (PROTECT_SSO_HEALTH) {
@@ -79,6 +100,20 @@ app.get('/api/cases/:id/kpis', (req, res) => {
 
   const summary = deriveKpisFromCaseData(caseData, { caseId: req.params.id });
   res.json({ summary });
+});
+
+app.post('/api/cases/:id/export', (req, res) => {
+  const caseData = getCaseById(req.params.id);
+  if (!caseData) {
+    return res.status(404).json({ error: 'CASE_NOT_FOUND' });
+  }
+
+  const events = deriveEventsFromCaseData(caseData, { caseId: req.params.id });
+  const kpis = deriveKpisFromCaseData(caseData, { caseId: req.params.id });
+  const exportPayload = buildCaseExportPayload(caseData, events, kpis);
+
+  console.log('[EXPORT]', req.params.id, exportPayload.generatedAt);
+  res.json({ export: exportPayload });
 });
 
 // ============================================================================

@@ -1,6 +1,27 @@
 # TS24 Case API
 
-The TS24 intelligence console now exposes a lightweight case API so the frontend can hydrate via HTTP instead of importing static modules directly. The current implementation still reads from the local TSL/Ümit datasets, but it establishes the shape and hooks needed for a future database-backed service.
+**Last updated:** 30 Nov 2025
+
+## Purpose
+
+The Case API provides HTTP endpoints for listing and retrieving case data. The frontend hydrates via these endpoints, with a fallback to local mock data when the server is unavailable.
+
+---
+
+## Where in the Code
+
+| Component/File | Path | Responsibility |
+|----------------|------|----------------|
+| API routes | `server/app.ts` (lines ~50-100) | `GET /api/cases`, `GET /api/cases/:id` |
+| Case store | `src/domains/cases/caseStore.ts` | In-memory case data (TSL/Ümit datasets) |
+| Case metadata | `src/domains/cases/caseMetadata.ts` | `CASE_METADATA` array with `CaseMeta` entries |
+| API client | `src/domains/api/client.ts` | `fetchCases()`, `fetchCase(id)` helpers |
+| DataContext | `src/context/DataContext.tsx` | Loads case via API → fallback → mock |
+| CaseLibraryView | `src/components/Cases/CaseLibraryView.tsx` | UI for browsing/selecting cases |
+| useCaseRegistry | `src/hooks/useCaseRegistry.ts` | Hook for case list with loading/error states |
+| Types | `src/types/core.ts` | `CaseMeta`, `CaseData` interfaces |
+
+---
 
 ## Endpoints
 
@@ -79,3 +100,14 @@ caseApiMock.fetchCaseMock.mockRejectedValueOnce(new Error('network fault'));
   This pattern powers `DataContext.test.tsx`, which asserts both the API-success path and the mock fallback path.
 
 - Because the mock lives purely in the test harness, browser/runtime behavior keeps calling the real HTTP endpoints unchanged.
+
+---
+
+## URL Routing (`?case=`)
+
+The console supports case selection via query parameter:
+
+- URL format: `/?case=tsl` or `/?case=umit`
+- `App.tsx` reads `searchParams.get('case')` and passes it to `DataProvider` as `activeCaseId`.
+- `CaseLibraryView.onSelectCase` updates the URL and triggers a re-render with the new case.
+- If no `?case=` param is present, the default case (`tsl`) is loaded.

@@ -7,6 +7,8 @@
 
 import type { RefObject } from 'react';
 import type { ExecutiveSummaryData, Subject } from '../../../types';
+import { CASE_METADATA } from '../../cases/caseMetadata';
+import { buildExecutiveReportMetadata } from '../../../pdf/reportMetadata';
 
 export interface ExecutiveExportChartRef {
   ref: RefObject<HTMLDivElement | null>;
@@ -15,12 +17,22 @@ export interface ExecutiveExportChartRef {
 
 interface ExportOptions {
   subject: Subject;
+  caseId: string;
+  caseName?: string;
+  exportedBy?: string;
+  classification?: string;
+  reportVersion?: string;
   summary: ExecutiveSummaryData;
   charts: ExecutiveExportChartRef[];
 }
 
 export const exportExecutiveSummaryReport = async ({
   subject,
+  caseId,
+  caseName,
+  exportedBy,
+  classification,
+  reportVersion,
   summary,
   charts,
 }: ExportOptions): Promise<void> => {
@@ -32,6 +44,9 @@ export const exportExecutiveSummaryReport = async ({
 
   const html2canvas = html2canvasModule.default;
   const exportPayload = executiveModule.createExecutiveExportPayload(subject, summary);
+  const resolvedCaseId = caseId ?? subject;
+  const resolvedCaseName =
+    caseName ?? CASE_METADATA.find(meta => meta.id === resolvedCaseId)?.name ?? resolvedCaseId.toUpperCase();
 
   const snapshots = await Promise.all(
     charts.map(async ({ ref, title }) => {
@@ -59,5 +74,15 @@ export const exportExecutiveSummaryReport = async ({
       snapshot !== null
   );
 
-  await generateExecutiveReportPdf(exportPayload, { charts: chartPayload });
+  const metadata = buildExecutiveReportMetadata({
+    caseId: resolvedCaseId,
+    caseName: resolvedCaseName,
+    subject,
+    exportedBy,
+    exportedAt: exportPayload.generatedAt,
+    classification,
+    reportVersion,
+  });
+
+  await generateExecutiveReportPdf(exportPayload, { charts: chartPayload, metadata });
 };

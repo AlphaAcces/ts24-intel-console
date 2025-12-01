@@ -1,108 +1,107 @@
-# TSL Intelligence Console
+# TS24 Intel Console
 
-This repository contains the TSL Intelligence Console — a multi-tenant React + Vite application for investigations, network analysis and reporting. It includes support for AI overlays on networks, tenant‑scoped AI keys (server‑side encrypted), a pluggable events engine, KPI modules, export pipelines and rebranding-ready UI work.
+**TS24 Intel Console** (Intel24) is a multi-tenant React + Vite application for financial investigations, network analysis, and executive reporting. It provides case management, KPI dashboards, event timelines, and branded PDF exports for operators and analysts.
 
-## High-level architecture
+---
 
-- **Frontend:** React + Vite app in `src/` with modular components (Dashboard, NetworkGraph, Executive, Settings, etc.).
-- **AI integration:** client-side adapters in `src/lib/ai` and a network analysis service in `src/domains/network/services/aiNetworkAnalysisService.ts` which caches results and exposes a pub/sub interface.
-- **Tenant & RBAC:** central `TenantProvider` supplies tenant information and permissions. UI respects `ai:use` (consume overlays) and `ai:configure` (manage tenant key).
-- **Server (local/dev):** a lightweight Express service in `server/` provides encrypted storage for tenant AI keys (`/api/tenant/:id/aiKey`). AES‑256‑GCM encryption is used; master key comes from `process.env.AI_KEY_MASTER`.
-- **Export module:** færdig pipeline for PDF/Excel/CSV/JSON under `src/domains/export/`. PDF bruger `jspdf` + `html2canvas`, Excel bygger flere faner med `exceljs`.
+## ✨ Main Features (v1)
 
-## Quickstart (development)
+| Feature | Description | Docs |
+|---------|-------------|------|
+| **SSO v1 Login** | JWT-based SSO from ALPHA-Interface-GUI + manual login fallback | [ts24_login_flow.md](docs/ts24_login_flow.md), [sso_v1_signoff_ts24.md](docs/sso_v1_signoff_ts24.md) |
+| **Case Library** | Browse and switch cases via `/api/cases`; URL routing with `?case=` | [cases_api.md](docs/cases_api.md) |
+| **Timeline / Events** | Case event engine + `CaseTimeline` UI grouped by day | [events_timeline.md](docs/events_timeline.md) |
+| **KPI Dashboard** | Derived KPI metrics displayed in `ExecutiveSummaryView` | [kpi_module.md](docs/kpi_module.md) |
+| **Executive PDF Export** | Branded multi-section PDF with header/footer, metadata-driven filename | [export_module.md](docs/export_module.md) |
+| **AI Network Overlays** | Optional AI analysis on network graphs (tenant-scoped keys) | See architecture below |
 
-Prerequisites: Node.js 16+ and Git.
+For a high-level flow diagram, see [system_overview.md](docs/system_overview.md).
 
-1. Install dependencies:
+---
+
+## 🚀 Getting Started
+
+**Prerequisites:** Node.js 18+ and Git.
 
 ```pwsh
+# 1. Install dependencies
 npm install
-```
 
-2. Environment variables
+# 2. Environment variables (create .env.local)
+VITE_SSO_JWT_SECRET=your_shared_secret
+AI_KEY_MASTER=<base64-encoded-32-byte-key>
 
-Create a `.env.local` (or set env vars) with at least the following keys:
+# 3. Start development servers
+npm run dev          # Vite frontend (default: http://localhost:5173)
+npx tsx server/index.ts  # Express backend (default: http://localhost:4001)
 
-```
-VITE_GEMINI_API_KEY=your_gemini_key_here
-AI_KEY_MASTER=<base64-encoded-32-byte-master-key>
-```
-
-Notes:
-- `AI_KEY_MASTER` must be a 32‑byte key encoded in base64. Use a proper secret manager (KMS, HashiCorp Vault, Azure Key Vault) in production — do not check secrets into source control.
-- The frontend will fetch/store tenant AI keys only via the server API; it does not persist keys in `localStorage`.
-
-3. Run locally
-
-- Start the frontend (Vite):
-
-```pwsh
-npm run dev
-```
-
-- Start the local AI-key service (optional, used by `AiKeySettings`):
-
-```pwsh
-node ./server/index.js
-# or with tsx for TS: npx tsx server/index.ts
-```
-
-4. Build and test
-
-```pwsh
+# 4. Build & test
 npm run build
-npm test --silent -- run   # Vitest (e2e tests er ekskluderet)
-npm run test:e2e           # Playwright UI/e2e når du behøver det
+npm test -- --run    # Vitest unit/integration tests
+npm run test:e2e     # Playwright e2e tests
 ```
 
-## Tenant AI key API
+---
 
-Routes (example server implementation in `server/`):
+## 🏗️ Architecture Overview
 
-- `GET /api/tenant/:id/aiKey` — returns `{ exists: boolean }`. Requires `ai:configure` permission.
-- `PUT /api/tenant/:id/aiKey` — body `{ aiKey: string | null }`. Stores (or deletes) encrypted key. Requires `ai:configure`.
+```text
+src/
+├── components/       # UI components (Auth, Cases, Dashboard, Executive, etc.)
+├── context/          # React contexts (DataContext for case/events/kpis)
+├── domains/          # Domain logic (api, cases, events, kpi, export, tenant, etc.)
+├── pdf/              # PDF generation (executiveReport, sections, theme)
+├── lib/              # Shared utilities (ai adapters, formatting)
+└── i18n/             # Translations (en, da)
 
-The provided `server/` implementation uses a simple JSON file for storage and reads `x-user-permissions` header to simulate RBAC in development/testing. Replace this with your real auth integration in production.
+server/
+├── app.ts            # Express routes (/api/cases, /api/auth/sso-health, etc.)
+├── storage.ts        # JSON file storage for tenant keys
+└── crypto.ts         # AES-256-GCM encryption utilities
 
-## New modules (summary)
-
-- `src/domains/network/services/aiNetworkAnalysisService.ts`: analysis + cache + pub/sub.
-- `src/components/Person/NetworkGraph.tsx`: AI overlay UI (toggle, sensitivity, category filters) and visuals.
-- `src/domains/tenant/TenantContext.tsx`: tenant state, `aiKey?: string | null`, `updateAiKey` and `useOptionalTenant`.
-- `src/components/Settings/AiKeySettings.tsx`: frontend integration to call server API (never stores keys client‑side).
-
-## Testing
-
-- Unit tests: Vitest (`npm test --silent -- run`)
-
-- Server integration tests: Supertest + Vitest (see `server/__tests__/aiKeyApi.test.ts`).
-
-- Playwright (e2e): scaffolded Playwright tests (API-level RBAC checks) are included. To run Playwright tests and install browsers:
-
-```pwsh
-npm i -D @playwright/test playwright
-npx playwright install --with-deps
-npm run test:e2e
+docs/                 # Documentation
 ```
 
-## Export pipelines
+**Key API routes (server/app.ts):**
 
-- ExportModal (Shared) lader operatører vælge format via dropdown/knapper, viser AI-toggle (respekterer `usePermission('ai:use')`), preview-log og loading-hinters for store datasæt.
-- `pdfRenderer.ts` samler hero-threat card, KPI-kort, risikobadges og AI-overlay i et 1024px grid, renderer via `html2canvas` (scale 3×) og sender resultatet til `jspdf` med dateret footer/pagination.
-- `excelRenderer.ts` anvender `exceljs` til at bygge `Overview`, `Nodes`, `Edges`, `AI_Insights` og `KPIs` faner med formatterede kolonner og cover sheet metadata.
-- `exportOrchestrator.ts` sanitiserer payloads automatisk hvis brugeren mangler `ai:use`, og en Vitest-suite demonstrerer begge RBAC-grene.
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | `/api/auth/sso-health` | SSO healthcheck (secret/issuer validation) |
+| GET | `/api/cases` | List all case metadata |
+| GET | `/api/cases/:id` | Full case data by ID |
+| GET | `/api/cases/:id/events` | Derived case events |
+| GET | `/api/cases/:id/kpis` | Derived KPI summary |
+| POST | `/api/cases/:id/export` | Export case payload (JSON) |
+| GET/PUT/DELETE | `/api/tenant/:id/aiKey` | Tenant AI key management |
 
-Full browser UI e2e tests (AI toggle visibility, overlay rendering) are planned next; they require the frontend dev server to be running during the tests and will be added to CI when stable.
+---
 
-## PR & CI guidance
+## 🧪 Testing
 
-- Ensure `npm run build` and `npm test` pass on your branch.
-- Security PR (`chore(security): add server-side encrypted tenant AI key API`) includes server code, server tests and the frontend change to `AiKeySettings`.
+- **Unit tests:** `npm test -- --run` (Vitest)
+- **Server tests:** `server/__tests__/*.test.ts`
+- **E2E tests:** `npm run test:e2e` (Playwright)
+- **SSO smoke test:** `npm run test:sso-smoke`
 
-## Next steps I can take for you
+---
 
-- Open or update the PR for the server API so it's ready for review.
-- Add full Playwright browser UI tests for AI toggle/overlay flows.
-- Start the export refactor (Del 8) on a new feature branch and scaffold `src/domains/export/`.
+## 📚 Documentation
+
+| Document | Content |
+|----------|---------|
+| [system_overview.md](docs/system_overview.md) | High-level flow diagrams |
+| [ts24_login_flow.md](docs/ts24_login_flow.md) | Login & SSO implementation details |
+| [sso_v1_signoff_ts24.md](docs/sso_v1_signoff_ts24.md) | SSO v1 sign-off checklist |
+| [cases_api.md](docs/cases_api.md) | Case API & DataContext integration |
+| [events_timeline.md](docs/events_timeline.md) | Event engine & CaseTimeline UI |
+| [kpi_module.md](docs/kpi_module.md) | KPI derivation & dashboard |
+| [export_module.md](docs/export_module.md) | Export pipeline & Executive PDF |
+
+---
+
+## 🔧 PR & CI Guidance
+
+1. Ensure `npm run build` and `npm test -- --run` pass before opening a PR.
+2. Run `npm run lint` to check for code style issues.
+3. For SSO changes, verify with `npm run test:sso-smoke` against the dev server.
 

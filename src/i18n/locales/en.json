@@ -1114,8 +1114,17 @@
     "eyebrow": "Executive Summary",
     "title": "Executive Summary",
     "subtitle": "Condensed status of finance, risks and actions — board ready.",
-    "export": "Export PDF",
-    "exporting": "Exporting…",
+    "export": {
+      "primary": "Export PDF",
+      "loading": "Exporting…",
+      "button": {
+        "label": "Export case",
+        "loading": "Exporting…",
+        "error": {
+          "generic": "Failed to export case. Please try again."
+        }
+      }
+    },
     "openTimeline": "Open timeline",
     "card": {
       "financial": {

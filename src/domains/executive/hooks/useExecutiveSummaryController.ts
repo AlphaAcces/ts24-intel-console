@@ -8,7 +8,7 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCaseData, useActiveSubject } from '../../../context/DataContext';
+import { useCaseData, useActiveSubject, useDataContext } from '../../../context/DataContext';
 import type { View, RiskLevel } from '../../../types';
 import { useExecutiveKpis } from '../../kpi';
 import { alertHandler } from '../../events/handlers/alertHandler';
@@ -42,6 +42,7 @@ export const useExecutiveSummaryController = (
 ): ExecutiveSummaryControllerState => {
   const { t } = useTranslation();
   const subject = useActiveSubject();
+  const { caseId } = useDataContext();
   const { executiveSummary } = useCaseData();
   const { financial, risk, actions } = executiveSummary;
 
@@ -286,6 +287,7 @@ export const useExecutiveSummaryController = (
       setIsExporting(true);
       await exportExecutiveSummaryReport({
         subject,
+        caseId,
         summary: executiveSummary,
         charts: [
           { ref: grossChartRef, title: t('executive.chart.grossTrend') },
@@ -298,7 +300,7 @@ export const useExecutiveSummaryController = (
     } finally {
       setIsExporting(false);
     }
-  }, [executiveSummary, subject, t]);
+  }, [caseId, executiveSummary, subject, t]);
 
   const onTimeline = useCallback(() => {
     onNavigate?.('timeline');
@@ -313,8 +315,8 @@ export const useExecutiveSummaryController = (
       eyebrow: t('executive.eyebrow'),
       title: t('executive.title'),
       subtitle: t('executive.subtitle'),
-      exportLabel: t('executive.export'),
-      exportingLabel: t('executive.exporting'),
+      exportLabel: t('executive.export.primary'),
+      exportingLabel: t('executive.export.loading'),
       timelineLabel: t('executive.openTimeline'),
       onTimeline,
       onExport: handleExport,

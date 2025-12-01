@@ -1,8 +1,29 @@
 # Case Event Engine & Timeline
 
-This note documents the v1 implementation of case events for the TS24 Intel Console.
+**Last updated:** 30 Nov 2025
 
-## CaseEvent model
+## Purpose
+
+The event engine derives case events from multiple data sources (timeline, actions, risk heatmap) and provides them to the UI via API or local derivation. The `CaseTimeline` component renders events grouped by day with severity badges.
+
+---
+
+## Where in the Code
+
+| Component/File | Path | Responsibility |
+|----------------|------|----------------|
+| CaseEvent types | `src/domains/events/caseEvents.ts` | `CaseEvent`, `CaseEventSeverity` types |
+| Derive helper | `src/domains/events/caseEvents.ts` | `deriveEventsFromCaseData(caseData, opts)` |
+| API route | `server/app.ts` (line ~65) | `GET /api/cases/:id/events` |
+| API client | `src/domains/api/client.ts` | `fetchCaseEvents(id)` |
+| DataContext | `src/context/DataContext.tsx` | `events`, `eventsLoading`, `eventsError`, `eventsSource` |
+| CaseTimeline UI | `src/components/Cases/CaseTimeline.tsx` | Grouped timeline with severity, source badge |
+| i18n keys | `src/i18n/locales/{en,da}/cases.json` | `cases.timeline.*` translations |
+| Tests | `server/__tests__/caseEventsApi.test.ts` | API endpoint tests |
+
+---
+
+## CaseEvent Model
 
 ```ts
 export type CaseEventSeverity = 'low' | 'medium' | 'high' | 'critical';

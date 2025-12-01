@@ -1,6 +1,83 @@
 # TS24 Login Flow
 
-**Last updated:** 30 Nov 2025
+**Last updated:** 1 Dec 2025
+
+## Purpose
+
+This document describes the authentication flows in TS24 Intel Console:
+
+1. **Manual login** – username/password via `LoginPage.tsx`.
+2. **SSO v1** – JWT-based single sign-on from ALPHA-Interface-GUI via `/sso-login`.
+3. **SSO healthcheck** – server endpoint for validating SSO configuration.
+
+---
+
+## 🎯 Canonical TS24 Entry URL (for ALPHA-Interface-GUI)
+
+**Production domain:** `https://intel24.blackbox.codes`
+
+| Use Case | Canonical URL | Notes |
+|----------|---------------|-------|
+| **SSO Entry (primary)** | `https://intel24.blackbox.codes/sso-login?sso=<JWT>` | GDI should set `TS24_CONSOLE_URL` to this |
+| **Manual Login** | `https://intel24.blackbox.codes/login` | Fallback when SSO fails or for direct access |
+| **Root** | `https://intel24.blackbox.codes/` | Redirects to `/login` if unauthenticated |
+
+### SSO Flow Sequence
+
+```text
+ALPHA-Interface-GUI (GDI login success)
+    │
+    └── Redirect to: https://intel24.blackbox.codes/sso-login?sso=<JWT>
+            │
+            ├── Token valid → Session created → Redirect to dashboard (/)
+            │
+            └── Token invalid/expired/missing → Redirect to /login with ssoFailed=true
+                    │
+                    └── User sees "SSO failed" banner + manual login form
+```
+
+### Legacy Aliases (still supported, but deprecated)
+
+- `/sso-login?ssoToken=<JWT>` → Automatically redirects to `/sso-login?sso=<JWT>`
+- `/login?sso=<JWT>` → Automatically redirects to `/sso-login?sso=<JWT>`
+
+> **Note for GDI team:** Use the canonical `/sso-login?sso=` format. Legacy aliases will be removed in a future release.
+
+---
+
+## Where in the Code
+
+| Component/File | Path | Responsibility |
+|----------------|------|----------------|
+| `LoginPage.tsx` | `src/components/Auth/LoginPage.tsx` | Manual login form, credential validation, access request drawer, SSO-failure banner |
+| `SsoLoginPage.tsx` | `src/components/Auth/SsoLoginPage.tsx` | SSO token verification, redirect handling |
+| `LoginRoute` | `src/App.tsx` (line ~350) | Detects `?sso=` param and redirects to `/sso-login` |
+| `App.tsx` | `src/App.tsx` | Auth state management, router config, `sessionStorage` |
+| SSO domain | `src/domains/auth/sso.ts` | `verifySsoToken()`, `SsoError` class, JWT verification using `jose` |
+| Auth types | `src/domains/auth/types.ts` | `AuthUser` interface |
+| Demo users | `src/domains/auth/demoUsers.ts` | Hardcoded demo credentials for dev |
+| SSO health route | `server/app.ts` (line ~24) | `/api/auth/sso-health` endpoint |
+| SSO metrics | `shared/ssoMetrics.ts` | Error counters shared between client/server |
+| i18n keys | `src/i18n/locales/{en,da}/auth.json` | Translated auth labels and errors |
+
+---
+
+## Router Configuration (Unauthenticated)
+
+When `authUser` is `null`, the router renders:
+
+```tsx
+<Routes>
+  <Route path="/sso-login" element={<SsoLoginPage />} />
+  <Route path="/login" element={<LoginRoute />} />
+  <Route path="/" element={<LoginRoute />} />
+  <Route path="*" element={<LoginRoute />} />
+</Routes>
+```
+
+The `LoginRoute` component checks for `?sso=` or `?ssoToken=` query params and redirects to `/sso-login` if found. Otherwise, it renders `LoginPage`.
+
+---
 
 ## Entry Point & Components
 

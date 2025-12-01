@@ -1,6 +1,29 @@
 # KPI Module
 
-## CaseKpiSummary model
+**Last updated:** 30 Nov 2025
+
+## Purpose
+
+The KPI module derives key performance indicators from case data and displays them in the executive dashboard. KPIs include risk score, open actions count, liquidity, and days sales outstanding (DSO).
+
+---
+
+## Where in the Code
+
+| Component/File | Path | Responsibility |
+|----------------|------|----------------|
+| KPI types | `src/domains/kpi/caseKpis.ts` | `CaseKpiSummary`, `CaseKpiMetric`, `KpiSeverity`, `KpiTrend` |
+| Derive helper | `src/domains/kpi/caseKpis.ts` | `deriveKpisFromCaseData(caseData, opts)` |
+| API route | `server/app.ts` (line ~75) | `GET /api/cases/:id/kpis` |
+| API client | `src/domains/api/client.ts` | `fetchCaseKpis(id)` |
+| DataContext | `src/context/DataContext.tsx` | `kpis`, `kpisLoading`, `kpisError`, `kpisSource` |
+| ExecutiveSummaryView | `src/components/Executive/ExecutiveSummaryView.tsx` | KPI panel rendering |
+| Tests | `server/__tests__/caseKpisApi.test.ts` | API endpoint tests |
+| Tests | `src/components/Executive/__tests__/ExecutiveSummaryView.test.tsx` | UI tests |
+
+---
+
+## CaseKpiSummary Model
 
 `CaseKpiSummary` represents the lightweight KPI snapshot that is shown across the executive dashboard:
 

@@ -1112,8 +1112,17 @@
     "eyebrow": "Executive Resumé",
     "title": "Executive Resumé",
     "subtitle": "Kondenseret status for økonomi, risici og handlinger — klar til bestyrelsen.",
-    "export": "Eksporter PDF",
-    "exporting": "Eksporterer…",
+    "export": {
+      "primary": "Eksporter PDF",
+      "loading": "Eksporterer…",
+      "button": {
+        "label": "Eksportér sag",
+        "loading": "Eksporterer…",
+        "error": {
+          "generic": "Kunne ikke eksportere sagen. Prøv igen."
+        }
+      }
+    },
     "openTimeline": "Åbn tidslinje",
     "card": {
       "financial": {

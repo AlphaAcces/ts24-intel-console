@@ -16,6 +16,7 @@
     "test:sso-smoke": "playwright test e2e/sso-smoke.spec.ts"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "@google/generative-ai": "^0.24.1",
     "@reduxjs/toolkit": "^1.9.5",
     "exceljs": "^4.4.0",
