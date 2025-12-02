@@ -378,10 +378,10 @@ $config['sso_jwt_secret'] = 'shared-secret-123';
    grep sso_jwt_secret env.php
    ```
 
-2. Check the secret is properly encoded:
+2. Check the secret is properly set:
    ```bash
-   # Should output your secret
-   node -p "import.meta.env.VITE_SSO_JWT_SECRET"
+   # Check environment variable
+   echo $VITE_SSO_JWT_SECRET
    ```
 
 ### Health Endpoint Returns 403
