@@ -29,7 +29,7 @@ function buildCoverSheet(sheet: ExcelJS.Worksheet, payload: ExportPayload) {
 
   sheet.mergeCells('A1:D1');
   const title = sheet.getCell('A1');
-  title.value = 'GreyEYE Export Summary';
+  title.value = 'Intel24 Export Summary';
   title.font = { size: 20, bold: true, color: { argb: 'FFEEF2FF' } };
   title.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F2937' } };
   title.alignment = { horizontal: 'left', vertical: 'middle' };

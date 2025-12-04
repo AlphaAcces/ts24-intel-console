@@ -100,7 +100,7 @@ curl -I https://intel24.blackbox.codes/login
 - `https://intel24.blackbox.codes/` → 200 (SPA) eller 302 afhængigt af cache.
 - `/api/health` → 200 OK med JSON (uptime, build info).
 - `/sso-login` → 302 til `/login`, når brugeren ikke har gyldigt token.
-- `/login` → 200 OK med GreyEYE-login.
+- `/login` → 200 OK med Intel24-login.
 
 ## SSO & GO-kriterier
 

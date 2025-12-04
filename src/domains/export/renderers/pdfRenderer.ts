@@ -218,7 +218,7 @@ function buildGrid(payload: ExportPayload): HTMLDivElement {
   header.style.justifyContent = 'space-between';
   header.style.alignItems = 'center';
   const title = document.createElement('div');
-  title.textContent = `GreyEYE Report • ${payload.tenant.name ?? payload.tenant.id}`;
+  title.textContent = `Intel24 Report • ${payload.tenant.name ?? payload.tenant.id}`;
   title.style.fontWeight = '600';
   title.style.fontSize = '18px';
   header.appendChild(title);

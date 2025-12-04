@@ -294,7 +294,7 @@ export const CommandDeck: React.FC<CommandDeckProps> = ({
 
             <footer className="px-6 py-4 border-t border-[var(--color-border)] text-xs text-[var(--color-text-muted)] flex items-center gap-2">
               <Shield className="w-4 h-4 text-[var(--color-gold)]" />
-              {t('commandDeck.footer', { defaultValue: 'GreyEYE security perimeter · Changes apply instantly' })}
+              {t('commandDeck.footer', { defaultValue: 'Intel24 security perimeter · Changes apply instantly' })}
             </footer>
           </aside>
         </>

@@ -21,7 +21,7 @@ describe('excelRenderer', () => {
     await workbook.xlsx.load(Buffer.from(bytes));
     const overview = workbook.getWorksheet('Overview');
     expect(overview).toBeDefined();
-    expect(overview?.getCell('A1').value).toBe('GreyEYE Export Summary');
+    expect(overview?.getCell('A1').value).toBe('Intel24 Export Summary');
     expect(workbook.getWorksheet('Nodes')?.actualRowCount).toBeGreaterThan(1);
   });
 });

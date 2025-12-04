@@ -85,7 +85,7 @@ export interface ExecutiveSummaryViewData {
 export const getMockExecutiveSummary = (): ExecutiveSummaryViewData => ({
   header: {
     eyebrow: 'LEDELSESOVERBLIK',
-    title: 'GreyEYE Command – Executive Summary',
+    title: 'Intel24 Command – Executive Summary',
     subtitle: 'Kritiske signaler og handlingspunkter på tværs af finans, risiko og AI drift',
     updatedAt: 'Opdateret 08:32 CET • 30. november',
   },

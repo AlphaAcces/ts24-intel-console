@@ -34,7 +34,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, payload, onClose }) =
   const formatDescription = useMemo(() => {
     switch (format) {
       case 'pdf':
-        return 'PDF samler et visuelt GreyEYE-dashboard med KPI-kort, risikobadges og AI-noter.';
+        return 'PDF samler et visuelt Intel24-dashboard med KPI-kort, risikobadges og AI-noter.';
       case 'excel':
         return 'Excel-arbejdsbogen indeholder faner for noder, kanter, AI-insights, KPI’er og et resume-cover.';
       case 'csv':
